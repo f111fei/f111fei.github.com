@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="chrome=1">
   
-  <title>归档：2014/8 | xzper</title>
+  <title>未分类 | xzper</title>
   <meta name="author" content="xzper">
   
   <meta name="description" content="xzper | f111fei | egret | html5">
@@ -52,7 +52,7 @@
 <div class="clearfix"></div>
 <a href="" class="title"></a></header>
     <div class="content">
-<h2 class="archive-title">2014/8</h2>
+<h2 class="archive-title category">未分类</h2>
 
 
   
@@ -60,18 +60,19 @@
   <header>
     
       <div class="icon"></div>
-      <time datetime="2014-08-08T16:43:25.000Z"><a href="/2014/08/09/框架包结构的设计/">8月 9 2014</a></time>
+      <time datetime="2014-06-14T19:49:56.000Z"><a href="/2014/06/15/新手引导—脚本设计/">6月 15 2014</a></time>
     
     
   
-    <h1 class="title"><a href="/2014/08/09/框架包结构的设计/">框架包结构的设计</a></h1>
+    <h1 class="title"><a href="/2014/06/15/新手引导—脚本设计/">新手引导—脚本设计</a></h1>
   
 
   </header>
   
   <div class="entry">
     
-      <p>这里的框架拿Flex或者FlexLite以及Egret做例子。框架的包结构划分应该是以调用关系为依据划分的，尽量把需要相互调用的类放在一个包下面。这样最终得到的结果就是各个包之间相互独立，理想情况下即使你删除一个包，其他的也不受影响。但是现实肯定不是理想的，包之间总是还有依赖。这些有依赖的东西，大部分就是框架里面核心的东西了。这时候就把这些公共依赖的部分抽出来，放到一个核心包下，比如叫core。 从另一种角度上来讲，所谓的框架”核心类”，实际上就是一些公共耦合的类。这样其他的包都和这个核心包有依赖关系，但是他们彼此之间没有依赖关系。</p>
+      <p>最近在做游戏的新手引导模块。由于是关卡式的引导，所以很适合用读取引导脚本的方式来开发。</p>
+<p><strong>脚本和命令配置</strong></p>
 
     
   </div>
@@ -79,7 +80,7 @@
     
       
         <div class="alignleft">
-          <a href="/2014/08/09/框架包结构的设计/#more" class="more-link">阅读全文</a>
+          <a href="/2014/06/15/新手引导—脚本设计/#more" class="more-link">阅读全文</a>
         </div>
       
       
