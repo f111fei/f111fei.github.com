@@ -48,51 +48,21 @@
 <h2 class="archive-title tag">架构</h2>
 
 
-  
-    <article class="post">
+  <div class="archive">
+    
+      
+        <article class="post">
   <header>
+    <div class="icon"></div>
+    <time datetime="2014-08-08T16:43:25.000Z"><a href="/2014/08/09/框架包结构的设计/">8月 9 2014</a></time>
     
-      <div class="icon"></div>
-      <time datetime="2014-08-08T16:43:25.000Z"><a href="/2014/08/09/框架包结构的设计/">8月 9 2014</a></time>
+      <h1 class="title"><a href="/2014/08/09/框架包结构的设计/">框架包结构的设计</a></h1>
     
-    
-  
-    <h1 class="title"><a href="/2014/08/09/框架包结构的设计/">框架包结构的设计</a></h1>
-  
-
   </header>
-  
-  <div class="entry">
-    
-      <p>这里的框架拿Flex或者FlexLite以及Egret做例子。框架的包结构划分应该是以调用关系为依据划分的，尽量把需要相互调用的类放在一个包下面。这样最终得到的结果就是各个包之间相互独立，理想情况下即使你删除一个包，其他的也不受影响。但是现实肯定不是理想的，包之间总是还有依赖。这些有依赖的东西，大部分就是框架里面核心的东西了。这时候就把这些公共依赖的部分抽出来，放到一个核心包下，比如叫core。 从另一种角度上来讲，所谓的框架”核心类”，实际上就是一些公共耦合的类。这样其他的包都和这个核心包有依赖关系，但是他们彼此之间没有依赖关系。</p>
-
+</article>
+      
     
   </div>
-  <footer class="end-sep">
-    
-      
-        <div class="alignleft">
-          <a href="/2014/08/09/框架包结构的设计/#more" class="more-link">阅读全文</a>
-        </div>
-      
-      
-    
-    <div class="clearfix"></div>
-<!--     <nav id="pagination">
-      
-      
-    </nav> -->
-  </footer>
-</article>
-
-
-  
-
-  <nav id="pagination">
-  
-  
-  <div class="clearfix"></div>
-</nav>
 
 </div>
   </div>
