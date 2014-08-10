@@ -1,0 +1,21 @@
+<% if (theme.flickr_user) { %>
+<%
+  var extraClass = '';
+  if (idx.current % 3 === 0) {
+    extraClass += ' first';
+    if (idx.current >= 3) {
+      extraClass += ' newline';
+    }
+  }
+%>
+<div class="widget flickr<%= extraClass %>">
+  <h3 class="title">
+    <a href="http://www.flickr.com/photos/<%= theme.flickr_nickname %>">@<%= theme.flickr_nickname %></a>'s Flickr
+  </h3>
+  	<div class="entry">
+				<div class="flickrlist">
+				<script type="text/javascript" src="http://www.flickr.com/badge_code_v2.gne?count=<%= theme.flickr_count %>&display=random&size=s&source=user_set&set=72157636676756714&user=<%= theme.flickr_user %>"></script>
+				</div>
+		</div>
+</div>
+<% } %>

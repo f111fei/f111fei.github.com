@@ -1,0 +1,23 @@
+<div class="title">
+  <h1><a href="<%- config.root %>" class="titlea"><%= config.title %></a></h1>
+  <p><a href="<%- config.root %>" class="titlea"><% if (config.subtitle){ %><%= config.subtitle %><% } %></a></p>
+</div>
+
+<% if (theme.search) { %>
+<div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="<%= __('search') %>"speech="”speech”" x-webkit-speech="”x-webkit-speech”" x-webkit-grammar="”builtin:translate”">
+    <input type="hidden" name="q" value="site:<%- config.url.replace(/^https?:\/\//, '') %>">
+  </form>
+</div>
+<% } %>
+<nav class="nav">
+  <ul>
+    <% for (var i in theme.menu){ %>
+      <li><a href="<%- theme.menu[i] %>"><%= i %></a></li>
+    <% } %>
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+<a href="" class="title"></a>

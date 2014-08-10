@@ -1,0 +1,21 @@
+<% if (theme.douban_user) { %>
+<%
+  var extraClass = '';
+  if (idx.current % 3 === 0) {
+    extraClass += ' first';
+    if (idx.current >= 3) {
+      extraClass += ' newline';
+    }
+  }
+%>
+<div class="widget douban<%= extraClass %>">
+  <h3 class="title">
+    <a href="http://www.douban.com/people/<%= theme.douban_user %>">Being Read</a>
+  </h3>
+  	<div class="entry">
+				<div class="doubanlist">
+        <script type="text/javascript" src="http://www.douban.com/service/badge/<%= theme.douban_user %>/?selection=latest&amp;picsize=small&amp;hideself=on&amp;show=dolist&amp;n=6&amp;hidelogo=on&amp;cat=book&amp;columns=3"></script>
+				</div>
+		</div>
+</div>
+<% } %>
