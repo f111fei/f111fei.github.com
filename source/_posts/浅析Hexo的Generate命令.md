@@ -63,6 +63,10 @@ tags: Hexo
 * 各Processor处理对应文件，需要渲染的文件交由对应的Renderer渲染。并将渲染的数据写入数据库。代码参见：[lib/plugins/processor/](https://github.com/hexojs/hexo/tree/master/lib/plugins/processor) 和 [lib/post/](https://github.com/hexojs/hexo/tree/master/lib/post)。
 * 各Generator根据数据库中的数据，根据对应主题进一步加工，将数据存入Route，最后写入目标位置。代码参见：[lib/plugins/generator/](https://github.com/hexojs/hexo/tree/master/lib/plugins/generator) 和 [lib/theme/index.js](https://github.com/hexojs/hexo/blob/master/lib/theme/index.js)。
 
+##一个小插件
+明白了基本原理之后，现在要实现一个小插件。需求是我现在的站点有一个文件夹project专门存放项目代码。但是每次hexo generate 都将public文件夹清空，然后写入文件。所以project文件夹要放在source下面。这样generate生成的时候就将project复制到public里面了。但是这又有一个问题，project我的项目文件夹不可避免的有代码，有些html文件他会自动加上页头和页尾，这个很不好。于是这个插件的功能就是在 _config.yml 配置一个参数允许自定义那些文件夹的内容是不需要渲染的直接复制到public文件夹。 基本思路就是 自定义一个processor，注册一个rule，只要是在这个列表中的文件就按照asset的方式处理。 附上插件地址 : <https://github.com/f111fei/hexo-processor-copyassets>
+
+
 ##题外:搭建NodeJS调试环境
 具体的步骤看这里:<http://blog.domlib.com/articles/686.html>。
 
@@ -80,7 +84,7 @@ tags: Hexo
 创建一个站点，这里假定站点目录是 E:/workSpace/xzper.com/ 。然后按照上面的教程，安装好调试工具并启动。
 
     npm install -g node-inspector
-    node -inspector
+    node-inspector
 
 
  输入 node-inspector 启动调试工具。 最后最关键的一步，我们要调试hexo generate这个命令，那么在命令行中输入 
