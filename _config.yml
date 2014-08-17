@@ -24,6 +24,7 @@ permalink_defaults:
 # Directory
 source_dir: source
 public_dir: public
+copyAssets: project
 
 # Writing
 new_post_name: :title.md # File name of new posts

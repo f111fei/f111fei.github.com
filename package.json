@@ -9,6 +9,7 @@
     "hexo-migrator-wordpress": "^0.1.1",
     "hexo-renderer-ejs": "*",
     "hexo-renderer-marked": "*",
-    "hexo-renderer-stylus": "*"
+    "hexo-renderer-stylus": "*",
+	"hexo-processor-copyassets": "*"
   }
 }
