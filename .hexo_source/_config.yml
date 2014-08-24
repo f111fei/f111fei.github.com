@@ -23,7 +23,7 @@ permalink_defaults:
 
 # Directory
 source_dir: source
-public_dir: public
+public_dir: ..
 copyAssets: project
 
 # Writing
@@ -80,7 +80,7 @@ disqus_shortname:
 # Extensions
 ## Plugins: https://github.com/hexojs/hexo/wiki/Plugins
 ## Themes: https://github.com/hexojs/hexo/wiki/Themes
-theme: blackeye
+theme: modernist
 exclude_generator:
 
 # Deployment
