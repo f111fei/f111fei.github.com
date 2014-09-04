@@ -4,7 +4,7 @@
   <subtitle><![CDATA[前行在被夕阳染红的街道]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://xzper.com/"/>
-  <updated>2014-08-24T08:22:37.244Z</updated>
+  <updated>2014-09-04T16:05:43.197Z</updated>
   <id>http://xzper.com/</id>
   
   <author>
@@ -15,11 +15,426 @@
   <generator uri="http://zespia.tw/hexo/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[分享一个小巧的快捷键管理工具类]]></title>
+    <link href="http://xzper.com/2014/09/04/%E5%BF%AB%E6%8D%B7%E9%94%AE%E7%AE%A1%E7%90%86/"/>
+    <id>http://xzper.com/2014/09/04/快捷键管理/</id>
+    <published>2014-09-04T13:58:03.000Z</published>
+    <updated>2014-09-04T16:04:51.000Z</updated>
+    <content type="html"><![CDATA[<p>最近接到了要完成软件中的快捷键模块。基本需求就是能做到让用户自由设置。基本之前的所有按键都是写死在代码中的，就像下面这样糟糕：</p>
+<pre><code><span class="keyword">this</span>.addEventListener(KeyboardEvent.KEY_DOWN,onKeyDown);
+
+<span class="keyword">private</span> <span class="function"><span class="keyword">function</span> <span class="title">onKeyDown</span><span class="params">(event:KeyboardEvent)</span><span class="type">:void</span>
+</span>{
+    <span class="keyword">if</span>(event.keyCode==Keyboard.S&amp;&amp;event.ctrlKey)
+    {
+        ...dosomething
+    }
+}
+</code></pre><a id="more"></a>
+
+<p>这样写是无法做到在后期维护中把快捷键分离出来让用户自由设置的。而且会造成代码冗余，比如这个面板需要Ctrl+S执行保存操作，那个面板也需要Ctrl+S执行那个面板的保存操作。这样Ctrl+S这种组合的快捷键每个面板都需要判断一下，这样相同的逻辑判断会多次出现。还有一种比较严格的情况，比如上面的那种判断严格意义上来讲是不能判断Ctrl+S的，因为用户可能同时也按下了Shift键或者Alt键，那这样这个判断要完全写对，代码量又要多不少。</p>
+<p>比较好的解决方式是使用一个快捷键管理类Shortcut，统一管理这些操作。在程序初始化的时候注入快捷键的映射，然后在各个面板注册需要响应的事件类型以及对应的函数。比如一个Ctrl+S的操作可以这样表示：</p>
+<p>程序初始化的时候，添加快捷键映射</p>
+<pre><code>Shortcut.addBinding(<span class="string">"save"</span> , [Keyboard.S , Keyboard.CONTROL]);
+</code></pre><p>具体的面板注册监听事件</p>
+<pre><code>Shortcut.addRegister(<span class="keyword">this</span> , “save” , onShortcut);
+</code></pre><p><code>addBinding</code>这个方法第一个参数就是事件类型，第二个类型就是事件对应的按键，用一个数组表示，可以是多个具体的解析交由Shortcut实现。</p>
+<p><code>addRegister</code>这个方法第一个参数就是要监听这个事件的对象，第二个参数是监听的类型，第三个参数是对应的回调函数。当然只有满足了按键条件才会触发这个回调函数。</p>
+<p>这样具体的按键事件监听，按键逻辑都交由Shortcut这个管理类去实现。要响应事件的对象不再需要去写繁琐的事件监听与逻辑判断了。这个面板只关心save这个事件，而不关心按了什么键，这样解耦了按键事件与面板的关系。用户如果需要改变快捷键，只需要改变那个binding的映射表就行了，具体的面板不需要任何改变。</p>
+<p>当然基于以上两个方法我们可以继续添加扩展，比如批量初始化快捷键映射</p>
+<pre><code>Shortcut.addBindindBatch(config);
+</code></pre><p>这种方式可以用于初始化的时候或者用户修改了快捷键的时候，传入一个映射表配置就行了。</p>
+<p>事件的类型也可以从简单的字符串变为一个静态常量，比如可以定义一个ShortcutType类存放这些事件：</p>
+<pre><code><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ShortcutType</span>
+</span>{
+    <span class="javadoc">/**
+     * 保存
+     */</span>
+    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">const</span> SAVE:String = <span class="string">"save"</span>;
+}
+</code></pre><p>基本上API就是这样，使用很简单，也很灵活。然后是重点<code>No Code You Say A Diao</code></p>
+<pre><code><span class="package"><span class="keyword">package</span>
+{</span>
+    <span class="preprocessor"><span class="keyword">import</span> flash.display.InteractiveObject;</span>
+    <span class="preprocessor"><span class="keyword">import</span> flash.display.Stage;</span>
+    <span class="preprocessor"><span class="keyword">import</span> flash.events.Event;</span>
+    <span class="preprocessor"><span class="keyword">import</span> flash.events.FocusEvent;</span>
+    <span class="preprocessor"><span class="keyword">import</span> flash.events.KeyboardEvent;</span>
+    <span class="preprocessor"><span class="keyword">import</span> flash.ui.Keyboard;</span>
+    <span class="preprocessor"><span class="keyword">import</span> flash.utils.Dictionary;</span>
+
+    <span class="comment">/**
+     * 快捷键管理类， 执行initialize初始化一个全局管理。
+     * &lt;br&gt;使用 addBinding 添加一个事件类型 与 按键的绑定
+     * &lt;br&gt;使用 addRegister 注册一个监听对象
+     * &lt;br&gt;下面是一个简单的使用例子
+     * &lt;code&gt;
+     *    &lt;br&gt;Shortcut.addBinding("example" , [Keyboard.S , Keyboard.CONTROL]);
+     *    &lt;br&gt;Shortcut.addRegister(this , "example" , onSave);
+     * &lt;/code&gt;
+     */</span>
+    <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Shortcut</span>
+    </span>{
+        <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">Shortcut</span><span class="params">(stage:Stage)</span>
+        </span>{
+            stage.addEventListener(KeyboardEvent.KEY_DOWN,onStageKeyDown,<span class="literal">true</span>,<span class="number">2000</span>);
+            stage.addEventListener(KeyboardEvent.KEY_UP,onStageKeyUp,<span class="literal">true</span>,<span class="number">2000</span>);
+            stage.addEventListener(FocusEvent.FOCUS_OUT,onDeactive);
+
+            Shortcut.addBindindBatch(config);
+        }
+
+        <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">var</span> instance:Shortcut;
+        <span class="comment">/**
+         * 初始化
+         */</span>        
+        <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">initialize</span><span class="params">(stage:Stage)</span><span class="type">:void</span>
+        </span>{
+            <span class="keyword">if</span>(instance)
+                <span class="keyword">return</span>;
+            instance = <span class="keyword">new</span> Shortcut(stage);
+        }
+
+        <span class="comment">/**
+         * @copy  Shortcut#addRegister()
+         */</span>
+        <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">addRegister</span><span class="params">(target:InteractiveObject , type:String , callBack:Function)</span><span class="type">:void</span>
+        </span>{
+            instance.addRegister(target , type , callBack);
+        }
+
+        <span class="comment">/**
+         * @copy  Shortcut#removeRegister()
+         */</span>
+        <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">removeRegister</span><span class="params">(target:InteractiveObject , type:String , callBack:Function)</span><span class="type">:void</span>
+        </span>{
+            instance.removeRegister(target , type , callBack);
+        }
+
+        <span class="comment">/**
+         * 移除一个对象所有注册的快捷键
+         */</span>
+        <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">removeTargetRegister</span><span class="params">(target:InteractiveObject)</span><span class="type">:void</span>
+        </span>{
+            <span class="keyword">if</span>(instance.targetDic[target])
+            {
+                <span class="keyword">var</span> shortcutMapList:Array = instance.targetDic[target];
+                <span class="keyword">for</span> <span class="keyword">each</span> (<span class="keyword">var</span> shortcutMap:ShortcutMap <span class="keyword">in</span> shortcutMapList) 
+                {
+                    instance.removeRegister(target , shortcutMap.type , shortcutMap.callBack);
+                }
+            }
+        }
+
+        <span class="comment">/**
+         * @copy  Shortcut#addBinding()
+         */</span>
+        <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">addBinding</span><span class="params">(type:String , keyCodeArray:Array)</span><span class="type">:void</span>
+        </span>{
+            instance.addBinding(type , keyCodeArray);
+        }
+
+        <span class="comment">/**
+         * 批量添加绑定事件类型 与 按键值的映射
+         * @param data 数据中的每一项格式参照addBinding方法中的参数
+         */</span>
+        <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">addBindindBatch</span><span class="params">(data:Object)</span><span class="type">:void</span>
+        </span>{
+            <span class="keyword">for</span> (<span class="keyword">var</span> key:String <span class="keyword">in</span> data) 
+            {
+                instance.addBinding(key , data[key]);
+            }
+        }
+
+        <span class="comment">/**
+         * @copy  Shortcut#removeBinding()
+         */</span>
+        <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">removeBinding</span><span class="params">(type:String)</span><span class="type">:void</span>
+        </span>{
+            instance.removeBinding(type);
+        }
+
+        <span class="comment">/**
+         * 移除所有的事件类型
+         */</span>
+        <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">removeAllBinding</span><span class="params">()</span><span class="type">:void</span>
+        </span>{
+            instance.bindingDic = <span class="keyword">new</span> Dictionary();
+        }
+
+        <span class="comment">/**
+         * 判断指定键是否按下
+         */</span>
+        <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">isKeyDown</span><span class="params">(keyCode:uint)</span><span class="type">:Boolean</span>
+        </span>{
+            <span class="keyword">return</span> instance.isKeyDown(keyCode);
+        }
+
+
+        <span class="comment">//======================== 快捷键相关=====================start=======================</span>
+
+        <span class="comment">/**
+         * 监听快捷键的对象 与 持有的注册列表字典
+         */</span>
+        <span class="keyword">private</span> <span class="keyword">var</span> targetDic:Dictionary = <span class="keyword">new</span> Dictionary(<span class="literal">true</span>);
+
+        <span class="comment">/**
+         * 事件类型 与 具体按键值的关系映射表
+         */</span>
+        <span class="keyword">private</span> <span class="keyword">var</span> bindingDic:Dictionary = <span class="keyword">new</span> Dictionary();
+
+        <span class="comment">/**
+         * 注册一个监听对象
+         * @param target 监听事件的目标对象
+         * @param type 按键要触发的事件类型
+         * @param callBack 回调函数示例：不含参数 callBack():void
+         * 带一个参数callBack(type:String):void , 带两个参数callBack(type:String , event:KeyboardEvent):void
+         */</span>
+        <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">addRegister</span><span class="params">(target:InteractiveObject , type:String , callBack:Function)</span><span class="type">:void</span>
+        </span>{
+            <span class="keyword">if</span>(getRegisterIndex(target , type , callBack) &gt;= <span class="number">0</span>)
+            {
+                <span class="keyword">return</span>;
+            }
+            <span class="keyword">if</span>(targetDic[target] === <span class="literal">undefined</span>)
+            {
+                targetDic[target] = [];
+                target.addEventListener(KeyboardEvent.KEY_DOWN , onKeyDown , <span class="literal">false</span> ,<span class="number">0</span> , <span class="literal">true</span>);
+            }
+            <span class="keyword">var</span> map:ShortcutMap = <span class="keyword">new</span> ShortcutMap();
+            map.type = type;
+            map.callBack = callBack; 
+            targetDic[target].push(map);
+        }
+
+        <span class="comment">/**
+         * 移除一个监听对象
+         * @param target 监听事件的目标对象
+         * @param type 按键要触发的事件类型
+         * @param callBack 回调函数
+         */</span>
+        <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">removeRegister</span><span class="params">(target:InteractiveObject , type:String , callBack:Function)</span><span class="type">:void</span>
+        </span>{
+            <span class="keyword">var</span> registerIndex:int = getRegisterIndex(target , type , callBack);
+            <span class="keyword">if</span>(registerIndex &gt;= <span class="number">0</span>)
+            {
+                <span class="keyword">var</span> shortcutMapList:Array = targetDic[target];
+                shortcutMapList.splice(registerIndex , <span class="number">1</span>);
+                <span class="keyword">if</span>(shortcutMapList.length == <span class="number">0</span>)
+                {
+                    target.removeEventListener(KeyboardEvent.KEY_DOWN , onKeyDown);
+                    <span class="keyword">delete</span> targetDic[target];
+                }
+            }
+        }
+
+        <span class="comment">/**
+         * 测试是否注册了指定类型的指定方法，并返回注册的索引
+         */</span>
+        <span class="keyword">private</span> <span class="function"><span class="keyword">function</span> <span class="title">getRegisterIndex</span><span class="params">(target:InteractiveObject , type:String , callBack:Function)</span><span class="type">:int</span>
+        </span>{
+            <span class="keyword">if</span>(targetDic[target])
+            {
+                <span class="keyword">var</span> shortcutMapList:Array = targetDic[target];
+                <span class="keyword">var</span> shortcutMap:ShortcutMap;
+                <span class="keyword">for</span> (<span class="keyword">var</span> i:int = <span class="number">0</span>; i &lt; shortcutMapList.length; i++) 
+                {
+                    shortcutMap = shortcutMapList[i] <span class="keyword">as</span> ShortcutMap;
+                    <span class="keyword">if</span>(shortcutMap.type == type &amp;&amp; shortcutMap.callBack == callBack)
+                    {
+                        <span class="keyword">return</span> i;
+                    }
+                }
+            }
+            <span class="keyword">return</span> -<span class="number">1</span>;
+        }
+
+        <span class="comment">/**
+         * 绑定一个事件类型 与 按键值的映射
+         * @param type  事件类型
+         * @param keyCodeArray 按下的键的数组，数组中的元素对应Keyboard中的常量
+         *     &lt;br/&gt;如果数组的长度等于1，则 按照对应的键值触发事件
+         * &lt;br/&gt;如果数组的长度大于1，则 按照数组中的第一项对应的键值触发事件，其他的键为触发事件需要按下的键
+         */</span>
+        <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">addBinding</span><span class="params">(type:String , keyCodeArray:Array)</span><span class="type">:void</span>
+        </span>{
+            bindingDic[type] = keyCodeArray;
+        }
+
+        <span class="comment">/**
+         * 移除一个事件类型
+         */</span>
+        <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">removeBinding</span><span class="params">(type:String)</span><span class="type">:void</span>
+        </span>{
+            <span class="keyword">if</span>(bindingDic[type])
+            {
+                <span class="keyword">delete</span> bindingDic[type];
+            }
+        }
+
+        <span class="keyword">private</span> <span class="function"><span class="keyword">function</span> <span class="title">onKeyDown</span><span class="params">(event:KeyboardEvent)</span><span class="type">:void</span>
+        </span>{
+            <span class="keyword">var</span> shortcutMapList:Array = targetDic[event.currentTarget];
+            <span class="keyword">if</span>(!shortcutMapList || shortcutMapList.length &lt; <span class="number">1</span>)
+                <span class="keyword">return</span>;
+
+            <span class="keyword">var</span> shortcutMap:ShortcutMap;
+            <span class="keyword">for</span> (<span class="keyword">var</span> i:int = <span class="number">0</span>; i &lt; shortcutMapList.length; i++) 
+            {
+                shortcutMap = shortcutMapList[i] <span class="keyword">as</span> ShortcutMap;
+                <span class="keyword">if</span>(check(event , shortcutMap.type))
+                {
+                    <span class="keyword">if</span>(shortcutMap.callBack.length == <span class="number">0</span>)
+                        shortcutMap.callBack();
+                    <span class="keyword">else</span> <span class="keyword">if</span>(shortcutMap.callBack.length == <span class="number">1</span>)
+                        shortcutMap.callBack(shortcutMap.type);
+                    <span class="keyword">else</span> <span class="keyword">if</span>(shortcutMap.callBack.length == <span class="number">2</span>)
+                        shortcutMap.callBack(shortcutMap.type , event);
+                    <span class="keyword">else</span>
+                        shortcutMap.callBack();
+                }
+            }
+        }
+
+        <span class="comment">/**
+         * 检查事件是否符合类型
+         */</span>
+        <span class="keyword">private</span> <span class="function"><span class="keyword">function</span> <span class="title">check</span><span class="params">(event:KeyboardEvent , type:String)</span><span class="type">:Boolean</span>
+        </span>{
+            <span class="keyword">var</span> keyCodeArray:Array = bindingDic[type];
+            <span class="keyword">if</span>(!keyCodeArray || keyCodeArray.length &lt; <span class="number">0</span>)
+                <span class="keyword">return</span> <span class="literal">false</span>;
+            <span class="keyword">if</span>(event.keyCode == keyCodeArray[<span class="number">0</span>])
+            {
+                <span class="keyword">if</span>(keyCodeArray.length == <span class="number">1</span>)
+                {
+                    <span class="keyword">return</span> <span class="literal">true</span>;
+                }
+                <span class="keyword">else</span>
+                {
+                    <span class="keyword">var</span> firstKey:uint = keyCodeArray[<span class="number">0</span>];
+                    <span class="keyword">var</span> hopeKeys:Array = keyCodeArray.concat();
+                    <span class="keyword">var</span> allDownkeyCodes:Array = compositeKeys(event);
+                    <span class="keyword">if</span>(allDownkeyCodes.indexOf(firstKey)&lt;<span class="number">0</span>)
+                        allDownkeyCodes.push(firstKey);
+
+                    <span class="keyword">if</span>(hopeKeys.length != allDownkeyCodes.length)
+                        <span class="keyword">return</span> <span class="literal">false</span>;
+
+                    hopeKeys.sort();
+                    allDownkeyCodes.sort();
+
+                    <span class="keyword">for</span> (<span class="keyword">var</span> i:int = <span class="number">0</span>; i &lt; hopeKeys.length; i++) 
+                    {
+                        <span class="keyword">if</span>(hopeKeys[i] != allDownkeyCodes[i])
+                        {
+                            <span class="keyword">return</span> <span class="literal">false</span>;
+                        }
+                    }
+                    <span class="keyword">return</span> <span class="literal">true</span>;
+                }
+            }
+            <span class="keyword">return</span> <span class="literal">false</span>;
+        }
+
+        <span class="comment">/**
+         * 获取按下的组合键
+         */</span>
+        <span class="keyword">private</span> <span class="function"><span class="keyword">function</span> <span class="title">compositeKeys</span><span class="params">(event:KeyboardEvent)</span><span class="type">:Array</span>
+        </span>{
+            <span class="keyword">var</span> keys:Array = [];
+            <span class="keyword">if</span>(event.altKey)
+                keys.push(Keyboard.ALTERNATE);
+            <span class="keyword">if</span>(event.shiftKey)
+                keys.push(Keyboard.SHIFT);
+            <span class="keyword">if</span>(event.controlKey)
+                keys.push(Keyboard.CONTROL);
+            <span class="keyword">if</span>(event.commandKey)
+                keys.push(Keyboard.COMMAND);
+            <span class="keyword">return</span> keys;
+        }
+
+        <span class="comment">//======================== 快捷键相关=====================end=======================</span>
+
+        <span class="comment">//======================== 全局舞台按键 =====================start=======================</span>
+
+        <span class="keyword">private</span> <span class="function"><span class="keyword">function</span> <span class="title">onDeactive</span><span class="params">(event:Event)</span><span class="type">:void</span>
+        </span>{
+            downKeyCodes = <span class="keyword">new</span> Dictionary();
+        }
+        <span class="comment">/**
+         * 按下的键代码列表
+         */</span>        
+        <span class="keyword">private</span> <span class="keyword">var</span> downKeyCodes:Dictionary = <span class="keyword">new</span> Dictionary();
+
+        <span class="keyword">private</span> <span class="function"><span class="keyword">function</span> <span class="title">onStageKeyDown</span><span class="params">(event:KeyboardEvent)</span><span class="type">:void</span>
+        </span>{
+            <span class="keyword">var</span> keyCode:uint = event.keyCode;
+            downKeyCodes[keyCode] = <span class="literal">true</span>;
+        }
+
+        <span class="keyword">private</span> <span class="function"><span class="keyword">function</span> <span class="title">onStageKeyUp</span><span class="params">(event:KeyboardEvent)</span><span class="type">:void</span>
+        </span>{
+            <span class="keyword">var</span> keyCode:uint = event.keyCode;
+            <span class="keyword">if</span>(downKeyCodes[keyCode])
+                <span class="keyword">delete</span> downKeyCodes[keyCode];
+        }
+
+        <span class="comment">/**
+         * 是否按下了指定键
+         */</span>
+        <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">isKeyDown</span><span class="params">(keyCode:uint)</span><span class="type">:Boolean</span>
+        </span>{
+            <span class="keyword">return</span> Boolean(downKeyCodes[keyCode]);
+        }
+
+        <span class="comment">//======================== 全局舞台按键 =====================end=======================</span>
+
+    }
+}
+
+<span class="class"><span class="keyword">class</span> <span class="title">ShortcutMap</span>
+</span>{
+    <span class="comment">/**
+     * 事件类型
+     */</span>
+    <span class="keyword">public</span> <span class="keyword">var</span> type:String;
+
+    <span class="comment">/**
+     * 回调函数
+     */</span>
+    <span class="keyword">public</span> <span class="keyword">var</span> callBack:Function;
+}
+</code></pre><p>基本上代码已经说明一切了。主要思路就是给注册的对象监听一个KeyDown事件，在事件内部判断有哪些键按下了，是否符合这个对象某一个注册了的事件对应的按键映射，如果有就执行回调。</p>
+<p>有一个关键点，给对象监听的按键事件<code>useWeakReference = true</code> 以及 <code>targetDic</code>也是使用了弱引用。只有这样我们无须手动调用<code>removeRegister</code>，当对象的引用计数为0时，就会被垃圾回收器GC自动回收了，不用担心内存泄露。</p>
+<p>另外，这个工具类一开始需要传入一个舞台对象<code>stage</code>进行初始化，这个主要是用于保存一个全局有那些键是被按下了，就是后面那一段代码。这一段可有可无，主要是提供一个公共方法外界可以获取哪些键按下了。</p>
+<p>基本上这个Shortcut已经能够满足大多数需求了。之前看过几个快捷键管理的工具类都是直接监听舞台上的事件，这个是有问题的。因为有些情况下，快捷键是针对指定面板的，当焦点不在面板上时快捷键是不起作用的，所以<code>removeRegister</code>这个方法的第一个参数就是设置快捷键应用的对象。<br>这个也能实现同一个事件可以注册给不同的对象，也可以一个对象注册同一个事件但是有不同的回调。就是说同一个快捷键可以给不同面板，同一个面板同一个快捷键也可以响应多个回调。</p>
+<p>有一点还没有实现的就是，同一个事件有不同的快捷键。就是说比如保存这个操作，我既可以按Ctrl+S也可以按Ctrl+D，这个其实稍微动一下就行了，关键就是<code>addBinding</code>这个函数的第二个参数这是一个按键数组，数组的格式，以及具体的解析我们可以自定义嘛。不过这种需求比较少就懒得写了。</p>
+<p>再一个就是快捷键冲突的问题，同一个快捷键可以派发不同的事件。这种设计也是允许冲突的，因为有可能事件的对象不同，比如面板1里面Ctrl+S是保存，面板2里面Ctrl+S是删除一行，也就不冲突了。</p>
+<p>差不多就这些啦。这个类可以拿来直接用，没有和其他的类耦合，也不需要定义接口啥的。另外，这些东西真的要到项目前期规划好，不然到了后面想改都蛋疼。</p>
+]]></content>
+    <summary type="html"><![CDATA[<p>最近接到了要完成软件中的快捷键模块。基本需求就是能做到让用户自由设置。基本之前的所有按键都是写死在代码中的，就像下面这样糟糕：</p>
+<pre><code><span class="keyword">this</span>.addEventListener(KeyboardEvent.KEY_DOWN,onKeyDown);
+
+<span class="keyword">private</span> <span class="function"><span class="keyword">function</span> <span class="title">onKeyDown</span><span class="params">(event:KeyboardEvent)</span><span class="type">:void</span>
+</span>{
+    <span class="keyword">if</span>(event.keyCode==Keyboard.S&amp;&amp;event.ctrlKey)
+    {
+        ...dosomething
+    }
+}
+</code></pre>]]></summary>
+    
+      <category term="ActionScript3" scheme="http://xzper.com/categories/ActionScript3/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[浅析Hexo的Generate命令]]></title>
     <link href="http://xzper.com/2014/08/17/%E6%B5%85%E6%9E%90Hexo%E7%9A%84Generate%E5%91%BD%E4%BB%A4/"/>
     <id>http://xzper.com/2014/08/17/浅析Hexo的Generate命令/</id>
     <published>2014-08-16T22:54:10.000Z</published>
-    <updated>2014-08-17T10:37:49.000Z</updated>
+    <updated>2014-08-24T08:37:44.000Z</updated>
     <content type="html"><![CDATA[<p><a href="https://github.com/hexojs/hexo" target="_blank" rel="external">Hexo</a>是一个轻量级的静态博客站点生成框架，使用NodeJS开发。经过我两个通宵的努力总算把这个东西研究了一个大概，这里拿来分享一下。</p>
 <a id="more"></a>
 
@@ -100,7 +515,7 @@ node --debug-brk=<span class="number">5858</span> <span class="constant">E</span
     <link href="http://xzper.com/2014/08/09/%E6%A1%86%E6%9E%B6%E5%8C%85%E7%BB%93%E6%9E%84%E7%9A%84%E8%AE%BE%E8%AE%A1/"/>
     <id>http://xzper.com/2014/08/09/框架包结构的设计/</id>
     <published>2014-08-08T16:43:25.000Z</published>
-    <updated>2014-08-17T00:04:40.000Z</updated>
+    <updated>2014-08-24T08:37:44.000Z</updated>
     <content type="html"><![CDATA[<p>这里的框架拿Flex或者FlexLite以及Egret做例子。框架的包结构划分应该是以调用关系为依据划分的，尽量把需要相互调用的类放在一个包下面。这样最终得到的结果就是各个包之间相互独立，理想情况下即使你删除一个包，其他的也不受影响。但是现实肯定不是理想的，包之间总是还有依赖。这些有依赖的东西，大部分就是框架里面核心的东西了。这时候就把这些公共依赖的部分抽出来，放到一个核心包下，比如叫core。 从另一种角度上来讲，所谓的框架”核心类”，实际上就是一些公共耦合的类。这样其他的包都和这个核心包有依赖关系，但是他们彼此之间没有依赖关系。</p>
 <a id="more"></a>
 
@@ -123,7 +538,7 @@ node --debug-brk=<span class="number">5858</span> <span class="constant">E</span
     <link href="http://xzper.com/2014/07/02/%E8%A7%A3%E8%AF%BBDXML%E7%BC%96%E8%AF%91%E5%99%A8/"/>
     <id>http://xzper.com/2014/07/02/解读DXML编译器/</id>
     <published>2014-07-02T08:22:49.000Z</published>
-    <updated>2014-08-17T00:04:40.000Z</updated>
+    <updated>2014-09-04T16:03:57.000Z</updated>
     <content type="html"><![CDATA[<p>DXML就是FlexLite中由FlexLiteStdio生成的皮肤文件，类似于Flex中的MXML。实际上区别没多少，可能最大的区别就是MXML支持Script脚本。DXML架构设计对编写各类UI编辑器，各类代码生成工具都有很好的参考价值。这里主要分析DXML编译器是如何将DXML文件转换为as代码。</p>
 <a id="more"></a>
 
@@ -229,7 +644,7 @@ node --debug-brk=<span class="number">5858</span> <span class="constant">E</span
     <summary type="html"><![CDATA[<p>DXML就是FlexLite中由FlexLiteStdio生成的皮肤文件，类似于Flex中的MXML。实际上区别没多少，可能最大的区别就是MXML支持Script脚本。DXML架构设计对编写各类UI编辑器，各类代码生成工具都有很好的参考价值。这里主要分析DXML编译器是如何将DXML文件转换为as代码。</p>
 ]]></summary>
     
-      <category term="FlexLite" scheme="http://xzper.com/tags/FlexLite/"/>
+      <category term="actionscript3" scheme="http://xzper.com/tags/actionscript3/"/>
     
       <category term="FlexLite" scheme="http://xzper.com/categories/FlexLite/"/>
     
@@ -240,7 +655,7 @@ node --debug-brk=<span class="number">5858</span> <span class="constant">E</span
     <link href="http://xzper.com/2014/06/22/%E4%BD%BF%E7%94%A8egret%E5%BC%80%E5%8F%912048/"/>
     <id>http://xzper.com/2014/06/22/使用egret开发2048/</id>
     <published>2014-06-22T12:41:00.000Z</published>
-    <updated>2014-08-17T00:04:39.000Z</updated>
+    <updated>2014-09-04T16:04:44.000Z</updated>
     <content type="html"><![CDATA[<p>2048是最近很火的一个小游戏，<a href="http://gabrielecirulli.github.io/2048/" target="_blank" rel="external">原版</a>就是用JavaScript写的。恰巧最近egret PublicBeta，观望和学习了一阵后，发现egret正好适合开发这类游戏。egret使用TypeScript作为开发语言，最终编译为JavaScript，正好和原始版本PK一下。</p>
 <p>游戏预览：<a href="http://xzperproject.qiniudn.com/2048egret/launcher/release.html" target="_blank" rel="external">点我体验</a></p>
 <a id="more"></a>
@@ -772,7 +1187,7 @@ node --debug-brk=<span class="number">5858</span> <span class="constant">E</span
     <link href="http://xzper.com/2014/06/15/%E6%96%B0%E6%89%8B%E5%BC%95%E5%AF%BC%E2%80%94%E8%84%9A%E6%9C%AC%E8%AE%BE%E8%AE%A1/"/>
     <id>http://xzper.com/2014/06/15/新手引导—脚本设计/</id>
     <published>2014-06-14T19:49:56.000Z</published>
-    <updated>2014-08-17T00:04:40.000Z</updated>
+    <updated>2014-08-24T08:37:44.000Z</updated>
     <content type="html"><![CDATA[<p>最近在做游戏的新手引导模块。由于是关卡式的引导，所以很适合用读取引导脚本的方式来开发。</p>
 <p><strong>脚本和命令配置</strong></p>
 <a id="more"></a>
@@ -859,7 +1274,7 @@ node --debug-brk=<span class="number">5858</span> <span class="constant">E</span
     <link href="http://xzper.com/2014/04/27/%E4%BB%8E2048%E6%B8%B8%E6%88%8F%E8%B0%88PureMVC/"/>
     <id>http://xzper.com/2014/04/27/从2048游戏谈PureMVC/</id>
     <published>2014-04-26T18:03:56.000Z</published>
-    <updated>2014-08-17T00:04:39.000Z</updated>
+    <updated>2014-08-24T08:37:44.000Z</updated>
     <content type="html"><![CDATA[<p>最近2048比较火，然后我又正好在学习pureMVC，之前对于pureMVC的了解只停留在理论上，正好拿这个游戏来练练手。废话不多说，游戏预览：<a href="http://xzper.tk/wp-content/uploads/2014/04/2048flexlite/Main.html" target="_blank" rel="external">2048</a><a href="http://xzper.qiniudn.com/wp-content/uploads/2014/04/mvc结构图.png" target="_blank" rel="external">
 </a></p>
 <a id="more"></a>
@@ -910,7 +1325,7 @@ node --debug-brk=<span class="number">5858</span> <span class="constant">E</span
     <link href="http://xzper.com/2014/04/21/%E5%9C%A8%E8%B7%AF%E4%B8%8A/"/>
     <id>http://xzper.com/2014/04/21/在路上/</id>
     <published>2014-04-21T15:51:00.000Z</published>
-    <updated>2014-08-17T00:04:40.000Z</updated>
+    <updated>2014-08-24T08:37:44.000Z</updated>
     <content type="html"><![CDATA[<p>博客建站以来也快有一个月了，每次想写点什么都不得而终。究其原因还是自己太懒了。所以现在趁自己不懒的时候，记录自己在前端开发路上的点滴。 希望此文能做一个好的开始，以此共勉。</p>
 <p>flash开发到了如今，也到了日落西山，穷途末路的时候吧。从官方上来看，Adobe已经对Flash力不从心了，停止了移动端的FP的更新 ，把Flex捐给了Apache 。从开发者来看，大量新技术如html5，cocos2d，unity3D的出现让开发者有了更多的选择，好多flash老程序员都转行了，这似乎成了一个趋势  。 从市场上来看，如今的页游市场，已经不复当年的辉煌了，前篇一律的感觉玩家会卖账么？而且各种坑爹的运营导致flash游戏的名声越来越臭。总之，对于即将毕业的我选择flash开发这条路显然不是一个明智的选择。</p>
 <a id="more"></a>

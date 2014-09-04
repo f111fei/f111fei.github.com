@@ -1,8 +1,6 @@
 title: 使用egret开发2048
-categories:
-  - Egret
-tags:
-  - Egret
+categories: Egret
+tags: Egret
 date: 2014-06-22 20:41:00
 ---
 2048是最近很火的一个小游戏，[原版](http://gabrielecirulli.github.io/2048/)就是用JavaScript写的。恰巧最近egret PublicBeta，观望和学习了一阵后，发现egret正好适合开发这类游戏。egret使用TypeScript作为开发语言，最终编译为JavaScript，正好和原始版本PK一下。
