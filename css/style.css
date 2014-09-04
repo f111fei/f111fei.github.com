@@ -21,7 +21,7 @@ body {
   font-weight: 300;
 }
 .wrapper {
-  width: 680px;
+  width: 750px;
   margin: 0 auto;
   background: #dedede;
   -webkit-border-radius: 8px;
@@ -375,7 +375,7 @@ article .entry pre {
   word-wrap: break-word;
 }
 article .entry code {
-  font-size: 13px;
+  font-size: 12px;
 }
 article .entry pre {
   padding: 10px 30px;
@@ -609,7 +609,7 @@ article footer .tags:before {
   display: inline-block;
 }
 #footer {
-  width: 680px;
+  width: 750px;
   margin: 20px auto 0;
   padding: 20px 0 0;
   color: #ccc;
