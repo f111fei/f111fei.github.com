@@ -4,7 +4,7 @@
   <subtitle><![CDATA[前行在被夕阳染红的街道]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://xzper.com/"/>
-  <updated>2014-09-05T15:12:22.381Z</updated>
+  <updated>2014-09-05T16:04:55.616Z</updated>
   <id>http://xzper.com/</id>
   
   <author>
@@ -19,8 +19,8 @@
     <link href="http://xzper.com/2014/09/04/%E5%BF%AB%E6%8D%B7%E9%94%AE%E7%AE%A1%E7%90%86/"/>
     <id>http://xzper.com/2014/09/04/快捷键管理/</id>
     <published>2014-09-04T13:58:03.000Z</published>
-    <updated>2014-09-04T16:04:51.000Z</updated>
-    <content type="html"><![CDATA[<p>最近接到了要完成软件中的快捷键模块。基本需求就是能做到让用户自由设置。基本之前的所有按键都是写死在代码中的，就像下面这样糟糕：</p>
+    <updated>2014-09-05T16:01:58.000Z</updated>
+    <content type="html"><![CDATA[<p>最近要完成软件中的快捷键模块。基本需求就是能做到让用户自由设置。基本之前的所有按键都是写死在代码中的，就像下面这样糟糕：</p>
 <pre><code><span class="keyword">this</span>.addEventListener(KeyboardEvent.KEY_DOWN,onKeyDown);
 
 <span class="keyword">private</span> <span class="function"><span class="keyword">function</span> <span class="title">onKeyDown</span><span class="params">(event:KeyboardEvent)</span><span class="type">:void</span>
@@ -53,7 +53,7 @@
     <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">const</span> SAVE:String = <span class="string">"save"</span>;
 }
 </code></pre><p>基本上API就是这样，使用很简单，也很灵活。然后是重点<code>No Code You Say A Diao</code></p>
-<pre><code><span class="package"><span class="keyword">package</span>
+<pre><code><span class="package"><span class="keyword">package</span> <span class="title">code</span>.<span class="title">common</span>.<span class="title">keyboard</span>
 {</span>
     <span class="preprocessor"><span class="keyword">import</span> flash.display.InteractiveObject;</span>
     <span class="preprocessor"><span class="keyword">import</span> flash.display.Stage;</span>
@@ -80,8 +80,6 @@
             stage.addEventListener(KeyboardEvent.KEY_DOWN,onStageKeyDown,<span class="literal">true</span>,<span class="number">2000</span>);
             stage.addEventListener(KeyboardEvent.KEY_UP,onStageKeyUp,<span class="literal">true</span>,<span class="number">2000</span>);
             stage.addEventListener(FocusEvent.FOCUS_OUT,onDeactive);
-
-            Shortcut.addBindindBatch(config);
         }
 
         <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">var</span> instance:Shortcut;
@@ -129,9 +127,9 @@
         <span class="comment">/**
          * @copy  Shortcut#addBinding()
          */</span>
-        <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">addBinding</span><span class="params">(type:String , keyCodeArray:Array)</span><span class="type">:void</span>
+        <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">addBinding</span><span class="params">(type:String , keyCodeValue:Array)</span><span class="type">:void</span>
         </span>{
-            instance.addBinding(type , keyCodeArray);
+            instance.addBinding(type , keyCodeValue);
         }
 
         <span class="comment">/**
@@ -252,13 +250,18 @@
         <span class="comment">/**
          * 绑定一个事件类型 与 按键值的映射
          * @param type  事件类型
-         * @param keyCodeArray 按下的键的数组，数组中的元素对应Keyboard中的常量
+         * @param keyCodeValue 按下的键的对象， 可以是一个数组也可以每一项是一个数组，数组中的元素对应Keyboard中的常量
          *     &lt;br/&gt;如果数组的长度等于1，则 按照对应的键值触发事件
          * &lt;br/&gt;如果数组的长度大于1，则 按照数组中的第一项对应的键值触发事件，其他的键为触发事件需要按下的键
+         * &lt;br/&gt;下面是一些例子
+         * &lt;code&gt;
+         *    &lt;br&gt;[Keyboard.S , Keyboard.CONTROL] 表示 Ctrl+S
+         *    &lt;br&gt;[[Keyboard.BACKSPACE] , [Keyboard.DELETE]] 表示退格或者删除
+         * &lt;/code&gt;
          */</span>
-        <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">addBinding</span><span class="params">(type:String , keyCodeArray:Array)</span><span class="type">:void</span>
+        <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">addBinding</span><span class="params">(type:String , keyCodeValue:Array)</span><span class="type">:void</span>
         </span>{
-            bindingDic[type] = keyCodeArray;
+            bindingDic[type] = keyCodeValue;
         }
 
         <span class="comment">/**
@@ -282,7 +285,25 @@
             <span class="keyword">for</span> (<span class="keyword">var</span> i:int = <span class="number">0</span>; i &lt; shortcutMapList.length; i++) 
             {
                 shortcutMap = shortcutMapList[i] <span class="keyword">as</span> ShortcutMap;
-                <span class="keyword">if</span>(check(event , shortcutMap.type))
+                <span class="keyword">var</span> keyCodeValue:Array = bindingDic[shortcutMap.type];
+                <span class="keyword">var</span> result:Boolean = <span class="literal">false</span>;
+                <span class="keyword">if</span>(keyCodeValue[<span class="number">0</span>] <span class="keyword">is</span> Array)
+                {
+                    <span class="keyword">for</span> <span class="keyword">each</span> (<span class="keyword">var</span> keyCodeArray:* <span class="keyword">in</span> keyCodeValue) 
+                    {
+                        <span class="keyword">if</span>(keyCodeArray <span class="keyword">is</span> uint)
+                            result = check(event , [keyCodeArray]);
+                        <span class="keyword">else</span>
+                            result = check(event , keyCodeArray);
+                        <span class="keyword">if</span>(result)
+                            <span class="keyword">break</span>;
+                    }
+                }
+                <span class="keyword">else</span>
+                {
+                    result = check(event , keyCodeValue);
+                }
+                <span class="keyword">if</span>(result)
                 {
                     <span class="keyword">if</span>(shortcutMap.callBack.length == <span class="number">0</span>)
                         shortcutMap.callBack();
@@ -297,11 +318,10 @@
         }
 
         <span class="comment">/**
-         * 检查事件是否符合类型
+         * 检查事件是否符合指定按键
          */</span>
-        <span class="keyword">private</span> <span class="function"><span class="keyword">function</span> <span class="title">check</span><span class="params">(event:KeyboardEvent , type:String)</span><span class="type">:Boolean</span>
+        <span class="keyword">private</span> <span class="function"><span class="keyword">function</span> <span class="title">check</span><span class="params">(event:KeyboardEvent , keyCodeArray:Array)</span><span class="type">:Boolean</span>
         </span>{
-            <span class="keyword">var</span> keyCodeArray:Array = bindingDic[type];
             <span class="keyword">if</span>(!keyCodeArray || keyCodeArray.length &lt; <span class="number">0</span>)
                 <span class="keyword">return</span> <span class="literal">false</span>;
             <span class="keyword">if</span>(event.keyCode == keyCodeArray[<span class="number">0</span>])
@@ -409,11 +429,13 @@
 <p>有一个关键点，给对象监听的按键事件<code>useWeakReference = true</code> 以及 <code>targetDic</code>也是使用了弱引用。只有这样我们无须手动调用<code>removeRegister</code>，当对象的引用计数为0时，就会被垃圾回收器GC自动回收了，不用担心内存泄露。</p>
 <p>另外，这个工具类一开始需要传入一个舞台对象<code>stage</code>进行初始化，这个主要是用于保存一个全局有那些键是被按下了，就是后面那一段代码。这一段可有可无，主要是提供一个公共方法外界可以获取哪些键按下了。</p>
 <p>基本上这个Shortcut已经能够满足大多数需求了。之前看过几个快捷键管理的工具类都是直接监听舞台上的事件，这个是有问题的。因为有些情况下，快捷键是针对指定面板的，当焦点不在面板上时快捷键是不起作用的，所以<code>removeRegister</code>这个方法的第一个参数就是设置快捷键应用的对象。<br>这个也能实现同一个事件可以注册给不同的对象，也可以一个对象注册同一个事件但是有不同的回调。就是说同一个快捷键可以给不同面板，同一个面板同一个快捷键也可以响应多个回调。</p>
-<p>有一点还没有实现的就是，同一个事件有不同的快捷键。就是说比如保存这个操作，我既可以按Ctrl+S也可以按Ctrl+D，这个其实稍微动一下就行了，关键就是<code>addBinding</code>这个函数的第二个参数这是一个按键数组，数组的格式，以及具体的解析我们可以自定义嘛。不过这种需求比较少就懒得写了。</p>
+<p>另外还支持一个事件多种快捷键，比如一个type为delete的事件，可以这样定义</p>
+<pre><code>Shortcut.binding(<span class="string">"delete"</span> , <span class="string">[[Keyboard.BACKSPACE] , [Keyboard.DELETE]]</span>)
+</code></pre><p>使用一个二维数组，每一个数组表示一组快捷键。delete事件既可以是退格键也可以是删除键。</p>
 <p>再一个就是快捷键冲突的问题，同一个快捷键可以派发不同的事件。这种设计也是允许冲突的，因为有可能事件的对象不同，比如面板1里面Ctrl+S是保存，面板2里面Ctrl+S是删除一行，也就不冲突了。</p>
 <p>差不多就这些啦。这个类可以拿来直接用，没有和其他的类耦合，也不需要定义接口啥的。另外，这些东西真的要到项目前期规划好，不然到了后面想改都蛋疼。</p>
 ]]></content>
-    <summary type="html"><![CDATA[<p>最近接到了要完成软件中的快捷键模块。基本需求就是能做到让用户自由设置。基本之前的所有按键都是写死在代码中的，就像下面这样糟糕：</p>
+    <summary type="html"><![CDATA[<p>最近要完成软件中的快捷键模块。基本需求就是能做到让用户自由设置。基本之前的所有按键都是写死在代码中的，就像下面这样糟糕：</p>
 <pre><code><span class="keyword">this</span>.addEventListener(KeyboardEvent.KEY_DOWN,onKeyDown);
 
 <span class="keyword">private</span> <span class="function"><span class="keyword">function</span> <span class="title">onKeyDown</span><span class="params">(event:KeyboardEvent)</span><span class="type">:void</span>
