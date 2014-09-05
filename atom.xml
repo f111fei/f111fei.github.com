@@ -4,7 +4,7 @@
   <subtitle><![CDATA[前行在被夕阳染红的街道]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://xzper.com/"/>
-  <updated>2014-09-05T18:14:53.429Z</updated>
+  <updated>2014-09-05T18:32:02.027Z</updated>
   <id>http://xzper.com/</id>
   
   <author>
@@ -537,7 +537,7 @@ node --debug-brk=<span class="number">5858</span> <span class="constant">E</span
     <link href="http://xzper.com/2014/08/09/%E6%A1%86%E6%9E%B6%E5%8C%85%E7%BB%93%E6%9E%84%E7%9A%84%E8%AE%BE%E8%AE%A1/"/>
     <id>http://xzper.com/2014/08/09/框架包结构的设计/</id>
     <published>2014-08-08T16:43:25.000Z</published>
-    <updated>2014-08-24T08:37:44.000Z</updated>
+    <updated>2014-09-05T18:26:45.000Z</updated>
     <content type="html"><![CDATA[<p>这里的框架拿Flex或者FlexLite以及Egret做例子。框架的包结构划分应该是以调用关系为依据划分的，尽量把需要相互调用的类放在一个包下面。这样最终得到的结果就是各个包之间相互独立，理想情况下即使你删除一个包，其他的也不受影响。但是现实肯定不是理想的，包之间总是还有依赖。这些有依赖的东西，大部分就是框架里面核心的东西了。这时候就把这些公共依赖的部分抽出来，放到一个核心包下，比如叫core。 从另一种角度上来讲，所谓的框架”核心类”，实际上就是一些公共耦合的类。这样其他的包都和这个核心包有依赖关系，但是他们彼此之间没有依赖关系。</p>
 <a id="more"></a>
 
@@ -560,7 +560,7 @@ node --debug-brk=<span class="number">5858</span> <span class="constant">E</span
     <link href="http://xzper.com/2014/07/02/%E8%A7%A3%E8%AF%BBDXML%E7%BC%96%E8%AF%91%E5%99%A8/"/>
     <id>http://xzper.com/2014/07/02/解读DXML编译器/</id>
     <published>2014-07-02T08:22:49.000Z</published>
-    <updated>2014-09-05T17:18:21.000Z</updated>
+    <updated>2014-09-05T18:31:08.000Z</updated>
     <content type="html"><![CDATA[<p>DXML就是FlexLite中由FlexLiteStdio生成的皮肤文件，类似于Flex中的MXML。实际上区别没多少，可能最大的区别就是MXML支持Script脚本。DXML架构设计对编写各类UI编辑器，各类代码生成工具都有很好的参考价值。这里主要分析DXML编译器是如何将DXML文件转换为as代码。</p>
 <a id="more"></a>
 
@@ -699,9 +699,9 @@ node --debug-brk=<span class="number">5858</span> <span class="constant">E</span
     <summary type="html"><![CDATA[<p>DXML就是FlexLite中由FlexLiteStdio生成的皮肤文件，类似于Flex中的MXML。实际上区别没多少，可能最大的区别就是MXML支持Script脚本。DXML架构设计对编写各类UI编辑器，各类代码生成工具都有很好的参考价值。这里主要分析DXML编译器是如何将DXML文件转换为as代码。</p>
 ]]></summary>
     
-      <category term="ActionScript3" scheme="http://xzper.com/tags/ActionScript3/"/>
-    
       <category term="FlexLite" scheme="http://xzper.com/categories/FlexLite/"/>
+    
+      <category term="ActionScript3" scheme="http://xzper.com/categories/FlexLite/ActionScript3/"/>
     
   </entry>
   
@@ -710,9 +710,11 @@ node --debug-brk=<span class="number">5858</span> <span class="constant">E</span
     <link href="http://xzper.com/2014/06/22/%E4%BD%BF%E7%94%A8egret%E5%BC%80%E5%8F%912048/"/>
     <id>http://xzper.com/2014/06/22/使用egret开发2048/</id>
     <published>2014-06-22T12:41:00.000Z</published>
-    <updated>2014-09-05T18:04:51.000Z</updated>
+    <updated>2014-09-05T18:25:07.000Z</updated>
     <content type="html"><![CDATA[<p>2048是最近很火的一个小游戏，<a href="http://gabrielecirulli.github.io/2048/" target="_blank" rel="external">原版</a> 就是用JavaScript写的。恰巧最近Egret PublicBeta，观望和学习了一阵后，发现egret正好适合开发这类游戏。Egret使用TypeScript作为开发语言，最终编译为JavaScript，正好和原始版本PK一下。</p>
 <p>游戏预览：<a href="http://xzper.com/project/2048egret/" target="_blank" rel="external">点我体验</a></p>
+<a id="more"></a>
+
 <p><strong>1.准备开始</strong></p>
 <p>在开始之前，我们需要学习一下TypeScript和阅读官方的教程从Egret开发环境的部署到创建，编译，发布项目，以及Egret相关工具。在安装好开发环境后，在工作空间目录下使用命令行，创建2048egret新项目</p>
 <pre><code>egret <span class="operator"><span class="keyword">create</span> <span class="number">2048</span>egret</span>
@@ -1222,7 +1224,9 @@ context.stage.<span class="variable">scaleMode =</span> scaleMode;
 <p>egret的工作流还是很高效的，工具也不少，架构设计集各家所长。最后发布游戏在PC上运行是满帧运行，比原版甚至更快。在手机上运行也不错，体验超过了某些原生语言开发的2048。</p>
 <p>最后交出源代码：<a href="https://github.com/f111fei/2048egret" target="_blank" rel="external">点我传送</a></p>
 ]]></content>
-    
+    <summary type="html"><![CDATA[<p>2048是最近很火的一个小游戏，<a href="http://gabrielecirulli.github.io/2048/" target="_blank" rel="external">原版</a> 就是用JavaScript写的。恰巧最近Egret PublicBeta，观望和学习了一阵后，发现egret正好适合开发这类游戏。Egret使用TypeScript作为开发语言，最终编译为JavaScript，正好和原始版本PK一下。</p>
+<p>游戏预览：<a href="http://xzper.com/project/2048egret/" target="_blank" rel="external">点我体验</a></p>
+]]></summary>
     
       <category term="Egret" scheme="http://xzper.com/tags/Egret/"/>
     

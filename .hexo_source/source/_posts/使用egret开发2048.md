@@ -8,6 +8,8 @@ tags: Egret
 
 游戏预览：[点我体验](http://xzper.com/project/2048egret/)
 
+<!--more-->
+
 **1.准备开始**
 
 在开始之前，我们需要学习一下TypeScript和阅读官方的教程从Egret开发环境的部署到创建，编译，发布项目，以及Egret相关工具。在安装好开发环境后，在工作空间目录下使用命令行，创建2048egret新项目

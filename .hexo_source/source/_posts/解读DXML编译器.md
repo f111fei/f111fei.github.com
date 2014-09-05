@@ -1,7 +1,7 @@
 title: 解读DXML编译器
-categories: FlexLite
+categories: [FlexLite,ActionScript3]
 date: 2014-07-02 16:22:49
-tags: ActionScript3
+tags: 
 ---
 
 DXML就是FlexLite中由FlexLiteStdio生成的皮肤文件，类似于Flex中的MXML。实际上区别没多少，可能最大的区别就是MXML支持Script脚本。DXML架构设计对编写各类UI编辑器，各类代码生成工具都有很好的参考价值。这里主要分析DXML编译器是如何将DXML文件转换为as代码。
