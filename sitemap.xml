@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://xzper.com/project/2048egret/index.html</loc>
+    <lastmod>2014-09-05T14:49:24.000Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://xzper.com/2014/09/04/%E5%BF%AB%E6%8D%B7%E9%94%AE%E7%AE%A1%E7%90%86/</loc>
     <lastmod>2014-09-04T16:04:51.000Z</lastmod>
   </url>
@@ -38,11 +43,6 @@
   
   <url>
     <loc>http://xzper.com/2014/04/27/%E4%BB%8E2048%E6%B8%B8%E6%88%8F%E8%B0%88PureMVC/</loc>
-    <lastmod>2014-08-24T08:37:44.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://xzper.com/project/2048egret/index.html</loc>
     <lastmod>2014-08-24T08:37:44.000Z</lastmod>
   </url>
   
