@@ -61,14 +61,21 @@
 
 <p><strong>1.如何使用DXML编译器</strong></p>
 <p>DXML编译器在源代码在FlexLiteExtends中的org.flexlite.domCompile包下。导入相应的类后，先导入配置文件manifest.xml(这个文件可以在FlexLiteStdio的安装目录的bin文件夹下可以找到，也可以通过ManifestUtil这个类生成)。这是一个全局静态属性，导入代码如下:</p>
-<p><pre class="lang:as decode:true">DXMLCompiler.configData = manifestXml;</pre><br>然后创建一个DXMLCompiler实例，调用compile方法得到编译后的结果:</p>
-<p><pre class="lang:as decode:true">var compiler:DXMLCompiler = new DXMLCompiler();<br>var result:String  = compiler.compile(buttonSkinXml , “Button”);</pre><br>完整的代码如下:</p>
-<p><pre class="lang:as decode:true">    public class DXMLCompilerTest extends Sprite<br>    {<br>        [Embed(source=”resource/xml/flexlite-manifest.xml” , mimeType = “application/octet-stream”)]<br>        private var manifest:Class;</pre></p>
-<pre><code>    [Embed(source=<span class="string">"resource/xml/ButtonSkin.dxml"</span> , mimeType = <span class="string">"application/octet-stream"</span>)]
+<pre><code><span class="attribute">DXMLCompiler.configData </span>=<span class="string"> manifestXml;</span>
+</code></pre><p>然后创建一个DXMLCompiler实例，调用compile方法得到编译后的结果:</p>
+<pre><code><span class="keyword">var</span> compiler:<span class="type">DXMLCompiler</span> = new <span class="type">DXMLCompiler</span>();
+<span class="keyword">var</span> <span class="literal">result</span>:<span class="type">String</span>  = compiler.compile(buttonSkinXml , <span class="string">"Button"</span>);
+</code></pre><p>完整的代码如下:</p>
+<pre><code>public <span class="class"><span class="keyword">class</span> <span class="title">DXMLCompilerTest</span> <span class="keyword">extends</span> <span class="title">Sprite</span></span>
+{
+    [Embed(source=<span class="string">"resource/xml/flexlite-manifest.xml"</span> , mimeType = <span class="string">"application/octet-stream"</span>)]
+    <span class="keyword">private</span> <span class="keyword">var</span> manifest:Class;
+
+    [Embed(source=<span class="string">"resource/xml/ButtonSkin.dxml"</span> , mimeType = <span class="string">"application/octet-stream"</span>)]
     <span class="keyword">private</span> <span class="keyword">var</span> buttonSkin:Class;
 
-    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">DXMLCompilerTest</span><span class="params">()</span>
-    </span>{
+    public function DXMLCompilerTest()
+    {
         <span class="keyword">super</span>();
 
         <span class="keyword">var</span> manifestBy:ByteArray = <span class="keyword">new</span> manifest();
@@ -84,12 +91,18 @@
 
         <span class="keyword">var</span> compiler:DXMLCompiler = <span class="keyword">new</span> DXMLCompiler();
         <span class="keyword">var</span> result:String  = compiler.compile(buttonSkinXml , <span class="string">"Button"</span>);
-        <span class="keyword">trace</span>(result);
+        trace(result);
     }
-}&lt;/pre&gt;
+}
 </code></pre><p><strong>2.配置文件manifest</strong></p>
 <p>manifest是由编译器使用的配置文件，定义了编译器能识别的各类组件。</p>
-<p><pre class="lang:as decode:true">&lt;componentPackage crc32=”a32782dd”&gt;<br>  &lt;component id=”ArrayCollection” p=”org.flexlite.domUI.collections.ArrayCollection” s=”flash.utils.Proxy” d=”source” array=”true”/&gt;<br>   &lt;component id=”Button” p=”org.flexlite.domUI.components.Button” s=”org.flexlite.domUI.components.supportClasses.ButtonBase” show=”true”/&gt;<br>  &lt;component id=”ButtonBase” p=”org.flexlite.domUI.components.supportClasses.ButtonBase” s=”org.flexlite.domUI.components.SkinnableComponent” d=”label” state=”up,over,down,disabled”/&gt;<br>  &lt;component id=”Group” p=”org.flexlite.domUI.components.Group” s=”org.flexlite.domUI.components.supportClasses.GroupBase” d=”elementsContent” show=”true” array=”true”/&gt;<br>&lt;/componentPackage&gt;</pre><br>以上节选自flexlite-manifest.xml。manifest.xml由各类component组成，包括但不限于UI组件。主要是用来配置对dxml文件中可能出现的节点的定义供编译器解析。component节点对应编译器中的Component类，各个属性解释如下</p>
+<pre><code>&lt;componentPackage <span class="variable">crc32=</span><span class="string">"a32782dd"</span>&gt;
+    &lt;component <span class="variable">id=</span><span class="string">"ArrayCollection"</span> <span class="variable">p=</span><span class="string">"org.flexlite.domUI.collections.ArrayCollection"</span> <span class="variable">s=</span><span class="string">"flash.utils.Proxy"</span> <span class="variable">d=</span><span class="string">"source"</span> <span class="variable">array=</span><span class="string">"true"</span>/&gt;
+    &lt;component <span class="variable">id=</span><span class="string">"Button"</span> <span class="variable">p=</span><span class="string">"org.flexlite.domUI.components.Button"</span> <span class="variable">s=</span><span class="string">"org.flexlite.domUI.components.supportClasses.ButtonBase"</span> <span class="variable">show=</span><span class="string">"true"</span>/&gt;
+    &lt;component <span class="variable">id=</span><span class="string">"ButtonBase"</span> <span class="variable">p=</span><span class="string">"org.flexlite.domUI.components.supportClasses.ButtonBase"</span> <span class="variable">s=</span><span class="string">"org.flexlite.domUI.components.SkinnableComponent"</span> <span class="variable">d=</span><span class="string">"label"</span> <span class="variable">state=</span><span class="string">"up,over,down,disabled"</span>/&gt;
+    &lt;component <span class="variable">id=</span><span class="string">"Group"</span> <span class="variable">p=</span><span class="string">"org.flexlite.domUI.components.Group"</span> <span class="variable">s=</span><span class="string">"org.flexlite.domUI.components.supportClasses.GroupBase"</span> <span class="variable">d=</span><span class="string">"elementsContent"</span> <span class="variable">show=</span><span class="string">"true"</span> <span class="variable">array=</span><span class="string">"true"</span>/&gt;
+&lt;/componentPackage&gt;
+</code></pre><p>以上节选自flexlite-manifest.xml。manifest.xml由各类component组成，包括但不限于UI组件。主要是用来配置对dxml文件中可能出现的节点的定义供编译器解析。component节点对应编译器中的Component类，各个属性解释如下</p>
 <p><strong>id</strong>，这个组件的短名ID，对应Component的id属性</p>
 <p><strong>p</strong>，组件的完整类名，对应Component的className属性</p>
 <p><strong>s</strong>，父级类名，对应Component的superClass属性</p>
@@ -97,7 +110,10 @@
 <p><strong>array</strong>，默认属性是否为数组类型，对应Component的isArray属性</p>
 <p><strong>states</strong>，视图状态列表，对应Component的states属性</p>
 <p>比如：</p>
-<p><pre class="lang:as decode:true">    &lt;dx:Group left=”16” right=”16” top=”41” id=”contentGroup” bottom=”42”&gt;<br>        &lt;dx:Label text=”标签” size=”14” maxWidth=”310” textColor=”0xFFFFFF”/&gt;<br>    &lt;/dx:Group&gt;</pre><br>这里有一个Group组件，然后对应一个子节点Label。那么Group的defaultProp也就是elementsContent这个属性对应的值是个数组，其中的一项就是Label。同理，比如ArrayCollection节点有子节点，那么source属性对应的值就是这些子节点。</p>
+<pre><code>&lt;dx:Group <span class="variable">left=</span><span class="string">"16"</span> <span class="variable">right=</span><span class="string">"16"</span> <span class="variable">top=</span><span class="string">"41"</span> <span class="variable">id=</span><span class="string">"contentGroup"</span> <span class="variable">bottom=</span><span class="string">"42"</span>/&gt;
+    &lt;dx:Label <span class="variable">text=</span><span class="string">"标签"</span> <span class="variable">size=</span><span class="string">"14"</span> <span class="variable">maxWidth=</span><span class="string">"310"</span> <span class="variable">textColor=</span><span class="string">"0xFFFFFF"</span>/&gt;
+&lt;/dx:Group&gt;
+</code></pre><p>这里有一个Group组件，然后对应一个子节点Label。那么Group的defaultProp也就是elementsContent这个属性对应的值是个数组，其中的一项就是Label。同理，比如ArrayCollection节点有子节点，那么source属性对应的值就是这些子节点。</p>
 <p><strong>2. 代码定义CodeBase</strong></p>
 <p>CodeBase是代码定义的基类，其中的toCode方法就是生成代码的关键。编译器中扩展了CodeBase实现了各种代码定义，比如注释，变量定义，参数定义，函数定义，类定义和代码块。这里挑几个重点的说:</p>
 <p><strong>函数定义CpFunction</strong>。一个函数主要由 修饰符(private,protected,public)，函数名 ，参数列表(CpArguments数组)和代码块(CpCodeBlock)组成。另外还有一些override，static之类的关键词标示符。</p>
@@ -105,49 +121,66 @@
 <p><strong>类定义CpClass</strong>。定义了一个类的代码，类的组成主要有 定义部分(例如:类注释， 类名，包名，修饰符，父类，接口)，导入包区块，构造函数，成员变量，成员函数。CpClass提供各种方法来完善这些内容，比如:导入包addImport，添加变量addVariable，添加函数addFunction。</p>
 <p>有了这些，在完成类中各个区块的定义和赋值之后，调用toCode方法转换成as代码。</p>
 <p><strong>3.解析配置文件DXMLConfig</strong></p>
-<p>manifest.xml的解析交给DXMLConfig来完成，DXMLConfig解析完成后存储配置文件中的组件对应的基本属性已经映射关系。解析完成后，外界可以使用的主要方法有:</p>
-<p><pre class="lang:as decode:true">        /**</pre></p>
-<pre><code>     * 根据类的短名ID和命名空间获取完整类名(以<span class="string">"."</span>分隔)
-     * @param id 类的短名ID
-     * @param ns 命名空间
-     */                
-    <span class="function"><span class="keyword">function</span> <span class="title">getClassNameById</span><span class="params">(id:String,ns:Namespace)</span><span class="type">:String</span></span>;
+<p>manifest.xml的解析交给DXMLConfig来完成，DXMLConfig解析完成后存储配置文件中的组件对应的基本属性已经映射关系。解析完成后，外界可以使用的主要方法有:<br>    /**</p>
+<pre><code> * 根据类的短名ID和命名空间获取完整类名(以<span class="string">"."</span>分隔)
+ * @param id 类的短名ID
+ * @param ns 命名空间
+ */                
+<span class="function"><span class="keyword">function</span> <span class="title">getClassNameById</span><span class="params">(id:String,ns:Namespace)</span><span class="type">:String</span></span>;
 
-    <span class="comment">/**
-     * 根据ID获取对应的默认属性
-     * @param id 类的短名ID
-     * @param ns 命名空间
-     * @return {name:属性名(String),isArray:该属性是否为数组(Boolean)}
-     */</span>        
-    <span class="function"><span class="keyword">function</span> <span class="title">getDefaultPropById</span><span class="params">(id:String,ns:Namespace)</span><span class="type">:Object</span></span>;
+<span class="comment">/**
+ * 根据ID获取对应的默认属性
+ * @param id 类的短名ID
+ * @param ns 命名空间
+ * @return {name:属性名(String),isArray:该属性是否为数组(Boolean)}
+ */</span>        
+<span class="function"><span class="keyword">function</span> <span class="title">getDefaultPropById</span><span class="params">(id:String,ns:Namespace)</span><span class="type">:Object</span></span>;
 
-    <span class="comment">/**
-     * 获取指定属性的类型,返回基本数据类型："uint","int","Boolean","String","Number","Class"。
-     * @param prop 属性名
-     * @param className 要查询的完整类名
-     * @param value 属性值
-     */</span>            
-    <span class="function"><span class="keyword">function</span> <span class="title">getPropertyType</span><span class="params">(prop:String,className:String,value:String)</span><span class="type">:String</span></span>;&lt;/pre&gt;
+<span class="comment">/**
+ * 获取指定属性的类型,返回基本数据类型："uint","int","Boolean","String","Number","Class"。
+ * @param prop 属性名
+ * @param className 要查询的完整类名
+ * @param value 属性值
+ */</span>            
+<span class="function"><span class="keyword">function</span> <span class="title">getPropertyType</span><span class="params">(prop:String,className:String,value:String)</span><span class="type">:String</span></span>;
 </code></pre><p><strong>4.了解DXML文件结构</strong></p>
 <p>在了解编译器是如何工作之前，需要了解DXML文件的结构。这里通过一个典型例子来了解DXML的结构。</p>
-<p><pre class="lang:as decode:true">&lt;?xml version=”1.0” encoding=”utf-8”?&gt;<br>&lt;dx:StateSkin width=”100” xmlns:dx=”<a href="http://www.flexlite.org/dxml/2012" target="_blank" rel="external">http://www.flexlite.org/dxml/2012</a>“ xmlns:fs=”<a href="http://www.flexlite.org/studio/2012&quot;&amp;gt" target="_blank" rel="external">http://www.flexlite.org/studio/2012&quot;&amp;gt</a>;<br>    &lt;fs:HostComponent name=”org.flexlite.domUI.components.Button”/&gt;<br>    &lt;fs:Declarations&gt;<br>        &lt;dx:DropShadowFilter alpha=”1.00” angle=”0.00” blurY=”4” color=”0x000000” quality=”1” blurX=”4” hideObject=”false” distance=”0” inner=”false” strength=”10” knockout=”false” id=”<strong>DropShadowFilter0”/&gt;<br>    &lt;/fs:Declarations&gt;<br>    &lt;dx:states&gt;<br>        &lt;dx:State name=”up”/&gt;<br>        &lt;dx:State name=”over”/&gt;<br>        &lt;dx:State name=”down”/&gt;<br>        &lt;dx:State name=”disabled”/&gt;<br>    &lt;/dx:states&gt;<br>    &lt;dx:UIAsset left=”0” y=”0” top=”0” right=”0” skinName=”DXR</strong>1C5D2D62” bottom=”0” x=”0” includeIn=”disabled”/&gt;<br>    &lt;dx:UIAsset left=”0” top=”0” bottom=”0” skinName=”DXR<strong>276F2CB5” right=”0” includeIn=”up”/&gt;<br>    &lt;dx:UIAsset left=”0” top=”0” bottom=”0” skinName=”DXR</strong>7905FD81” right=”0” includeIn=”down”/&gt;<br>    &lt;dx:UIAsset left=”0” top=”0” bottom=”0” skinName=”DXR<strong>F2888F03” right=”0” includeIn=”over”/&gt;<br>    &lt;dx:Label paddingTop=”4” id=”labelDisplay” horizontalCenter=”0” text=”按钮” size=”14” textAlign=”center” paddingBottom=”4” filters=”{[</strong>DropShadowFilter0]}” paddingLeft=”10” bold=”false” textColor=”0xFFFFCD” paddingRight=”10” fontFamily=”FZShaoEr-M11S” verticalCenter=”0”/&gt;<br>&lt;/dx:StateSkin&gt;</pre><br><strong>根节点</strong>。每个DXML文件对应一个as类，根节点就是这个类定义，在这里可以定义类的属性以及对应的值。另外这里还有命名空间NameSpace的定义。默认的命名空间有dx和fs。命名空间主要用来快速区别节点，从而快速过滤对节点执行对应操作。</p>
+<pre><code>&lt;xml <span class="variable">version=</span><span class="string">"1.0"</span> <span class="variable">encoding=</span><span class="string">"utf-8"</span>&gt;
+&lt;dx:StateSkin <span class="variable">width=</span><span class="string">"100"</span> xmlns:<span class="variable">dx=</span><span class="string">"http://www.flexlite.org/dxml/2012"</span> xmlns:<span class="variable">fs=</span><span class="string">"http://www.flexlite.org/studio/2012"</span>&gt;
+    &lt;fs:HostComponent <span class="variable">name=</span><span class="string">"org.flexlite.domUI.components.Button"</span>/&gt;
+    &lt;fs:Declarations&gt;
+        &lt;dx:DropShadowFilter <span class="variable">alpha=</span><span class="string">"1.00"</span> <span class="variable">angle=</span><span class="string">"0.00"</span> <span class="variable">blurY=</span><span class="string">"4"</span> <span class="variable">color=</span><span class="string">"0x000000"</span> <span class="variable">quality=</span><span class="string">"1"</span> <span class="variable">blurX=</span><span class="string">"4"</span> <span class="variable">hideObject=</span><span class="string">"false"</span> <span class="variable">distance=</span><span class="string">"0"</span> <span class="variable">inner=</span><span class="string">"false"</span> <span class="variable">strength=</span><span class="string">"10"</span> <span class="variable">knockout=</span><span class="string">"false"</span> <span class="variable">id=</span><span class="string">"__DropShadowFilter0"</span>/&gt;
+    &lt;/fs:Declarations&gt;
+    &lt;dx:states&gt;
+        &lt;dx:State <span class="variable">name=</span><span class="string">"up"</span>/&gt;
+        &lt;dx:State <span class="variable">name=</span><span class="string">"over"</span>/&gt;
+        &lt;dx:State <span class="variable">name=</span><span class="string">"down"</span>/&gt;
+        &lt;dx:State <span class="variable">name=</span><span class="string">"disabled"</span>/&gt;
+    &lt;/dx:states&gt;
+    &lt;dx:UIAsset <span class="variable">left=</span><span class="string">"0"</span> <span class="variable">y=</span><span class="string">"0"</span> <span class="variable">top=</span><span class="string">"0"</span> <span class="variable">right=</span><span class="string">"0"</span> <span class="variable">skinName=</span><span class="string">"DXR__1C5D2D62"</span> <span class="variable">bottom=</span><span class="string">"0"</span> <span class="variable">x=</span><span class="string">"0"</span> <span class="variable">includeIn=</span><span class="string">"disabled"</span>/&gt;
+    &lt;dx:UIAsset <span class="variable">left=</span><span class="string">"0"</span> <span class="variable">top=</span><span class="string">"0"</span> <span class="variable">bottom=</span><span class="string">"0"</span> <span class="variable">skinName=</span><span class="string">"DXR__276F2CB5"</span> <span class="variable">right=</span><span class="string">"0"</span> <span class="variable">includeIn=</span><span class="string">"up"</span>/&gt;
+    &lt;dx:UIAsset <span class="variable">left=</span><span class="string">"0"</span> <span class="variable">top=</span><span class="string">"0"</span> <span class="variable">bottom=</span><span class="string">"0"</span> <span class="variable">skinName=</span><span class="string">"DXR__7905FD81"</span> <span class="variable">right=</span><span class="string">"0"</span> <span class="variable">includeIn=</span><span class="string">"down"</span>/&gt;
+    &lt;dx:UIAsset <span class="variable">left=</span><span class="string">"0"</span> <span class="variable">top=</span><span class="string">"0"</span> <span class="variable">bottom=</span><span class="string">"0"</span> <span class="variable">skinName=</span><span class="string">"DXR__F2888F03"</span> <span class="variable">right=</span><span class="string">"0"</span> <span class="variable">includeIn=</span><span class="string">"over"</span>/&gt;
+    &lt;dx:Label <span class="variable">paddingTop=</span><span class="string">"4"</span> <span class="variable">id=</span><span class="string">"labelDisplay"</span> <span class="variable">horizontalCenter=</span><span class="string">"0"</span> <span class="variable">text=</span><span class="string">"按钮"</span> <span class="variable">size=</span><span class="string">"14"</span> <span class="variable">textAlign=</span><span class="string">"center"</span> <span class="variable">paddingBottom=</span><span class="string">"4"</span> <span class="variable">filters=</span><span class="string">"{[__DropShadowFilter0]}"</span> <span class="variable">paddingLeft=</span><span class="string">"10"</span> <span class="variable">bold=</span><span class="string">"false"</span> <span class="variable">textColor=</span><span class="string">"0xFFFFCD"</span> <span class="variable">paddingRight=</span><span class="string">"10"</span> <span class="variable">fontFamily=</span><span class="string">"FZShaoEr-M11S"</span> <span class="variable">verticalCenter=</span><span class="string">"0"</span>/&gt;
+&lt;/dx:StateSkin&gt;
+</code></pre><p><strong>根节点</strong>。每个DXML文件对应一个as类，根节点就是这个类定义，在这里可以定义类的属性以及对应的值。另外这里还有命名空间NameSpace的定义。默认的命名空间有dx和fs。命名空间主要用来快速区别节点，从而快速过滤对节点执行对应操作。</p>
 <p><strong>声明节点</strong>。DXML中一些不可视的一些元素可以定义在声明节点中，作为fs:Declarations这个节点的子节点。上述例子中的阴影滤镜就是在这个节点中。</p>
 <p><strong>States节点</strong>。States定义了组件的各个状态。</p>
 <p><strong>组件节点</strong>。一般以dx开头的节点就是组件节点，当然组件节点也可以自定义(使用自定义组件所在的包作为新的命名空间，添加到根节点中)。这里可使用的组件是和manifest.xml中对应的。在组件节点中可以对组件的各个属性赋值。另外，组件节点有一些共有的特殊属性，比如: id 表示组件对应的实例名，includeIn，excludeFrom表示组件对应的状态。还有上面提到的，组件如果有子节点，那么这些子节点就是组件对应的默认值。</p>
-<p><strong>5.DXML**</strong>编译器**</p>
+<p><strong>5.DXML编译器</strong></p>
 <p><strong>编译开始的准备工作</strong></p>
 <p>在编译开始前，创建DXMLConfig实例解析manifest配置，读取dxml文件。创建一个CpClass实例currentClass。</p>
 <p><strong>编译开始</strong></p>
 <p>调用startCompile编译开始，通过getStateNames方法获取dxml中定义的所有状态并使用stateCode保存。然后为根节点加入currentState的属性并赋值。使用declarations保存dxml的声明节点。然后调用addIds方法遍历各个节点添加成员变量以及函数。最后是生成构造函数。</p>
-<p><strong>导入包，添加**</strong>import<strong>**区块</strong></p>
+<p><strong>导入包，添加import区块</strong></p>
 <p>包的导入，并不是一次性导入，而是贯彻在整个编译过程中。通常在调用getPackageByNode这个方法时来添加import区块。因为每个节点一般对应一个class，这样在分析节点时就能获取到节点的className，从而导入。</p>
-<p><strong>依据**</strong>id<strong><strong>添加成员变量，以及自动为组件添加</strong></strong>id<strong>**属性</strong></p>
+<p><strong>依据id添加成员变量，以及自动为组件添加id属性</strong></p>
 <p>某些节点具有id属性，那么一般这个节点对应的实例就是这个类的成员变量，实例名就是这个id的值，调用createVarForNode方法将节点添加进成员变量列表。某些组件没有id属性，那么调用createIdForNode给每一个组件节点加上id属性，赋值也遵循一定规范不会重复。另外有些组件是只存在于某些特定状态下的，这时会使用stateIds记录下来，随后在构造函数里面单独实例化。以上过程的具体实现参考addIds这个方法，整个过程是递归的。</p>
 <p><strong>创建构造函数</strong></p>
 <p>函数的主要内容就是代码块，首先创建一个代码块实例。通过addAttributesToCodeBlock方法解析根节点的所有属性，并生成赋值语句。解析declarations的子节点，调用createFuncForNode为每一个子节点创建对应的方法。使用initlizeChildNode方法遍历组件的子组件，对组件的默认属性赋值。最后解析状态代码，完成所有状态的赋值。</p>
 <p>简而言之，解析一个组件的大致思路就是，通过addAttributesToCodeBlock方法解析节点的属性并赋值，然后使用initlizeChildNode方法遍历节点的子节点为默认属性赋值。在initlizeChildNode方法中调用createFuncForNode，为每个子节点创建单独的函数。而createFuncForNode这个方法中又会调用addAttributesToCodeBlock和initlizeChildNode解析节点属性和为默认属性赋值，如此递归调用下去。</p>
 <p><strong>重要方法解析</strong></p>
-<p><strong>createVarForNode </strong></p>
+<p><strong>createVarForNode</strong></p>
 <p>创建成员变量。一般带有id的组件节点都会被调用这个方法创建对应id的实例名变量。</p>
 <p><strong>addAttributesToCodeBlock</strong></p>
 <p>解析组件的属性并赋值。对应一些特殊属性比如id，includeIn，locked已经带有”.”操作符的属性是不理会的。这样获取一个keyList，读取对应的value，格式化key和value然后添加赋值语句。有些key比较特殊比如height，因为对应的值可能是一个百分比所以需要格式化key转换成percentHeight。格式化value就比较麻烦了，有些value是带”{}”的要去掉{}，有些特殊的key比如skinName对应的value可能是一个class，这些key-value的转换规则通过DXMLConfig的getPropertyType来获取。最后如果对应的值是一个id即成员变量，则需要延迟赋值，到那个成员变量的创建函数中赋值。</p>
@@ -171,7 +204,7 @@
       
   
   <div class="tags">
-    <a href="/tags/actionscript3/">actionscript3</a>
+    <a href="/tags/ActionScript3/">ActionScript3</a>
   </div>
 
     
@@ -224,13 +257,15 @@
   <h3 class="title">标签</h3>
   <ul class="entry">
   
+    <li><a href="/tags/ActionScript3/">ActionScript3</a><small>1</small></li>
+  
     <li><a href="/tags/Egret/">Egret</a><small>1</small></li>
   
     <li><a href="/tags/FlexLite/">FlexLite</a><small>0</small></li>
   
     <li><a href="/tags/Hexo/">Hexo</a><small>1</small></li>
   
-    <li><a href="/tags/actionscript3/">actionscript3</a><small>1</small></li>
+    <li><a href="/tags/actionscript3/">actionscript3</a><small>0</small></li>
   
     <li><a href="/tags/架构/">架构</a><small>1</small></li>
   
@@ -244,7 +279,7 @@
 <div class="widget tagcloud">
   <h3 class="title">标签云</h3>
   <div class="entry">
-    <a href="/tags/Egret/" style="font-size: 20.00px;">Egret</a><a href="/tags/FlexLite/" style="font-size: 10.00px;">FlexLite</a><a href="/tags/Hexo/" style="font-size: 20.00px;">Hexo</a><a href="/tags/actionscript3/" style="font-size: 20.00px;">actionscript3</a><a href="/tags/架构/" style="font-size: 20.00px;">架构</a>
+    <a href="/tags/ActionScript3/" style="font-size: 20.00px;">ActionScript3</a><a href="/tags/Egret/" style="font-size: 20.00px;">Egret</a><a href="/tags/FlexLite/" style="font-size: 10.00px;">FlexLite</a><a href="/tags/Hexo/" style="font-size: 20.00px;">Hexo</a><a href="/tags/actionscript3/" style="font-size: 10.00px;">actionscript3</a><a href="/tags/架构/" style="font-size: 20.00px;">架构</a>
   </div>
 </div>
 

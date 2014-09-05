@@ -4,7 +4,7 @@
   <subtitle><![CDATA[前行在被夕阳染红的街道]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://xzper.com/"/>
-  <updated>2014-09-05T16:04:55.616Z</updated>
+  <updated>2014-09-05T18:14:53.429Z</updated>
   <id>http://xzper.com/</id>
   
   <author>
@@ -560,20 +560,27 @@ node --debug-brk=<span class="number">5858</span> <span class="constant">E</span
     <link href="http://xzper.com/2014/07/02/%E8%A7%A3%E8%AF%BBDXML%E7%BC%96%E8%AF%91%E5%99%A8/"/>
     <id>http://xzper.com/2014/07/02/解读DXML编译器/</id>
     <published>2014-07-02T08:22:49.000Z</published>
-    <updated>2014-09-04T16:03:57.000Z</updated>
+    <updated>2014-09-05T17:18:21.000Z</updated>
     <content type="html"><![CDATA[<p>DXML就是FlexLite中由FlexLiteStdio生成的皮肤文件，类似于Flex中的MXML。实际上区别没多少，可能最大的区别就是MXML支持Script脚本。DXML架构设计对编写各类UI编辑器，各类代码生成工具都有很好的参考价值。这里主要分析DXML编译器是如何将DXML文件转换为as代码。</p>
 <a id="more"></a>
 
 <p><strong>1.如何使用DXML编译器</strong></p>
 <p>DXML编译器在源代码在FlexLiteExtends中的org.flexlite.domCompile包下。导入相应的类后，先导入配置文件manifest.xml(这个文件可以在FlexLiteStdio的安装目录的bin文件夹下可以找到，也可以通过ManifestUtil这个类生成)。这是一个全局静态属性，导入代码如下:</p>
-<p><pre class="lang:as decode:true">DXMLCompiler.configData = manifestXml;</pre><br>然后创建一个DXMLCompiler实例，调用compile方法得到编译后的结果:</p>
-<p><pre class="lang:as decode:true">var compiler:DXMLCompiler = new DXMLCompiler();<br>var result:String  = compiler.compile(buttonSkinXml , “Button”);</pre><br>完整的代码如下:</p>
-<p><pre class="lang:as decode:true">    public class DXMLCompilerTest extends Sprite<br>    {<br>        [Embed(source=”resource/xml/flexlite-manifest.xml” , mimeType = “application/octet-stream”)]<br>        private var manifest:Class;</pre></p>
-<pre><code>    [Embed(source=<span class="string">"resource/xml/ButtonSkin.dxml"</span> , mimeType = <span class="string">"application/octet-stream"</span>)]
+<pre><code><span class="attribute">DXMLCompiler.configData </span>=<span class="string"> manifestXml;</span>
+</code></pre><p>然后创建一个DXMLCompiler实例，调用compile方法得到编译后的结果:</p>
+<pre><code><span class="keyword">var</span> compiler:<span class="type">DXMLCompiler</span> = new <span class="type">DXMLCompiler</span>();
+<span class="keyword">var</span> <span class="literal">result</span>:<span class="type">String</span>  = compiler.compile(buttonSkinXml , <span class="string">"Button"</span>);
+</code></pre><p>完整的代码如下:</p>
+<pre><code>public <span class="class"><span class="keyword">class</span> <span class="title">DXMLCompilerTest</span> <span class="keyword">extends</span> <span class="title">Sprite</span></span>
+{
+    [Embed(source=<span class="string">"resource/xml/flexlite-manifest.xml"</span> , mimeType = <span class="string">"application/octet-stream"</span>)]
+    <span class="keyword">private</span> <span class="keyword">var</span> manifest:Class;
+
+    [Embed(source=<span class="string">"resource/xml/ButtonSkin.dxml"</span> , mimeType = <span class="string">"application/octet-stream"</span>)]
     <span class="keyword">private</span> <span class="keyword">var</span> buttonSkin:Class;
 
-    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">DXMLCompilerTest</span><span class="params">()</span>
-    </span>{
+    public function DXMLCompilerTest()
+    {
         <span class="keyword">super</span>();
 
         <span class="keyword">var</span> manifestBy:ByteArray = <span class="keyword">new</span> manifest();
@@ -589,12 +596,18 @@ node --debug-brk=<span class="number">5858</span> <span class="constant">E</span
 
         <span class="keyword">var</span> compiler:DXMLCompiler = <span class="keyword">new</span> DXMLCompiler();
         <span class="keyword">var</span> result:String  = compiler.compile(buttonSkinXml , <span class="string">"Button"</span>);
-        <span class="keyword">trace</span>(result);
+        trace(result);
     }
-}&lt;/pre&gt;
+}
 </code></pre><p><strong>2.配置文件manifest</strong></p>
 <p>manifest是由编译器使用的配置文件，定义了编译器能识别的各类组件。</p>
-<p><pre class="lang:as decode:true">&lt;componentPackage crc32=”a32782dd”&gt;<br>  &lt;component id=”ArrayCollection” p=”org.flexlite.domUI.collections.ArrayCollection” s=”flash.utils.Proxy” d=”source” array=”true”/&gt;<br>   &lt;component id=”Button” p=”org.flexlite.domUI.components.Button” s=”org.flexlite.domUI.components.supportClasses.ButtonBase” show=”true”/&gt;<br>  &lt;component id=”ButtonBase” p=”org.flexlite.domUI.components.supportClasses.ButtonBase” s=”org.flexlite.domUI.components.SkinnableComponent” d=”label” state=”up,over,down,disabled”/&gt;<br>  &lt;component id=”Group” p=”org.flexlite.domUI.components.Group” s=”org.flexlite.domUI.components.supportClasses.GroupBase” d=”elementsContent” show=”true” array=”true”/&gt;<br>&lt;/componentPackage&gt;</pre><br>以上节选自flexlite-manifest.xml。manifest.xml由各类component组成，包括但不限于UI组件。主要是用来配置对dxml文件中可能出现的节点的定义供编译器解析。component节点对应编译器中的Component类，各个属性解释如下</p>
+<pre><code>&lt;componentPackage <span class="variable">crc32=</span><span class="string">"a32782dd"</span>&gt;
+    &lt;component <span class="variable">id=</span><span class="string">"ArrayCollection"</span> <span class="variable">p=</span><span class="string">"org.flexlite.domUI.collections.ArrayCollection"</span> <span class="variable">s=</span><span class="string">"flash.utils.Proxy"</span> <span class="variable">d=</span><span class="string">"source"</span> <span class="variable">array=</span><span class="string">"true"</span>/&gt;
+    &lt;component <span class="variable">id=</span><span class="string">"Button"</span> <span class="variable">p=</span><span class="string">"org.flexlite.domUI.components.Button"</span> <span class="variable">s=</span><span class="string">"org.flexlite.domUI.components.supportClasses.ButtonBase"</span> <span class="variable">show=</span><span class="string">"true"</span>/&gt;
+    &lt;component <span class="variable">id=</span><span class="string">"ButtonBase"</span> <span class="variable">p=</span><span class="string">"org.flexlite.domUI.components.supportClasses.ButtonBase"</span> <span class="variable">s=</span><span class="string">"org.flexlite.domUI.components.SkinnableComponent"</span> <span class="variable">d=</span><span class="string">"label"</span> <span class="variable">state=</span><span class="string">"up,over,down,disabled"</span>/&gt;
+    &lt;component <span class="variable">id=</span><span class="string">"Group"</span> <span class="variable">p=</span><span class="string">"org.flexlite.domUI.components.Group"</span> <span class="variable">s=</span><span class="string">"org.flexlite.domUI.components.supportClasses.GroupBase"</span> <span class="variable">d=</span><span class="string">"elementsContent"</span> <span class="variable">show=</span><span class="string">"true"</span> <span class="variable">array=</span><span class="string">"true"</span>/&gt;
+&lt;/componentPackage&gt;
+</code></pre><p>以上节选自flexlite-manifest.xml。manifest.xml由各类component组成，包括但不限于UI组件。主要是用来配置对dxml文件中可能出现的节点的定义供编译器解析。component节点对应编译器中的Component类，各个属性解释如下</p>
 <p><strong>id</strong>，这个组件的短名ID，对应Component的id属性</p>
 <p><strong>p</strong>，组件的完整类名，对应Component的className属性</p>
 <p><strong>s</strong>，父级类名，对应Component的superClass属性</p>
@@ -602,7 +615,10 @@ node --debug-brk=<span class="number">5858</span> <span class="constant">E</span
 <p><strong>array</strong>，默认属性是否为数组类型，对应Component的isArray属性</p>
 <p><strong>states</strong>，视图状态列表，对应Component的states属性</p>
 <p>比如：</p>
-<p><pre class="lang:as decode:true">    &lt;dx:Group left=”16” right=”16” top=”41” id=”contentGroup” bottom=”42”&gt;<br>        &lt;dx:Label text=”标签” size=”14” maxWidth=”310” textColor=”0xFFFFFF”/&gt;<br>    &lt;/dx:Group&gt;</pre><br>这里有一个Group组件，然后对应一个子节点Label。那么Group的defaultProp也就是elementsContent这个属性对应的值是个数组，其中的一项就是Label。同理，比如ArrayCollection节点有子节点，那么source属性对应的值就是这些子节点。</p>
+<pre><code>&lt;dx:Group <span class="variable">left=</span><span class="string">"16"</span> <span class="variable">right=</span><span class="string">"16"</span> <span class="variable">top=</span><span class="string">"41"</span> <span class="variable">id=</span><span class="string">"contentGroup"</span> <span class="variable">bottom=</span><span class="string">"42"</span>/&gt;
+    &lt;dx:Label <span class="variable">text=</span><span class="string">"标签"</span> <span class="variable">size=</span><span class="string">"14"</span> <span class="variable">maxWidth=</span><span class="string">"310"</span> <span class="variable">textColor=</span><span class="string">"0xFFFFFF"</span>/&gt;
+&lt;/dx:Group&gt;
+</code></pre><p>这里有一个Group组件，然后对应一个子节点Label。那么Group的defaultProp也就是elementsContent这个属性对应的值是个数组，其中的一项就是Label。同理，比如ArrayCollection节点有子节点，那么source属性对应的值就是这些子节点。</p>
 <p><strong>2. 代码定义CodeBase</strong></p>
 <p>CodeBase是代码定义的基类，其中的toCode方法就是生成代码的关键。编译器中扩展了CodeBase实现了各种代码定义，比如注释，变量定义，参数定义，函数定义，类定义和代码块。这里挑几个重点的说:</p>
 <p><strong>函数定义CpFunction</strong>。一个函数主要由 修饰符(private,protected,public)，函数名 ，参数列表(CpArguments数组)和代码块(CpCodeBlock)组成。另外还有一些override，static之类的关键词标示符。</p>
@@ -610,49 +626,66 @@ node --debug-brk=<span class="number">5858</span> <span class="constant">E</span
 <p><strong>类定义CpClass</strong>。定义了一个类的代码，类的组成主要有 定义部分(例如:类注释， 类名，包名，修饰符，父类，接口)，导入包区块，构造函数，成员变量，成员函数。CpClass提供各种方法来完善这些内容，比如:导入包addImport，添加变量addVariable，添加函数addFunction。</p>
 <p>有了这些，在完成类中各个区块的定义和赋值之后，调用toCode方法转换成as代码。</p>
 <p><strong>3.解析配置文件DXMLConfig</strong></p>
-<p>manifest.xml的解析交给DXMLConfig来完成，DXMLConfig解析完成后存储配置文件中的组件对应的基本属性已经映射关系。解析完成后，外界可以使用的主要方法有:</p>
-<p><pre class="lang:as decode:true">        /**</pre></p>
-<pre><code>     * 根据类的短名ID和命名空间获取完整类名(以<span class="string">"."</span>分隔)
-     * @param id 类的短名ID
-     * @param ns 命名空间
-     */                
-    <span class="function"><span class="keyword">function</span> <span class="title">getClassNameById</span><span class="params">(id:String,ns:Namespace)</span><span class="type">:String</span></span>;
+<p>manifest.xml的解析交给DXMLConfig来完成，DXMLConfig解析完成后存储配置文件中的组件对应的基本属性已经映射关系。解析完成后，外界可以使用的主要方法有:<br>    /**</p>
+<pre><code> * 根据类的短名ID和命名空间获取完整类名(以<span class="string">"."</span>分隔)
+ * @param id 类的短名ID
+ * @param ns 命名空间
+ */                
+<span class="function"><span class="keyword">function</span> <span class="title">getClassNameById</span><span class="params">(id:String,ns:Namespace)</span><span class="type">:String</span></span>;
 
-    <span class="comment">/**
-     * 根据ID获取对应的默认属性
-     * @param id 类的短名ID
-     * @param ns 命名空间
-     * @return {name:属性名(String),isArray:该属性是否为数组(Boolean)}
-     */</span>        
-    <span class="function"><span class="keyword">function</span> <span class="title">getDefaultPropById</span><span class="params">(id:String,ns:Namespace)</span><span class="type">:Object</span></span>;
+<span class="comment">/**
+ * 根据ID获取对应的默认属性
+ * @param id 类的短名ID
+ * @param ns 命名空间
+ * @return {name:属性名(String),isArray:该属性是否为数组(Boolean)}
+ */</span>        
+<span class="function"><span class="keyword">function</span> <span class="title">getDefaultPropById</span><span class="params">(id:String,ns:Namespace)</span><span class="type">:Object</span></span>;
 
-    <span class="comment">/**
-     * 获取指定属性的类型,返回基本数据类型："uint","int","Boolean","String","Number","Class"。
-     * @param prop 属性名
-     * @param className 要查询的完整类名
-     * @param value 属性值
-     */</span>            
-    <span class="function"><span class="keyword">function</span> <span class="title">getPropertyType</span><span class="params">(prop:String,className:String,value:String)</span><span class="type">:String</span></span>;&lt;/pre&gt;
+<span class="comment">/**
+ * 获取指定属性的类型,返回基本数据类型："uint","int","Boolean","String","Number","Class"。
+ * @param prop 属性名
+ * @param className 要查询的完整类名
+ * @param value 属性值
+ */</span>            
+<span class="function"><span class="keyword">function</span> <span class="title">getPropertyType</span><span class="params">(prop:String,className:String,value:String)</span><span class="type">:String</span></span>;
 </code></pre><p><strong>4.了解DXML文件结构</strong></p>
 <p>在了解编译器是如何工作之前，需要了解DXML文件的结构。这里通过一个典型例子来了解DXML的结构。</p>
-<p><pre class="lang:as decode:true">&lt;?xml version=”1.0” encoding=”utf-8”?&gt;<br>&lt;dx:StateSkin width=”100” xmlns:dx=”<a href="http://www.flexlite.org/dxml/2012" target="_blank" rel="external">http://www.flexlite.org/dxml/2012</a>“ xmlns:fs=”<a href="http://www.flexlite.org/studio/2012&quot;&amp;gt" target="_blank" rel="external">http://www.flexlite.org/studio/2012&quot;&amp;gt</a>;<br>    &lt;fs:HostComponent name=”org.flexlite.domUI.components.Button”/&gt;<br>    &lt;fs:Declarations&gt;<br>        &lt;dx:DropShadowFilter alpha=”1.00” angle=”0.00” blurY=”4” color=”0x000000” quality=”1” blurX=”4” hideObject=”false” distance=”0” inner=”false” strength=”10” knockout=”false” id=”<strong>DropShadowFilter0”/&gt;<br>    &lt;/fs:Declarations&gt;<br>    &lt;dx:states&gt;<br>        &lt;dx:State name=”up”/&gt;<br>        &lt;dx:State name=”over”/&gt;<br>        &lt;dx:State name=”down”/&gt;<br>        &lt;dx:State name=”disabled”/&gt;<br>    &lt;/dx:states&gt;<br>    &lt;dx:UIAsset left=”0” y=”0” top=”0” right=”0” skinName=”DXR</strong>1C5D2D62” bottom=”0” x=”0” includeIn=”disabled”/&gt;<br>    &lt;dx:UIAsset left=”0” top=”0” bottom=”0” skinName=”DXR<strong>276F2CB5” right=”0” includeIn=”up”/&gt;<br>    &lt;dx:UIAsset left=”0” top=”0” bottom=”0” skinName=”DXR</strong>7905FD81” right=”0” includeIn=”down”/&gt;<br>    &lt;dx:UIAsset left=”0” top=”0” bottom=”0” skinName=”DXR<strong>F2888F03” right=”0” includeIn=”over”/&gt;<br>    &lt;dx:Label paddingTop=”4” id=”labelDisplay” horizontalCenter=”0” text=”按钮” size=”14” textAlign=”center” paddingBottom=”4” filters=”{[</strong>DropShadowFilter0]}” paddingLeft=”10” bold=”false” textColor=”0xFFFFCD” paddingRight=”10” fontFamily=”FZShaoEr-M11S” verticalCenter=”0”/&gt;<br>&lt;/dx:StateSkin&gt;</pre><br><strong>根节点</strong>。每个DXML文件对应一个as类，根节点就是这个类定义，在这里可以定义类的属性以及对应的值。另外这里还有命名空间NameSpace的定义。默认的命名空间有dx和fs。命名空间主要用来快速区别节点，从而快速过滤对节点执行对应操作。</p>
+<pre><code>&lt;xml <span class="variable">version=</span><span class="string">"1.0"</span> <span class="variable">encoding=</span><span class="string">"utf-8"</span>&gt;
+&lt;dx:StateSkin <span class="variable">width=</span><span class="string">"100"</span> xmlns:<span class="variable">dx=</span><span class="string">"http://www.flexlite.org/dxml/2012"</span> xmlns:<span class="variable">fs=</span><span class="string">"http://www.flexlite.org/studio/2012"</span>&gt;
+    &lt;fs:HostComponent <span class="variable">name=</span><span class="string">"org.flexlite.domUI.components.Button"</span>/&gt;
+    &lt;fs:Declarations&gt;
+        &lt;dx:DropShadowFilter <span class="variable">alpha=</span><span class="string">"1.00"</span> <span class="variable">angle=</span><span class="string">"0.00"</span> <span class="variable">blurY=</span><span class="string">"4"</span> <span class="variable">color=</span><span class="string">"0x000000"</span> <span class="variable">quality=</span><span class="string">"1"</span> <span class="variable">blurX=</span><span class="string">"4"</span> <span class="variable">hideObject=</span><span class="string">"false"</span> <span class="variable">distance=</span><span class="string">"0"</span> <span class="variable">inner=</span><span class="string">"false"</span> <span class="variable">strength=</span><span class="string">"10"</span> <span class="variable">knockout=</span><span class="string">"false"</span> <span class="variable">id=</span><span class="string">"__DropShadowFilter0"</span>/&gt;
+    &lt;/fs:Declarations&gt;
+    &lt;dx:states&gt;
+        &lt;dx:State <span class="variable">name=</span><span class="string">"up"</span>/&gt;
+        &lt;dx:State <span class="variable">name=</span><span class="string">"over"</span>/&gt;
+        &lt;dx:State <span class="variable">name=</span><span class="string">"down"</span>/&gt;
+        &lt;dx:State <span class="variable">name=</span><span class="string">"disabled"</span>/&gt;
+    &lt;/dx:states&gt;
+    &lt;dx:UIAsset <span class="variable">left=</span><span class="string">"0"</span> <span class="variable">y=</span><span class="string">"0"</span> <span class="variable">top=</span><span class="string">"0"</span> <span class="variable">right=</span><span class="string">"0"</span> <span class="variable">skinName=</span><span class="string">"DXR__1C5D2D62"</span> <span class="variable">bottom=</span><span class="string">"0"</span> <span class="variable">x=</span><span class="string">"0"</span> <span class="variable">includeIn=</span><span class="string">"disabled"</span>/&gt;
+    &lt;dx:UIAsset <span class="variable">left=</span><span class="string">"0"</span> <span class="variable">top=</span><span class="string">"0"</span> <span class="variable">bottom=</span><span class="string">"0"</span> <span class="variable">skinName=</span><span class="string">"DXR__276F2CB5"</span> <span class="variable">right=</span><span class="string">"0"</span> <span class="variable">includeIn=</span><span class="string">"up"</span>/&gt;
+    &lt;dx:UIAsset <span class="variable">left=</span><span class="string">"0"</span> <span class="variable">top=</span><span class="string">"0"</span> <span class="variable">bottom=</span><span class="string">"0"</span> <span class="variable">skinName=</span><span class="string">"DXR__7905FD81"</span> <span class="variable">right=</span><span class="string">"0"</span> <span class="variable">includeIn=</span><span class="string">"down"</span>/&gt;
+    &lt;dx:UIAsset <span class="variable">left=</span><span class="string">"0"</span> <span class="variable">top=</span><span class="string">"0"</span> <span class="variable">bottom=</span><span class="string">"0"</span> <span class="variable">skinName=</span><span class="string">"DXR__F2888F03"</span> <span class="variable">right=</span><span class="string">"0"</span> <span class="variable">includeIn=</span><span class="string">"over"</span>/&gt;
+    &lt;dx:Label <span class="variable">paddingTop=</span><span class="string">"4"</span> <span class="variable">id=</span><span class="string">"labelDisplay"</span> <span class="variable">horizontalCenter=</span><span class="string">"0"</span> <span class="variable">text=</span><span class="string">"按钮"</span> <span class="variable">size=</span><span class="string">"14"</span> <span class="variable">textAlign=</span><span class="string">"center"</span> <span class="variable">paddingBottom=</span><span class="string">"4"</span> <span class="variable">filters=</span><span class="string">"{[__DropShadowFilter0]}"</span> <span class="variable">paddingLeft=</span><span class="string">"10"</span> <span class="variable">bold=</span><span class="string">"false"</span> <span class="variable">textColor=</span><span class="string">"0xFFFFCD"</span> <span class="variable">paddingRight=</span><span class="string">"10"</span> <span class="variable">fontFamily=</span><span class="string">"FZShaoEr-M11S"</span> <span class="variable">verticalCenter=</span><span class="string">"0"</span>/&gt;
+&lt;/dx:StateSkin&gt;
+</code></pre><p><strong>根节点</strong>。每个DXML文件对应一个as类，根节点就是这个类定义，在这里可以定义类的属性以及对应的值。另外这里还有命名空间NameSpace的定义。默认的命名空间有dx和fs。命名空间主要用来快速区别节点，从而快速过滤对节点执行对应操作。</p>
 <p><strong>声明节点</strong>。DXML中一些不可视的一些元素可以定义在声明节点中，作为fs:Declarations这个节点的子节点。上述例子中的阴影滤镜就是在这个节点中。</p>
 <p><strong>States节点</strong>。States定义了组件的各个状态。</p>
 <p><strong>组件节点</strong>。一般以dx开头的节点就是组件节点，当然组件节点也可以自定义(使用自定义组件所在的包作为新的命名空间，添加到根节点中)。这里可使用的组件是和manifest.xml中对应的。在组件节点中可以对组件的各个属性赋值。另外，组件节点有一些共有的特殊属性，比如: id 表示组件对应的实例名，includeIn，excludeFrom表示组件对应的状态。还有上面提到的，组件如果有子节点，那么这些子节点就是组件对应的默认值。</p>
-<p><strong>5.DXML**</strong>编译器**</p>
+<p><strong>5.DXML编译器</strong></p>
 <p><strong>编译开始的准备工作</strong></p>
 <p>在编译开始前，创建DXMLConfig实例解析manifest配置，读取dxml文件。创建一个CpClass实例currentClass。</p>
 <p><strong>编译开始</strong></p>
 <p>调用startCompile编译开始，通过getStateNames方法获取dxml中定义的所有状态并使用stateCode保存。然后为根节点加入currentState的属性并赋值。使用declarations保存dxml的声明节点。然后调用addIds方法遍历各个节点添加成员变量以及函数。最后是生成构造函数。</p>
-<p><strong>导入包，添加**</strong>import<strong>**区块</strong></p>
+<p><strong>导入包，添加import区块</strong></p>
 <p>包的导入，并不是一次性导入，而是贯彻在整个编译过程中。通常在调用getPackageByNode这个方法时来添加import区块。因为每个节点一般对应一个class，这样在分析节点时就能获取到节点的className，从而导入。</p>
-<p><strong>依据**</strong>id<strong><strong>添加成员变量，以及自动为组件添加</strong></strong>id<strong>**属性</strong></p>
+<p><strong>依据id添加成员变量，以及自动为组件添加id属性</strong></p>
 <p>某些节点具有id属性，那么一般这个节点对应的实例就是这个类的成员变量，实例名就是这个id的值，调用createVarForNode方法将节点添加进成员变量列表。某些组件没有id属性，那么调用createIdForNode给每一个组件节点加上id属性，赋值也遵循一定规范不会重复。另外有些组件是只存在于某些特定状态下的，这时会使用stateIds记录下来，随后在构造函数里面单独实例化。以上过程的具体实现参考addIds这个方法，整个过程是递归的。</p>
 <p><strong>创建构造函数</strong></p>
 <p>函数的主要内容就是代码块，首先创建一个代码块实例。通过addAttributesToCodeBlock方法解析根节点的所有属性，并生成赋值语句。解析declarations的子节点，调用createFuncForNode为每一个子节点创建对应的方法。使用initlizeChildNode方法遍历组件的子组件，对组件的默认属性赋值。最后解析状态代码，完成所有状态的赋值。</p>
 <p>简而言之，解析一个组件的大致思路就是，通过addAttributesToCodeBlock方法解析节点的属性并赋值，然后使用initlizeChildNode方法遍历节点的子节点为默认属性赋值。在initlizeChildNode方法中调用createFuncForNode，为每个子节点创建单独的函数。而createFuncForNode这个方法中又会调用addAttributesToCodeBlock和initlizeChildNode解析节点属性和为默认属性赋值，如此递归调用下去。</p>
 <p><strong>重要方法解析</strong></p>
-<p><strong>createVarForNode </strong></p>
+<p><strong>createVarForNode</strong></p>
 <p>创建成员变量。一般带有id的组件节点都会被调用这个方法创建对应id的实例名变量。</p>
 <p><strong>addAttributesToCodeBlock</strong></p>
 <p>解析组件的属性并赋值。对应一些特殊属性比如id，includeIn，locked已经带有”.”操作符的属性是不理会的。这样获取一个keyList，读取对应的value，格式化key和value然后添加赋值语句。有些key比较特殊比如height，因为对应的值可能是一个百分比所以需要格式化key转换成percentHeight。格式化value就比较麻烦了，有些value是带”{}”的要去掉{}，有些特殊的key比如skinName对应的value可能是一个class，这些key-value的转换规则通过DXMLConfig的getPropertyType来获取。最后如果对应的值是一个id即成员变量，则需要延迟赋值，到那个成员变量的创建函数中赋值。</p>
@@ -666,7 +699,7 @@ node --debug-brk=<span class="number">5858</span> <span class="constant">E</span
     <summary type="html"><![CDATA[<p>DXML就是FlexLite中由FlexLiteStdio生成的皮肤文件，类似于Flex中的MXML。实际上区别没多少，可能最大的区别就是MXML支持Script脚本。DXML架构设计对编写各类UI编辑器，各类代码生成工具都有很好的参考价值。这里主要分析DXML编译器是如何将DXML文件转换为as代码。</p>
 ]]></summary>
     
-      <category term="actionscript3" scheme="http://xzper.com/tags/actionscript3/"/>
+      <category term="ActionScript3" scheme="http://xzper.com/tags/ActionScript3/"/>
     
       <category term="FlexLite" scheme="http://xzper.com/categories/FlexLite/"/>
     
@@ -677,526 +710,519 @@ node --debug-brk=<span class="number">5858</span> <span class="constant">E</span
     <link href="http://xzper.com/2014/06/22/%E4%BD%BF%E7%94%A8egret%E5%BC%80%E5%8F%912048/"/>
     <id>http://xzper.com/2014/06/22/使用egret开发2048/</id>
     <published>2014-06-22T12:41:00.000Z</published>
-    <updated>2014-09-04T16:04:44.000Z</updated>
-    <content type="html"><![CDATA[<p>2048是最近很火的一个小游戏，<a href="http://gabrielecirulli.github.io/2048/" target="_blank" rel="external">原版</a>就是用JavaScript写的。恰巧最近egret PublicBeta，观望和学习了一阵后，发现egret正好适合开发这类游戏。egret使用TypeScript作为开发语言，最终编译为JavaScript，正好和原始版本PK一下。</p>
-<p>游戏预览：<a href="http://xzperproject.qiniudn.com/2048egret/launcher/release.html" target="_blank" rel="external">点我体验</a></p>
-<a id="more"></a>
-
-<p><strong>1.准备开始</strong><br> 在开始之前，我们需要学习一下TypeScript和阅读官方的教程从egret开发环境的部署到创建，编译，发布项目，以及egret相关工具。在安装好开发环境后，在工作空间目录下使用命令行，创建2048egret新项目</p>
-<pre class="lang:as decode:true">egret create 2048egret</pre>
-
-<p><strong>2.准备素材</strong></p>
+    <updated>2014-09-05T18:04:51.000Z</updated>
+    <content type="html"><![CDATA[<p>2048是最近很火的一个小游戏，<a href="http://gabrielecirulli.github.io/2048/" target="_blank" rel="external">原版</a> 就是用JavaScript写的。恰巧最近Egret PublicBeta，观望和学习了一阵后，发现egret正好适合开发这类游戏。Egret使用TypeScript作为开发语言，最终编译为JavaScript，正好和原始版本PK一下。</p>
+<p>游戏预览：<a href="http://xzper.com/project/2048egret/" target="_blank" rel="external">点我体验</a></p>
+<p><strong>1.准备开始</strong></p>
+<p>在开始之前，我们需要学习一下TypeScript和阅读官方的教程从Egret开发环境的部署到创建，编译，发布项目，以及Egret相关工具。在安装好开发环境后，在工作空间目录下使用命令行，创建2048egret新项目</p>
+<pre><code>egret <span class="operator"><span class="keyword">create</span> <span class="number">2048</span>egret</span>
+</code></pre><p><strong>2.准备素材</strong></p>
 <p>每一个游戏都离不开美术资源，我们需要做的就是把美术资源打包，然后加载进来使用。这一方面egret有一套完整的工作流。</p>
-<p><strong>①资源打包</strong>。</p>
-<p>这里我们用到的资源主要有按钮，背景，文字以及数字这些图片。我们选择把这些图片都打包在一起合成一张大图就像<a href="http://xzperproject.qiniudn.com/2048egret/resources/assets/source.png" target="_blank" rel="external">这样</a>和<a href="http://xzperproject.qiniudn.com/2048egret/resources/assets/number.png" target="_blank" rel="external">这样</a>。这样做可以减少URL请求数，还能减少资源的体积，把一些具有相同特征的图片放在一起便于管理。在egret里面这种类型的资源就是sheet。只有图片是不够的，还需要一个json描述文件来说明这张图每一张小图片的位置和大小。目前已经有成熟的工具来生成sheet和json。这里我用到的是<a href="http://www.renderhjs.net/shoebox/" target="_blank" rel="external">ShoeBox</a>配合这个<a href="https://github.com/runinspring/egretTools" target="_blank" rel="external">插件</a>来生成egret能识别的json。安装好插件后， 将每一张图片命名，然后将这些图片选中拖入Sprites Sheet中然后配置好生成的文件名点击save就能得到一张大图和一个json了，将图片和json放入”resources/assets/“文件夹下以备使用。此外ShoeBox还能读取swf将MovieClip导出为这种大图，按每一帧自动命名，这里的number.png就是这样导出的，下面有原始素材下载地址。</p>
-<p><strong> ②资源加载</strong></p>
-<p>接下来我们需要生成一个资源描述文件resource.json，在游戏开始之前读取这个json来加载对应的文件。egret的资源加载机制可以参考<a href="https://github.com/egret-labs/egret-core/wiki/Using%20Resource%20System" target="_blank" rel="external">这里</a>。现在已经有<a href="http://bbs.egret-labs.org/thread-48-1-1.html" target="_blank" rel="external">工具</a>能自动生成这个resource.json了。按照下图配置。<strong>注意：**</strong>虽然我们的资源有图片，但是对应的json文件已经记录了图片的位置，所以在这个工具中我们不需要添加对应的图片只添加json文件就行了。<br> **</p>
-<p><img src="http://xzper.qiniudn.com/wp-content/uploads/2014/06/ResTool.png" alt="ResTool"></p>
-<p><span style="color: #0000ee;"> </span>在项目初始化时，使用RES加载资源，简单明了。</p>
-<pre class="lang:as decode:true">    private onAddToStage(event:egret.Event){
-        ........
-        ........
-        //初始化Resource资源加载库
-        RES.addEventListener(RES.ResourceEvent.CONFIG_COMPLETE,this.onConfigComplete,this);
-        RES.loadConfig("resources/resource.json","resources/");
-    }
+<p><strong>①资源打包</strong></p>
+<p>这里我们用到的资源主要有按钮，背景，文字以及数字这些图片。我们选择把这些图片都打包在一起合成一张大图就像 <a href="http://xzper.com/project/2048egret/resource/assets/source.png" target="_blank" rel="external">这样</a> 和 <a href="http://xzper.com/project/2048egret/resource/assets/number.png" target="_blank" rel="external">这样</a> 这样做可以减少URL请求数，还能减少资源的体积，把一些具有相同特征的图片放在一起便于管理。在egret里面这种类型的资源就是sheet。只有图片是不够的，还需要一个json描述文件来说明这张图每一张小图片的位置和大小。目前已经有成熟的工具来生成sheet和json。这里我用到的是 <a href="http://www.renderhjs.net/shoebox/" target="_blank" rel="external">ShoeBox</a> 配合这个 <a href="https://github.com/runinspring/egretTools" target="_blank" rel="external">插件</a> 来生成egret能识别的json。安装好插件后， 将每一张图片命名，然后将这些图片选中拖入Sprites Sheet中然后配置好生成的文件名点击save就能得到一张大图和一个json了，将图片和json放入”resource/assets/“文件夹下以备使用。此外ShoeBox还能读取swf将MovieClip导出为这种大图，按每一帧自动命名，这里的number.png就是这样导出的，下面有原始素材下载地址。</p>
+<p><strong>②资源加载</strong></p>
+<p>接下来我们需要生成一个资源描述文件resource.json，在游戏开始之前读取这个json来加载对应的文件。egret的资源加载机制可以参考 <a href="https://github.com/egret-labs/egret-core/wiki/Using%20Resource%20System" target="_blank" rel="external">这里</a> 现在已经有 <a href="http://bbs.egret-labs.org/thread-48-1-1.html" target="_blank" rel="external">工具</a> 能自动生成这个resource.json了。按照下图配置。<strong>注意：虽然我们的资源有图片，但是对应的json文件已经记录了图片的位置，所以在这个工具中我们不需要添加对应的图片只添加json文件就行了。</strong></p>
+<center><img src="http://xzper.qiniudn.com/2014/06/ResTool.png" alt=""></center>
 
-    /**
-     * 配置文件加载完成,开始预加载preload资源组。
-     */
-    private onConfigComplete(event:RES.ResourceEvent):void{
-        RES.removeEventListener(RES.ResourceEvent.CONFIG_COMPLETE,this.onConfigComplete,this);
-        RES.addEventListener(RES.ResourceEvent.GROUP_COMPLETE,this.onResourceLoadComplete,this);
-        RES.addEventListener(RES.ResourceEvent.GROUP_PROGRESS,this.onResourceProgress,this);
-        RES.loadGroup("preload");
-    }</pre>
+<p>在项目初始化时，使用RES加载资源，简单明了。</p>
+<pre><code><span class="keyword">private</span> <span class="title">onAddToStage</span>(event:egret.Event){
+    ........
+    ........
+    <span class="comment">//初始化Resource资源加载库</span>
+    RES.addEventListener(RES.ResourceEvent.CONFIG_COMPLETE,<span class="keyword">this</span>.onConfigComplete,<span class="keyword">this</span>);
+    RES.loadConfig(<span class="string">"resource/resource.json"</span>,<span class="string">"resource/"</span>);
+}
 
-<p><strong>③资源使用</strong></p>
+<span class="javadoc">/**
+ *配置文件加载完成,开始预加载preload资源组。
+ */</span>
+<span class="keyword">private</span> <span class="title">onConfigComplete</span>(event:RES.ResourceEvent):<span class="keyword">void</span>{
+    RES.removeEventListener(RES.ResourceEvent.CONFIG_COMPLETE,<span class="keyword">this</span>.onConfigComplete,<span class="keyword">this</span>);
+    RES.addEventListener(RES.ResourceEvent.GROUP_COMPLETE,<span class="keyword">this</span>.onResourceLoadComplete,<span class="keyword">this</span>);
+    RES.addEventListener(RES.ResourceEvent.GROUP_PROGRESS,<span class="keyword">this</span>.onResourceProgress,<span class="keyword">this</span>);
+    RES.loadGroup(<span class="string">"preload"</span>);
+}
+</code></pre><p><strong>③资源使用</strong></p>
 <p>在项目中我们可以使用RES来使用资源，参照对应的API。对于没有写进配置文件的资源使用RES.getResByUrl方法来异步获取。开发人员能使用极其少量的代码来完成各类资源的加载。</p>
 <p><strong>3.更改模板生成的代码</strong></p>
 <p><strong>①修改细节</strong></p>
-<p>默认的文档类是GameApp。我觉得还是叫Main比较亲切，修改类名称，然后修改egret_loader.js</p>
-<pre class="lang:as decode:true">    //在此定义文档类的完整类名，若包含命名空间，需要填写命名空间前缀。
-    var document_class = "Main";</pre>
-
-<p>默认生成的html的背景是黑色的，这里全部改成白色。将index.html里面的背景替换成#ffffff。</p>
+<p>默认的文档类是GameApp。我觉得还是叫Main比较亲切，修改类名称，然后修改项目目录下的egretProperties.json文件，将document_class的值改为Main</p>
+<pre><code>{
+    "<span class="attribute">document_class</span>" : <span class="value"><span class="string">"Main"</span></span>,
+    "<span class="attribute">native</span>": <span class="value">{
+        "<span class="attribute">path_ignore</span>": <span class="value">[
+            <span class="string">"libs"</span>
+        ]
+    </span>}
+</span>}
+</code></pre><p>默认生成的html的背景是黑色的，这里全部改成白色。将index.html里面的背景替换成#ffffff。</p>
 <p>默认尺寸是480x800的尺寸。由于我们使用的部分图片宽度大于500，以及部分PC的分辨率太小为了不出现垂直滚动条影响体验，将尺寸换成520x650。这个不影响移动设备上的尺寸，移动设备默认是自适应宽度的。</p>
 <p>index.html中</p>
-<pre class="lang:as decode:true">&lt;div style="display:inline-block;width:100%; height:100%;margin: 0 auto; background: #ffffff; position:relative;"
-     id="gameDiv"&gt;
-    &lt;canvas id="gameCanvas" width="520" height="650" style="background-color: #ffffff"&gt;&lt;/canvas&gt;
-&lt;/div&gt;</pre>
-
-<p>egret_loader.js中</p>
-<pre class="lang:as decode:true">    //设置屏幕适配策略
-    var container = new egret.EqualToFrame();
-    var content = egret.Browser.getInstance().isMobile ? new egret.FixedWidth() : new egret.FixedSize(520, 650);
-    var policy = new egret.ResolutionPolicy(container, content);
-    egret.StageDelegate.getInstance().setDesignSize(520, 650, policy);</pre>
-
-<p><strong>③引入第三方库pureMVC</strong></p>
-<p>这次我们要使用到一个mvc开发框架-pureMVC，熟悉as3的朋友一定也对这个框架不陌生吧。不熟悉的也没关系，这个框架不是这次的主角。我们从<a href="https://github.com/PureMVC/puremvc-typescript-standard-framework" target="_blank" rel="external">这里</a>下载pureMVC的TypeScript版本。得到puremvc-typescript-standard-1.0.d.ts 和 puremvc-typescript-standard-1.0.js这两个文件，其实.d.ts就类似于c++里面的.h头文件，只有空方法和空属性，真正的实现是在js文件或者ts文件里面。 将.d.ts文件放入到”src/lib/“目录下,js文件放入launcher目录下。然后修改index.html引入这个js文件 以便在加载游戏代码之前先加载到库文件。release.html也一样引入这个js文件。</p>
-<pre class="lang:as decode:true">&lt;script src="bin-debug/lib/egret_file_list.js"&gt;&lt;/script&gt;
-&lt;script src="launcher/egret_loader.js"&gt;&lt;/script&gt;
-&lt;script src="launcher/puremvc-typescript-standard-1.0.js"&gt;&lt;/script&gt;
-&lt;script src="bin-debug/src/game_file_list.js"&gt;&lt;/script&gt;</pre>
-
-<p>由于现在官方对第三方库的编译支持还没设计好方案。目前我临时采用这种方式来实现。大家有更好的办法欢迎回帖讨论。</p>
-<p><strong>④注入AssetAdapter和SkinAdapter</strong></p>
-<p>我们这次的主角是egret的GUI。找到官方<a href="https://github.com/egret-labs/egret-examples" target="_blank" rel="external">GUIExample</a>中的这两个ts文件复制到项目的src文件夹下面，由于这个项目没有用到默认皮肤，删除ShinAdapter里面getDefaultSkin方法的默认皮肤。最后不要忘了一点，在引擎初始化的时候注入这两个Adapter。</p>
-<pre class="lang:as decode:true">private onAddToStage(event:egret.Event){
-        //注入自定义的素材解析器
-        egret.Injector.mapClass("egret.IAssetAdapter",AssetAdapter);
-        //注入自定义的皮肤解析器
-        egret.Injector.mapClass("egret.ISkinAdapter",SkinAdapter);
-        ......
-        ......
-}</pre>
-
-<p>这两个的Adapter的作用至关重要，AssetAdapter负责解释UIAsset的source属性 ，SkinAdapter负责解释SkinnableCompent的skinName属性。这里官方提供了两个默认已经写好了的，当然我们可以自己扩展。 没有他们，UIAsset素材包装器的source属性 和 可设置皮肤的GUI组件的skinName属性毫无作用。而这两种组件是今后使用最多的。不信可以往下看 。</p>
+<pre><code>&lt;div <span class="variable">style=</span><span class="string">"display:inline-block;width:100%; height:100%;margin: 0 auto; background: #ffffff; position:relative;"</span> <span class="variable">id=</span><span class="string">"gameDiv"</span>&gt;
+    &lt;canvas <span class="variable">id=</span><span class="string">"gameCanvas"</span> <span class="variable">width=</span><span class="string">"520"</span> <span class="variable">height=</span><span class="string">"650"</span> <span class="variable">style=</span><span class="string">"background-color: #ffffff"</span>&gt;&lt;/canvas&gt;
+&lt;/div&gt;
+</code></pre><p>egret_loader.js中</p>
+<pre><code>//设置屏幕适配策略
+egret.StageDelegate.getInstance().setDesignSize(<span class="number">520</span>, <span class="number">650</span>);
+context.<span class="variable">stage =</span> new egret.Stage();
+var <span class="variable">scaleMode =</span>  egret.MainContext.<span class="variable">deviceType =</span>= egret.MainContext.DEVICE_MOBILE ? egret.StageScaleMode.SHOW_ALL : egret.StageScaleMode.NO_SCALE;
+context.stage.<span class="variable">scaleMode =</span> scaleMode;
+</code></pre><p><strong>③引入第三方库pureMVC</strong></p>
+<p>这次我们要使用到一个mvc开发框架-pureMVC，熟悉as3的朋友一定也对这个框架不陌生吧。不熟悉的也没关系，这个框架不是这次的主角。我们从 <a href="https://github.com/PureMVC/puremvc-typescript-standard-framework" target="_blank" rel="external">这里</a> 下载pureMVC的TypeScript版本。得到puremvc-typescript-standard-1.0.d.ts 和 puremvc-typescript-standard-1.0.js这两个文件，其实.d.ts就类似于c++里面的.h头文件，只有空方法和空属性，真正的实现是在js文件或者ts文件里面。在项目里面的src文件夹下建立一个puremvc的文件夹，将这个js文件和d.ts文件放进去。然后在项目根目录下建立一个puremvc.json的文件内容如下</p>
+<pre><code>{
+    "<span class="attribute">name</span>": <span class="value"><span class="string">"puremvc"</span></span>,
+    "<span class="attribute">source</span>":<span class="value"><span class="string">"src/puremvc/"</span></span>,
+    "<span class="attribute">file_list</span>": <span class="value">[
+        <span class="string">"puremvc-typescript-standard-1.0.js"</span>,
+        <span class="string">"puremvc-typescript-standard-1.0.d.ts"</span>
+    ]
+</span>}
+</code></pre><p>这样就表示配置了一个第三方模块。之后在编译器编译时会把相应的模块对应的js文件夹编译进libs文件夹下。项目里面我们还使用了gui模块，这些模块的配置是在egretProperties.json中，部分代码如下</p>
+<pre><code><span class="string">"modules"</span>: [
+    {
+        <span class="string">"name"</span>: <span class="string">"core"</span>
+    },
+    {
+        <span class="string">"name"</span>: <span class="string">"gui"</span>
+    },
+    {
+        <span class="string">"name"</span>: <span class="string">"puremvc"</span>,<span class="string">"path"</span>:<span class="string">"."</span>
+    }
+],
+</code></pre><p><strong>④注入AssetAdapter和SkinAdapter</strong></p>
+<p>我们这次的主角是egret的GUI。找到官方<a href="https://github.com/egret-labs/egret-examples" target="_blank">GUIExample</a>中的这两个ts文件复制到项目的src文件夹下面，由于这个项目没有用到默认皮肤，删除ShinAdapter里面getDefaultSkin方法的默认皮肤。最后不要忘了一点，在引擎初始化的时候注入这两个Adapter。</p>
+<pre><code><span class="keyword">private</span> onAddToStage(event:egret<span class="built_in">.</span>Event){
+        <span class="comment">//注入自定义的素材解析器</span>
+        egret<span class="built_in">.</span>Injector<span class="built_in">.</span>mapClass(<span class="string">"egret.gui.IAssetAdapter"</span>,AssetAdapter);
+        <span class="comment">//注入自定义的皮肤解析器</span>
+        egret<span class="built_in">.</span>Injector<span class="built_in">.</span>mapClass(<span class="string">"egret.gui.ISkinAdapter"</span>,SkinAdapter);
+        <span class="attribute">...</span><span class="attribute">...</span>
+        <span class="attribute">...</span><span class="attribute">...</span>
+}
+</code></pre><p>这两个的Adapter的作用至关重要，AssetAdapter负责解释UIAsset的source属性 ，SkinAdapter负责解释SkinnableCompent的skinName属性。这里官方提供了两个默认已经写好了的，当然我们可以自己扩展。 没有他们，UIAsset素材包装器的source属性 和 可设置皮肤的GUI组件的skinName属性毫无作用。而这两种组件是今后使用最多的。不信可以往下看 。</p>
 <p><strong>⑤修改createGameScene方法</strong></p>
 <p>在生成的模板中，文档类Main在经过一系列的前期准备工作之后，终于轮到GUI组件的老大UIStage上场了。UIStage类似于Flex里面的SystemManager，内置弹出窗口层，工具提示层和鼠标样式层，所有的GUI组件都应该添加到他的下面，并且UIStage全局唯一。  这里我们实现了一个AppContainer继承自UIStage。 同时在这里pureMVC框架正式启动，开始运作。</p>
-<pre class="lang:as decode:true">    /**
-     * 创建游戏场景
-     */
-    private createGameScene():void {
-        var appContainer:game.AppContainer = new game.AppContainer();
-        this.addChild(appContainer);
-        game.ApplicationFacade.getInstance().startUp(appContainer);
-    }</pre>
-
-<p><strong>4.pureMVC</strong></p>
+<pre><code><span class="javadoc">/**
+ * 创建游戏场景
+ */</span>
+<span class="keyword">private</span> <span class="title">createGameScene</span>():<span class="keyword">void</span> {
+    var appContainer:game.AppContainer = <span class="keyword">new</span> game.AppContainer();
+    <span class="keyword">this</span>.addChild(appContainer);
+    game.ApplicationFacade.getInstance().startUp(appContainer);
+}
+</code></pre><p><strong>4.pureMVC</strong></p>
 <p><strong>①Mediator</strong></p>
 <p>Mediator(中介器)是连接视图也就是egret的GUI和pureMVC的桥梁。Mediator受到消息时(handleNotification)调用GUI组件的方法和设置属性，来改变视图。或者视图发生改变时通知Mediator由其发送消息到pureMVC(sendNotification)。</p>
-<p><strong>ApplicationMediator  </strong>监听键盘事件或者手势发送消息到GameCommand通知移动</p>
-<p><strong>MainGameMediator  </strong>接收消息，调用MainGameUI的方法处理格子的移动，添加，删除，重置，以及接收游戏结果，显示结果面板</p>
-<p><strong>MainMenuMediator</strong> 接收更新分数的消息，调用MainGameUI的方法更新分数与重置<strong>
- </strong></p>
-<p><strong>ResultWindowMediator </strong>发送游戏重置的消息，以及自销毁。</p>
+<p><strong>ApplicationMediator</strong> 监听键盘事件或者手势发送消息到GameCommand通知移动</p>
+<p><strong>MainGameMediator</strong> 接收消息，调用MainGameUI的方法处理格子的移动，添加，删除，重置，以及接收游戏结果，显示结果面板</p>
+<p><strong>MainMenuMediator</strong> 接收更新分数的消息，调用MainGameUI的方法更新分数与重置</p>
+<p><strong>ResultWindowMediator</strong> 发送游戏重置的消息，以及自销毁。</p>
 <p><strong>②Command</strong></p>
 <p>command属于控制器。负责收发消息和处理简单的事务。在StartupCommand中使用ControllerPrepCommand，ModelPrepCommand，ViewPrepCommand三个子任务。分别注册控制器，数据和视图。</p>
-<p><strong>GameCommand </strong>处理各类事务。比如 玩家按下了方向键，收到消息调用GridProxy的移动方法改变数据，比如GridProxy移动格子分数改变了，通知GameCommand 调用GameProxy的更新分数方法改变分数，比如处理重置游戏的事务，通知各个数据模块重置数据</p>
+<p><strong>GameCommand</strong> 处理各类事务。比如 玩家按下了方向键，收到消息调用GridProxy的移动方法改变数据，比如GridProxy移动格子分数改变了，通知GameCommand 调用GameProxy的更新分数方法改变分数，比如处理重置游戏的事务，通知各个数据模块重置数据</p>
 <p><strong>③Proxy</strong></p>
 <p>处理数据，提供公共方法供Command调用以改变数据。改变数据了然后sendNotification通知Mediator改变视图。</p>
-<p><strong>GameProxy </strong>处理游戏数据，比如更新分数，处理游戏结果</p>
-<p><strong>GridProxy </strong>这个游戏的核心数据，操作每一个格子的数据，通知视图格子的移动，添加，删除，重置。这里包含2048这个游戏的精髓。有兴趣的可以研究下，源码里面有详细注释，这篇文章不做重点讲解。</p>
+<p><strong>GameProxy</strong> 处理游戏数据，比如更新分数，处理游戏结果</p>
+<p><strong>GridProxy</strong> 这个游戏的核心数据，操作每一个格子的数据，通知视图格子的移动，添加，删除，重置。这里包含2048这个游戏的精髓。有兴趣的可以研究下，源码里面有详细注释，这篇文章不做重点讲解。</p>
 <p><strong>5.egret的GUI</strong></p>
-<p><strong>①制作菜单———-认识皮肤部件 </strong></p>
+<p><strong>①制作菜单———-认识皮肤部件</strong></p>
 <p>先来看看菜单长什么样子</p>
-<p><img src="http://xzper.qiniudn.com/wp-content/uploads/2014/06/菜单.jpg" alt="菜单"></p>
-<p>我们会发现这个菜单。有些是静态文本，是一直不变的，我偷懒直接用了一张图片代替了，图片可以用egret.UIAsset。</p>
-<p>还有当前得分和最高分已经那个向上飘的数字是动态的，可以选用egret.Label这个组件。</p>
-<p>一个重试按钮，既然已经说了是按钮了我们就用egret.Button好了。</p>
+<p><img src="http://xzper.qiniudn.com/2014/06/菜单.jpg" alt=""></p>
+<p>我们会发现这个菜单。有些是静态文本，是一直不变的，我偷懒直接用了一张图片代替了，图片可以用egret.gui.UIAsset。</p>
+<p>还有当前得分和最高分已经那个向上飘的数字是动态的，可以选用egret.gui.Label这个组件。</p>
+<p>一个重试按钮，既然已经说了是按钮了我们就用egret.gui.Button好了。</p>
 <p>接下来我们要做到皮肤和组件分离。那几个需要参与逻辑的组件自然就成了皮肤部件了。来看看MainMenuUISkin：</p>
-<pre class="lang:as decode:true">        /**
-         * 和主机组件匹配的皮肤部件
-         */
-        private static _skinParts:Array&lt;string&gt; = ["addLabel","scoreLabel","highScoreLabel","resetButton"];
+<pre><code><span class="javadoc">/**
+ * 和主机组件匹配的皮肤部件
+ */</span>
+<span class="keyword">private</span> <span class="keyword">static</span> _skinParts:Array&amp;lt;string&amp;gt; = [<span class="string">"addLabel"</span>,<span class="string">"scoreLabel"</span>,<span class="string">"highScoreLabel"</span>,<span class="string">"resetButton"</span>];
 
-        public get skinParts():Array&lt;string&gt;{
-            return MainMenuUISkin._skinParts;
-        }
+<span class="keyword">public</span> get <span class="title">skinParts</span>():Array&amp;lt;string&amp;gt;{
+    <span class="keyword">return</span> MainMenuUISkin._skinParts;
+}
 
-        /**
-         * 加分文本
-         */
-        public addLabel:egret.Label;
+<span class="javadoc">/**
+ * 加分文本
+ */</span>
+<span class="keyword">public</span> addLabel:egret.gui.Label;
 
-        /**
-         * 总分文本
-         */
-        public scoreLabel:egret.Label;
+<span class="javadoc">/**
+ * 总分文本
+ */</span>
+<span class="keyword">public</span> scoreLabel:egret.gui.Label;
 
-        /**
-         * 最高分文本
-         */
-        public highScoreLabel:egret.Label;
+<span class="javadoc">/**
+ * 最高分文本
+ */</span>
+<span class="keyword">public</span> highScoreLabel:egret.gui.Label;
 
-        /**
-         * 重置按钮
-         */
-        public resetButton:egret.Button;
+<span class="javadoc">/**
+ * 重置按钮
+ */</span>
+<span class="keyword">public</span> resetButton:egret.gui.Button;
 
-        public createChildren():void
-        {
-            super.createChildren;
-            var uiAsset:egret.UIAsset = new egret.UIAsset();
-            uiAsset.source = "source.menu";
-            this.addElement(uiAsset);
+<span class="keyword">public</span> <span class="title">createChildren</span>():<span class="keyword">void</span>
+{
+    <span class="keyword">super</span>.createChildren;
+    var uiAsset:egret.gui.UIAsset = <span class="keyword">new</span> egret.gui.UIAsset();
+    uiAsset.source = <span class="string">"source.menu"</span>;
+    <span class="keyword">this</span>.addElement(uiAsset);
 
-            this.resetButton = new egret.Button();
-            this.resetButton.skinName = ResetButtonSkin;
-            this.resetButton.right = 10;
-            this.resetButton.top = 80;
-            this.resetButton.label = "重置游戏";
-            this.addElement(this.resetButton);
+    <span class="keyword">this</span>.resetButton = <span class="keyword">new</span> egret.gui.Button();
+    <span class="keyword">this</span>.resetButton.skinName = ResetButtonSkin;
+    <span class="keyword">this</span>.resetButton.right = <span class="number">10</span>;
+    <span class="keyword">this</span>.resetButton.top = <span class="number">80</span>;
+    <span class="keyword">this</span>.resetButton.label = <span class="string">"重置游戏"</span>;
+    <span class="keyword">this</span>.addElement(<span class="keyword">this</span>.resetButton);
 
-            this.highScoreLabel = new egret.Label();
-            ...省略若干代码
-            this.scoreLabel = new egret.Label();
-            ...省略若干代码
-            this.addLabel = new egret.Label();
-            ...省略若干代码
-        }</pre>
-
-<p>篇幅有限，省略了createChildren方法里面的子组件布局。<strong>skin的createChildren方法是在皮肤和主机组件匹配的时候被调用的。皮肤和主机组件匹配是在主机组件被添加到显示列表的时候完成的。所以只要主机组件hostComponent还没有添加到显示舞台，获取hostComponent的皮肤部件都是无效的。</strong>这也是为什么我将Mediator的注册放在GUI组件的createComplete后。以防Mediator访问出现空对象的情况。</p>
+    <span class="keyword">this</span>.highScoreLabel = <span class="keyword">new</span> egret.gui.Label();
+    ...省略若干代码
+    <span class="keyword">this</span>.scoreLabel = <span class="keyword">new</span> egret.gui.Label();
+    ...省略若干代码
+    <span class="keyword">this</span>.addLabel = <span class="keyword">new</span> egret.gui.Label();
+    ...省略若干代码
+}
+</code></pre><p>篇幅有限，省略了createChildren方法里面的子组件布局。<strong>skin的createChildren方法是在皮肤和主机组件匹配的时候被调用的。皮肤和主机组件匹配是在主机组件被添加到显示列表的时候完成的。所以只要主机组件hostComponent还没有添加到显示舞台，获取hostComponent的皮肤部件都是无效的。</strong>这也是为什么我将Mediator的注册放在GUI组件的createComplete后。以防Mediator访问出现空对象的情况。</p>
 <p>再来看看主机组件MainMenuUI是怎么写的。</p>
-<pre class="lang:as decode:true">    export class MainMenuUI extends egret.SkinnableComponent{
-        public addLabel:egret.Label;
-        public scoreLabel:egret.Label;
-        public highScoreLabel:egret.Label;
-        public resetButton:egret.Button;
+<pre><code>export class MainMenuUI extends egret.gui.SkinnableComponent{
+    <span class="keyword">public</span> addLabel:egret.gui.Label;
+    <span class="keyword">public</span> scoreLabel:egret.gui.Label;
+    <span class="keyword">public</span> highScoreLabel:egret.gui.Label;
+    <span class="keyword">public</span> resetButton:egret.gui.Button;
 
-        public constructor(){
-            super();
-            this.skinName = MainMenuUISkin;
-            this.addEventListener(egret.UIEvent.CREATION_COMPLETE , this.createCompleteEvent, this);
-        }
-
-        public createCompleteEvent(event:egret.UIEvent):void{
-            this.removeEventListener(egret.UIEvent.CREATION_COMPLETE , this.createCompleteEvent, this);
-            ApplicationFacade.getInstance().registerMediator( new MainMenuMediator(this) );
-        }
-
-        public partAdded(partName:string, instance:any):void{
-            super.partAdded(partName , instance);
-            if(this.addLabel == instance){
-                this.addLabel.visible = false;
-            }
-        }
-
-        private moveEffect_effectEndHandler():void
-        {
-            this.addLabel.visible = false;
-        }
-
-    /**
-    * 加分效果
-    */
-        public playScoreEffect(addScore:number):void{
-            this.addLabel.visible = true;
-            this.addLabel.text = "+".concat(addScore.toString());
-            egret.Tween.removeTweens(this.addLabel);
-            this.addLabel.y = 25;
-            egret.Tween.get(this.addLabel).to({y:0},300).call(this.moveEffect_effectEndHandler , this);
+    <span class="keyword">public</span> <span class="title">constructor</span>(){
+        <span class="keyword">super</span>();
+        <span class="keyword">this</span>.skinName = MainMenuUISkin;
+        <span class="keyword">this</span>.addEventListener(egret.gui.UIEvent.CREATION_COMPLETE , <span class="keyword">this</span>.createCompleteEvent, <span class="keyword">this</span>);
     }
-   }</pre>
 
+    <span class="keyword">public</span> <span class="title">createCompleteEvent</span>(event:egret.gui.UIEvent):<span class="keyword">void</span>{
+        <span class="keyword">this</span>.removeEventListener(egret.gui.UIEvent.CREATION_COMPLETE , <span class="keyword">this</span>.createCompleteEvent, <span class="keyword">this</span>);
+        ApplicationFacade.getInstance().registerMediator( <span class="keyword">new</span> MainMenuMediator(<span class="keyword">this</span>) );
+    }
+
+    <span class="keyword">public</span> <span class="title">partAdded</span>(partName:string, instance:any):<span class="keyword">void</span>{
+        <span class="keyword">super</span>.partAdded(partName , instance);
+        <span class="keyword">if</span>(<span class="keyword">this</span>.addLabel == instance){
+            <span class="keyword">this</span>.addLabel.visible = <span class="keyword">false</span>;
+        }
+    }
+
+    <span class="keyword">private</span> <span class="title">moveEffect_effectEndHandler</span>():<span class="keyword">void</span>
+    {
+        <span class="keyword">this</span>.addLabel.visible = <span class="keyword">false</span>;
+    }
+
+    <span class="javadoc">/**
+    * 加分效果
+    */</span>
+    <span class="keyword">public</span> <span class="title">playScoreEffect</span>(addScore:number):<span class="keyword">void</span>{
+        <span class="keyword">this</span>.addLabel.visible = <span class="keyword">true</span>;
+        <span class="keyword">this</span>.addLabel.text = <span class="string">"+"</span>.concat(addScore.toString());
+        egret.Tween.removeTweens(<span class="keyword">this</span>.addLabel);
+        <span class="keyword">this</span>.addLabel.y = <span class="number">25</span>;
+        egret.Tween.get(<span class="keyword">this</span>.addLabel).to({y:<span class="number">0</span>},<span class="number">300</span>).call(<span class="keyword">this</span>.moveEffect_effectEndHandler , <span class="keyword">this</span>);
+    }
+</code></pre><p>   }</p>
 <p>在构造函数里面赋值skinName传入皮肤的类引用，这个解析过程就是SkinAdapter完成的。 可以看到主机组件有一个partAdded进行皮肤组件的配对。这个时候我们就可以获取到对应的皮肤组件，来进行操作了，</p>
 <p><strong>②制作游戏区域————了解九宫格和容器布局</strong></p>
-<p><img src="http://xzper.qiniudn.com/wp-content/uploads/2014/06/游戏演示.png" alt="游戏演示"></p>
+<p><img src="http://xzper.qiniudn.com/2014/06/游戏演示.png" alt=""></p>
 <p>再次来观察这个游戏的主界面。有一张纯色的背景图，还有4x4个空白的格子，随着游戏的进行会多出带数字的格子，游戏结束了还会出现胜利的界面。</p>
 <p>先来看看第一张图。也许你认为这个背景一张4x4的图片不就搞定了么。不过我们这个2048单元格的数量可是可以任意调整的，可以是5x5，或者6x6甚至更多，这样才具备灵活性。你只需要改变CommandData的size属性就可以了(PS:游戏胜利的条件默认是达成2048，也可以通过修改CommandData的winValue属性来修改条件比如8192时胜利或者像上面那样32的时候胜利，想不输都难)。</p>
 <p>我们继承SkinnableContainer建立一个MainGameUI的类作为容器来显示上面的界面，当然同时还需要一个皮肤MainGameUISkin。先来确定skinParts，如下：</p>
-<pre class="lang:as decode:true">        /**
-         * 和主机组件匹配的皮肤部件
-         */
-        private static _skinParts:Array&lt;string&gt; = [
-            "tileGroup","contentGroup"
-        ];
+<pre><code><span class="javadoc">/**
+ * 和主机组件匹配的皮肤部件
+ */</span>
+<span class="keyword">private</span> <span class="keyword">static</span> _skinParts:Array&amp;lt;string&amp;gt; = [
+    <span class="string">"tileGroup"</span>,<span class="string">"contentGroup"</span>
+];
 
-        public get skinParts():Array&lt;string&gt;{
-            return MainGameUISkin._skinParts;
-        }
+<span class="keyword">public</span> get <span class="title">skinParts</span>():Array&amp;lt;string&amp;gt;{
+    <span class="keyword">return</span> MainGameUISkin._skinParts;
+}
 
-        /**
-         * 游戏底背景
-         */
-        private backUIAsset:egret.UIAsset;
+<span class="javadoc">/**
+ * 游戏底背景
+ */</span>
+<span class="keyword">private</span> backUIAsset:egret.gui.UIAsset;
 
-        /**
-         * 背景格子容器
-         */
-        private backGroundGroup:egret.Group;
+<span class="javadoc">/**
+ * 背景格子容器
+ */</span>
+<span class="keyword">private</span> backGroundGroup:egret.gui.Group;
 
-        /**
-         * 格子容器
-         */
-        public tileGroup:egret.Group;
+<span class="javadoc">/**
+ * 格子容器
+ */</span>
+<span class="keyword">public</span> tileGroup:egret.gui.Group;
 
-        /**
-         * 内容
-         */
-        public contentGroup:egret.Group;</pre>
+<span class="javadoc">/**
+ * 内容
+ */</span>
+<span class="keyword">public</span> contentGroup:egret.gui.Group;
+</code></pre><p>游戏游戏的底背景backUIAsset和背景格子容器backGroundGroup由于逻辑组件MainGameUI不需要关心所有这里不将其设置为skinParts。tileGroup是放置单元格的容器，contentGroup是SkinnableContainer的皮肤部件，SkinnableContainer的addElement方法实际上是添加到这个里面，换言之如果皮肤缺少这个contentGroup那么调用MainGameUI的addElement是看不到你要添加的子项的。 然后override这个createChildren方法将这些组件加入到显示列表。</p>
+<pre><code><span class="keyword">public</span> createChildren():<span class="keyword">void</span>
+{
+    <span class="keyword">super</span>.createChildren;
+    <span class="keyword">this</span>.backUIAsset = <span class="keyword">new</span> egret.gui.UIAsset();
+    <span class="keyword">this</span>.backUIAsset.<span class="keyword">source</span> = <span class="string">"source.background"</span>;
+    <span class="comment">//使用九宫格</span>
+    <span class="keyword">this</span>.backUIAsset.scale9Grid = <span class="keyword">new</span> egret.gui.Rectangle(<span class="number">20</span>, <span class="number">20</span>, <span class="number">65</span>, <span class="number">65</span>);
+    <span class="keyword">this</span>.backUIAsset.width = CommonData.<span class="keyword">size</span>*(TileUI.<span class="keyword">size</span> + <span class="keyword">this</span>.gap) + <span class="keyword">this</span>.gap;
+    <span class="keyword">this</span>.backUIAsset.height = <span class="keyword">this</span>.backUIAsset.width;
+    <span class="keyword">this</span>.addElement(<span class="keyword">this</span>.backUIAsset);
 
-<p>游戏游戏的底背景backUIAsset和背景格子容器backGroundGroup由于逻辑组件MainGameUI不需要关心所有这里不将其设置为skinParts。tileGroup是放置单元格的容器，contentGroup是SkinnableContainer的皮肤部件，SkinnableContainer的addElement方法实际上是添加到这个里面，换言之如果皮肤缺少这个contentGroup那么调用MainGameUI的addElement是看不到你要添加的子项的。 然后override这个createChildren方法将这些组件加入到显示列表。</p>
-<pre class="lang:as decode:true">        public createChildren():void
+    <span class="comment">//使用格子布局</span>
+    var layout:egret.gui.TileLayout = <span class="keyword">new</span> egret.gui.TileLayout();
+    layout.columnCount = layout.rowCount = CommonData.<span class="keyword">size</span>;
+    layout.horizontalGap = layout.verticalGap = <span class="keyword">this</span>.gap;
+    <span class="keyword">this</span>.backGroundGroup = <span class="keyword">new</span> egret.gui.<span class="keyword">Group</span>();
+    <span class="keyword">this</span>.backGroundGroup.x = <span class="keyword">this</span>.backGroundGroup.y = <span class="keyword">this</span>.gap;
+    <span class="keyword">this</span>.backGroundGroup.layout = layout;
+    <span class="keyword">this</span>.addElement(<span class="keyword">this</span>.backGroundGroup);
+    <span class="keyword">this</span>.initBackGround(CommonData.<span class="keyword">size</span>);
+
+    <span class="keyword">this</span>.tileGroup = <span class="keyword">new</span> egret.gui.<span class="keyword">Group</span>();
+    <span class="keyword">this</span>.tileGroup.x = <span class="keyword">this</span>.tileGroup.y = <span class="keyword">this</span>.gap;
+    <span class="keyword">this</span>.addElement(<span class="keyword">this</span>.tileGroup);
+
+    <span class="keyword">this</span>.contentGroup = <span class="keyword">new</span> egret.gui.<span class="keyword">Group</span>();
+    <span class="keyword">this</span>.contentGroup.percentHeight = <span class="keyword">this</span>.contentGroup.percentWidth = <span class="number">100</span>;
+    <span class="keyword">this</span>.contentGroup.touchEnabled = <span class="keyword">false</span>;
+    <span class="keyword">this</span>.addElement(<span class="keyword">this</span>.contentGroup);
+}
+</code></pre><p>先看backUIAsset，由于图片素材只是一个小的纯色圆角矩形，使用scale9Grid属性来设置九宫格缩放，这样设置了宽高就不会变形了。这里backGroundGroup设置了一个layout来确定布局。设置好间距以及行列数，向容器里面添加子项时就自动设置了位置了，不需要设置子项的x，y属性。TileLayout会自动布局。</p>
+<pre><code><span class="keyword">private</span> initBackGround(size:<span class="built_in">number</span>):<span class="built_in">void</span>{
+        <span class="comment">//背景格子</span>
+        <span class="keyword">var</span> tile:egret.gui.UIAsset;
+        <span class="keyword">var</span> totalNum:<span class="built_in">number</span> = size * size;
+        <span class="keyword">for</span>(<span class="keyword">var</span> i:<span class="built_in">number</span> = <span class="number">0</span>;i &amp;lt; totalNum ; i++)
         {
-            super.createChildren;
-            this.backUIAsset = new egret.UIAsset();
-            this.backUIAsset.source = "source.background";
-            //使用九宫格
-            this.backUIAsset.scale9Grid = new egret.Rectangle(20, 20, 65, 65);
-            this.backUIAsset.width = CommonData.size*(TileUI.size + this.gap) + this.gap;
-            this.backUIAsset.height = this.backUIAsset.width;
-            this.addElement(this.backUIAsset);
-
-            //使用格子布局
-            var layout:egret.TileLayout = new egret.TileLayout();
-            layout.columnCount = layout.rowCount = CommonData.size;
-            layout.horizontalGap = layout.verticalGap = this.gap;
-            this.backGroundGroup = new egret.Group();
-            this.backGroundGroup.x = this.backGroundGroup.y = this.gap;
-            this.backGroundGroup.layout = layout;
-            this.addElement(this.backGroundGroup);
-            this.initBackGround(CommonData.size);
-
-            this.tileGroup = new egret.Group();
-            this.tileGroup.x = this.tileGroup.y = this.gap;
-            this.addElement(this.tileGroup);
-
-            this.contentGroup = new egret.Group();
-            this.contentGroup.percentHeight = this.contentGroup.percentWidth = 100;
-            this.contentGroup.touchEnabled = false;
-            this.addElement(this.contentGroup);
-        }</pre>
-
-<p>先看backUIAsset，由于图片素材只是一个小的纯色圆角矩形，使用scale9Grid属性来设置九宫格缩放，这样设置了宽高就不会变形了。这里backGroundGroup设置了一个layout来确定布局。设置好间距以及行列数，向容器里面添加子项时就自动设置了位置了，不需要设置子项的x，y属性。TileLayout会自动布局。</p>
-<pre class="lang:as decode:true">        private initBackGround(size:number):void{
-            //背景格子
-            var tile:egret.UIAsset;
-            var totalNum:number = size * size;
-            for(var i:number = 0;i &lt; totalNum ; i++)
-            {
-                tile = new egret.UIAsset();
-                tile.width = tile.height = TileUI.size;
-                tile.source = "source.backtile";
-                this.backGroundGroup.addElement(tile);
-            }
-        }</pre>
-
-<p><strong>③制作单元格————自定义属性</strong></p>
+            tile = <span class="keyword">new</span> egret.gui.UIAsset();
+            tile.width = tile.height = TileUI.size;
+            tile.source = <span class="string">"source.backtile"</span>;
+            <span class="keyword">this</span>.backGroundGroup.addElement(tile);
+        }
+}
+</code></pre><p><strong>③制作单元格————自定义属性</strong></p>
 <p>单元格使用TileUI来定义。单元格有一个很重要的属性就是单元格的数据，这里使用value属性来表示。</p>
-<pre class="lang:as decode:true">        private valueChanged:boolean;
-        private _value:number;
-        /**
-         * 格子的数字
-         */
-        public get value():number{
-            return this._value;
-        }
+<pre><code><span class="keyword">private</span> valueChanged:<span class="keyword">boolean</span>;
+<span class="keyword">private</span> _value:number;
+<span class="javadoc">/**
+ * 格子的数字
+ */</span>
+<span class="keyword">public</span> get <span class="title">value</span>():number{
+    <span class="keyword">return</span> <span class="keyword">this</span>._value;
+}
 
-        public set value(value:number){
-            if(value == this._value){
-                return;
-            }
-            this.valueChanged = true;
-            this._value = value;
-            this.invalidateProperties();
-        }
+<span class="keyword">public</span> set <span class="title">value</span>(value:number){
+    <span class="keyword">if</span>(value == <span class="keyword">this</span>._value){
+        <span class="keyword">return</span>;
+    }
+    <span class="keyword">this</span>.valueChanged = <span class="keyword">true</span>;
+    <span class="keyword">this</span>._value = value;
+    <span class="keyword">this</span>.invalidateProperties();
+}
 
-        public commitProperties():void{
-            if(this.valueChanged){
-                this.valueChanged = false;
-                this.updateValue();
-            }
-        }
+<span class="keyword">public</span> <span class="title">commitProperties</span>():<span class="keyword">void</span>{
+    <span class="keyword">if</span>(<span class="keyword">this</span>.valueChanged){
+        <span class="keyword">this</span>.valueChanged = <span class="keyword">false</span>;
+        <span class="keyword">this</span>.updateValue();
+    }
+}
 
-        private updateValue():void{
-            var mi:number = Math.log(this._value)/Math.log(2);
-            this.source = "number.number_"+mi;
-        }</pre>
+<span class="keyword">private</span> <span class="title">updateValue</span>():<span class="keyword">void</span>{
+    var mi:number = Math.log(<span class="keyword">this</span>._value)/Math.log(<span class="number">2</span>);
+    <span class="keyword">this</span>.source = <span class="string">"number.number_"</span>+mi;
+}
+</code></pre><p>这里使用了invalidateProperties和commitProperties来完成属性的失效验证。当设置value的时候调用invalidateProperties，失效属性，GUI框架在下一次渲染的时候会调用commitProperties来完成属性的提交。失效验证简单说就是一种延迟应用改变的措施，这种失效验证在egret的GUI组件内部随处可见。这种自定义属性的例子只是其中之一，当组件的commitProperties方法被调用时组件已经准备完毕，所有的皮肤部件也匹配上了。这样也不用担心应用属性的时候报空的情况。这里通过设置TileUI的source属性来改变数字。还记得一开始的resource.json加载的number.json么。</p>
+<pre><code>{
+"<span class="attribute">frames</span>": <span class="value">{
+    "<span class="attribute">number_1</span>": <span class="value">{"<span class="attribute">x</span>":<span class="value"><span class="number">106</span></span>, "<span class="attribute">y</span>":<span class="value"><span class="number">212</span></span>, "<span class="attribute">w</span>":<span class="value"><span class="number">105</span></span>, "<span class="attribute">h</span>":<span class="value"><span class="number">105</span></span>, "<span class="attribute">offX</span>":<span class="value"><span class="number">0</span></span>,"<span class="attribute">offY</span>":<span class="value"><span class="number">0</span></span>,"<span class="attribute">sourceW</span>":<span class="value"><span class="number">105</span></span>,"<span class="attribute">sourceH</span>":<span class="value"><span class="number">105</span></span>}</span>,
+    "<span class="attribute">number_10</span>": <span class="value">{"<span class="attribute">x</span>":<span class="value"><span class="number">0</span></span>, "<span class="attribute">y</span>":<span class="value"><span class="number">318</span></span>, "<span class="attribute">w</span>":<span class="value"><span class="number">105</span></span>, "<span class="attribute">h</span>":<span class="value"><span class="number">105</span></span>, "<span class="attribute">offX</span>":<span class="value"><span class="number">0</span></span>,"<span class="attribute">offY</span>":<span class="value"><span class="number">0</span></span>,"<span class="attribute">sourceW</span>":<span class="value"><span class="number">105</span></span>,"<span class="attribute">sourceH</span>":<span class="value"><span class="number">105</span></span>}</span>,
+    "<span class="attribute">number_11</span>": <span class="value">{"<span class="attribute">x</span>":<span class="value"><span class="number">0</span></span>, "<span class="attribute">y</span>":<span class="value"><span class="number">212</span></span>, "<span class="attribute">w</span>":<span class="value"><span class="number">105</span></span>, "<span class="attribute">h</span>":<span class="value"><span class="number">105</span></span>, "<span class="attribute">offX</span>":<span class="value"><span class="number">0</span></span>,"<span class="attribute">offY</span>":<span class="value"><span class="number">0</span></span>,"<span class="attribute">sourceW</span>":<span class="value"><span class="number">105</span></span>,"<span class="attribute">sourceH</span>":<span class="value"><span class="number">105</span></span>}</span>,
+    "<span class="attribute">number_12</span>": <span class="value">{"<span class="attribute">x</span>":<span class="value"><span class="number">0</span></span>, "<span class="attribute">y</span>":<span class="value"><span class="number">106</span></span>, "<span class="attribute">w</span>":<span class="value"><span class="number">105</span></span>, "<span class="attribute">h</span>":<span class="value"><span class="number">105</span></span>, "<span class="attribute">offX</span>":<span class="value"><span class="number">0</span></span>,"<span class="attribute">offY</span>":<span class="value"><span class="number">0</span></span>,"<span class="attribute">sourceW</span>":<span class="value"><span class="number">105</span></span>,"<span class="attribute">sourceH</span>":<span class="value"><span class="number">105</span></span>}</span>,
+    "<span class="attribute">number_13</span>": <span class="value">{"<span class="attribute">x</span>":<span class="value"><span class="number">0</span></span>, "<span class="attribute">y</span>":<span class="value"><span class="number">0</span></span>, "<span class="attribute">w</span>":<span class="value"><span class="number">105</span></span>, "<span class="attribute">h</span>":<span class="value"><span class="number">105</span></span>, "<span class="attribute">offX</span>":<span class="value"><span class="number">0</span></span>,"<span class="attribute">offY</span>":<span class="value"><span class="number">0</span></span>,"<span class="attribute">sourceW</span>":<span class="value"><span class="number">105</span></span>,"<span class="attribute">sourceH</span>":<span class="value"><span class="number">105</span></span>}</span>,
+    "<span class="attribute">number_2</span>": <span class="value">{"<span class="attribute">x</span>":<span class="value"><span class="number">212</span></span>, "<span class="attribute">y</span>":<span class="value"><span class="number">318</span></span>, "<span class="attribute">w</span>":<span class="value"><span class="number">105</span></span>, "<span class="attribute">h</span>":<span class="value"><span class="number">105</span></span>, "<span class="attribute">offX</span>":<span class="value"><span class="number">0</span></span>,"<span class="attribute">offY</span>":<span class="value"><span class="number">0</span></span>,"<span class="attribute">sourceW</span>":<span class="value"><span class="number">105</span></span>,"<span class="attribute">sourceH</span>":<span class="value"><span class="number">105</span></span>}</span>,
+    "<span class="attribute">number_3</span>": <span class="value">{"<span class="attribute">x</span>":<span class="value"><span class="number">212</span></span>, "<span class="attribute">y</span>":<span class="value"><span class="number">212</span></span>, "<span class="attribute">w</span>":<span class="value"><span class="number">105</span></span>, "<span class="attribute">h</span>":<span class="value"><span class="number">105</span></span>, "<span class="attribute">offX</span>":<span class="value"><span class="number">0</span></span>,"<span class="attribute">offY</span>":<span class="value"><span class="number">0</span></span>,"<span class="attribute">sourceW</span>":<span class="value"><span class="number">105</span></span>,"<span class="attribute">sourceH</span>":<span class="value"><span class="number">105</span></span>}</span>,
+    "<span class="attribute">number_4</span>": <span class="value">{"<span class="attribute">x</span>":<span class="value"><span class="number">212</span></span>, "<span class="attribute">y</span>":<span class="value"><span class="number">106</span></span>, "<span class="attribute">w</span>":<span class="value"><span class="number">105</span></span>, "<span class="attribute">h</span>":<span class="value"><span class="number">105</span></span>, "<span class="attribute">offX</span>":<span class="value"><span class="number">0</span></span>,"<span class="attribute">offY</span>":<span class="value"><span class="number">0</span></span>,"<span class="attribute">sourceW</span>":<span class="value"><span class="number">105</span></span>,"<span class="attribute">sourceH</span>":<span class="value"><span class="number">105</span></span>}</span>,
+    "<span class="attribute">number_5</span>": <span class="value">{"<span class="attribute">x</span>":<span class="value"><span class="number">212</span></span>, "<span class="attribute">y</span>":<span class="value"><span class="number">0</span></span>, "<span class="attribute">w</span>":<span class="value"><span class="number">105</span></span>, "<span class="attribute">h</span>":<span class="value"><span class="number">105</span></span>, "<span class="attribute">offX</span>":<span class="value"><span class="number">0</span></span>,"<span class="attribute">offY</span>":<span class="value"><span class="number">0</span></span>,"<span class="attribute">sourceW</span>":<span class="value"><span class="number">105</span></span>,"<span class="attribute">sourceH</span>":<span class="value"><span class="number">105</span></span>}</span>,
+    "<span class="attribute">number_6</span>": <span class="value">{"<span class="attribute">x</span>":<span class="value"><span class="number">106</span></span>, "<span class="attribute">y</span>":<span class="value"><span class="number">318</span></span>, "<span class="attribute">w</span>":<span class="value"><span class="number">105</span></span>, "<span class="attribute">h</span>":<span class="value"><span class="number">105</span></span>, "<span class="attribute">offX</span>":<span class="value"><span class="number">0</span></span>,"<span class="attribute">offY</span>":<span class="value"><span class="number">0</span></span>,"<span class="attribute">sourceW</span>":<span class="value"><span class="number">105</span></span>,"<span class="attribute">sourceH</span>":<span class="value"><span class="number">105</span></span>}</span>,
+    "<span class="attribute">number_7</span>": <span class="value">{"<span class="attribute">x</span>":<span class="value"><span class="number">318</span></span>, "<span class="attribute">y</span>":<span class="value"><span class="number">0</span></span>, "<span class="attribute">w</span>":<span class="value"><span class="number">105</span></span>, "<span class="attribute">h</span>":<span class="value"><span class="number">105</span></span>, "<span class="attribute">offX</span>":<span class="value"><span class="number">0</span></span>,"<span class="attribute">offY</span>":<span class="value"><span class="number">0</span></span>,"<span class="attribute">sourceW</span>":<span class="value"><span class="number">105</span></span>,"<span class="attribute">sourceH</span>":<span class="value"><span class="number">105</span></span>}</span>,
+    "<span class="attribute">number_8</span>": <span class="value">{"<span class="attribute">x</span>":<span class="value"><span class="number">106</span></span>, "<span class="attribute">y</span>":<span class="value"><span class="number">106</span></span>, "<span class="attribute">w</span>":<span class="value"><span class="number">105</span></span>, "<span class="attribute">h</span>":<span class="value"><span class="number">105</span></span>, "<span class="attribute">offX</span>":<span class="value"><span class="number">0</span></span>,"<span class="attribute">offY</span>":<span class="value"><span class="number">0</span></span>,"<span class="attribute">sourceW</span>":<span class="value"><span class="number">105</span></span>,"<span class="attribute">sourceH</span>":<span class="value"><span class="number">105</span></span>}</span>,
+    "<span class="attribute">number_9</span>": <span class="value">{"<span class="attribute">x</span>":<span class="value"><span class="number">106</span></span>, "<span class="attribute">y</span>":<span class="value"><span class="number">0</span></span>, "<span class="attribute">w</span>":<span class="value"><span class="number">105</span></span>, "<span class="attribute">h</span>":<span class="value"><span class="number">105</span></span>, "<span class="attribute">offX</span>":<span class="value"><span class="number">0</span></span>,"<span class="attribute">offY</span>":<span class="value"><span class="number">0</span></span>,"<span class="attribute">sourceW</span>":<span class="value"><span class="number">105</span></span>,"<span class="attribute">sourceH</span>":<span class="value"><span class="number">105</span></span>}
 
-<p>这里使用了invalidateProperties和commitProperties来完成属性的失效验证。当设置value的时候调用invalidateProperties，失效属性，GUI框架在下一次渲染的时候会调用commitProperties来完成属性的提交。失效验证简单说就是一种延迟应用改变的措施，这种失效验证在egret的GUI组件内部随处可见。这种自定义属性的例子只是其中之一，当组件的commitProperties方法被调用时组件已经准备完毕，所有的皮肤部件也匹配上了。这样也不用担心应用属性的时候报空的情况。这里通过设置TileUI的source属性来改变数字。还记得一开始的resource.json加载的number.json么。</p>
-<pre class="lang:as decode:true">{
-"frames": {
-    "number_1": {"x":107, "y":214, "w":106, "h":106, "offX":262,"offY":159},
-    "number_10": {"x":0, "y":321, "w":106, "h":106, "offX":262,"offY":159},
-    "number_11": {"x":0, "y":214, "w":106, "h":106, "offX":262,"offY":159},
-    "number_12": {"x":0, "y":107, "w":106, "h":106, "offX":262,"offY":159},
-    "number_13": {"x":0, "y":0, "w":106, "h":106, "offX":262,"offY":159},
-    "number_2": {"x":214, "y":321, "w":106, "h":106, "offX":262,"offY":159},
-    "number_3": {"x":214, "y":214, "w":106, "h":106, "offX":262,"offY":159},
-    "number_4": {"x":214, "y":107, "w":106, "h":106, "offX":262,"offY":159},
-    "number_5": {"x":214, "y":0, "w":106, "h":106, "offX":262,"offY":159},
-    "number_6": {"x":107, "y":321, "w":106, "h":106, "offX":262,"offY":159},
-    "number_7": {"x":321, "y":0, "w":106, "h":106, "offX":262,"offY":159},
-    "number_8": {"x":107, "y":107, "w":106, "h":106, "offX":262,"offY":159},
-    "number_9": {"x":107, "y":0, "w":106, "h":106, "offX":262,"offY":159}
-
-},
-"file": "number.png"
-}</pre>
-
-<p>这个sheet记录的每一张图也有一个名称比如2这个数字就是number_1，加上number这个sheet名称使用”.”符号连接，所以获取”2”这个数字的图片就可以这样写this.source = “number.number_1”。根据值的不同取2的对数得到相应的下标数字。</p>
+</span>}</span>,
+"<span class="attribute">file</span>": <span class="value"><span class="string">"number.png"</span>
+</span>}
+</code></pre><p>这个sheet记录的每一张图也有一个名称比如2这个数字就是number_1加上number这个sheet名称使用”.”符号连接，所以获取”2”这个数字的图片就可以这样写this.source = “number.number_1”。根据值的不同取2的对数得到相应的下标数字。</p>
 <p><strong>④制作胜负界面————自定义组件状态</strong></p>
 <p>游戏结束之后会出现胜负的界面。但是胜负界面应该是两套不同的素材，那么我们是不是可以制作两个皮肤来根据胜负来切换？这样当然可以。但是，还有一种更简单的办法就是使用自定义状态，只需要一个皮肤类就可以完成两种视图的切换。</p>
 <p>新建一个ResultWindow类继承自SkinnableComponent，然后新建ResultWindowSkin。在ResultWindowSkin的构造函数中定义两个状态win和failed。</p>
-<pre class="lang:as decode:true">        public constructor(){
-            super();
-            this.states = ["win","failed"];
-        }</pre>
+<pre><code><span class="keyword">public</span> <span class="constructor"><span class="keyword">constructor</span>()</span>{
+    <span class="keyword">super</span>();
+    <span class="keyword">this</span>.states = [<span class="string">"win"</span>,<span class="string">"failed"</span>];
+}
+</code></pre><p>然后加入两个皮肤部件button和resultUI</p>
+<pre><code><span class="keyword">private</span> <span class="keyword">static</span> _skinParts:Array&lt;string&gt; = [<span class="string">"button"</span>,<span class="string">"resultUI"</span>];
 
-<p>然后加入两个皮肤部件button和resultUI</p>
-<pre class="lang:as decode:true">        private static _skinParts:Array&lt;string&gt; = ["button","resultUI"];
+<span class="keyword">public</span> get <span class="title">skinParts</span>():Array&lt;string&gt;{
+    <span class="keyword">return</span> ResultWindowSkin._skinParts;
+}
 
-        public get skinParts():Array&lt;string&gt;{
-            return ResultWindowSkin._skinParts;
-        }
+<span class="javadoc">/**
+ * 按钮
+ */</span>
+<span class="keyword">public</span> button:egret.gui.Button;
 
-        /**
-         * 按钮
-         */
-        public button:egret.Button;
+<span class="javadoc">/**
+ * 结果文本
+ */</span>
+<span class="keyword">public</span> resultUI:egret.gui.UIAsset;
+</code></pre><p>在createChildren里面将皮肤部件布局好位置。最后重写commitCurrentState方法来根据对应的状态来改变部件的skin。</p>
+<pre><code><span class="keyword">public</span> <span class="title">commitCurrentState</span>():<span class="keyword">void</span> {
+    <span class="keyword">super</span>.commitCurrentState();
+    <span class="keyword">if</span>(<span class="keyword">this</span>.currentState == <span class="string">"win"</span>)
+    {
+        <span class="keyword">this</span>.resultUI.source = <span class="string">"source.result_sucess"</span>;
+        <span class="keyword">this</span>.button.skinName = ContinueButtonSkin;
+    }
+    <span class="keyword">else</span>
+    {
+        <span class="keyword">this</span>.resultUI.source = <span class="string">"source.result_failed"</span>;
+        <span class="keyword">this</span>.button.skinName = ResetButtonSkin;
+    }
+}
+</code></pre><p>这样还没有完，我们需要在主机组件里面定义何时是何种状态，在ResultWindow中重写getCurrentSkinState来定义皮肤状态。</p>
+<pre><code><span class="keyword">private</span> _win:boolean = <span class="keyword">false</span>;
+<span class="keyword">public</span> <span class="keyword">get</span> <span class="title">win</span>():boolean{
+    <span class="keyword">return</span> <span class="keyword">this</span>._win;
+}
 
-        /**
-         * 结果文本
-         */
-        public resultUI:egret.UIAsset;</pre>
+<span class="keyword">public</span> <span class="keyword">set</span> <span class="title">win</span>(<span class="keyword">value</span>:boolean){
+    <span class="keyword">if</span>(<span class="keyword">value</span> == <span class="keyword">this</span>._win)
+        <span class="keyword">return</span>;
+    <span class="keyword">this</span>._win = <span class="keyword">value</span>;
+    <span class="keyword">this</span>.invalidateSkinState();
+}
 
-<p>在createChildren里面将皮肤部件布局好位置。最后重写commitCurrentState方法来根据对应的状态来改变部件的skin。</p>
-<pre class="lang:as decode:true">        public commitCurrentState():void {
-            super.commitCurrentState();
-            if(this.currentState == "win")
-            {
-                this.resultUI.source = "source.result_sucess";
-                this.button.skinName = ContinueButtonSkin;
-            }
-            else
-            {
-                this.resultUI.source = "source.result_failed";
-                this.button.skinName = ResetButtonSkin;
-            }
-        }</pre>
-
-<p>这样还没有完，我们需要在主机组件里面定义何时是何种状态，在ResultWindow中重写getCurrentSkinState来定义皮肤状态。</p>
-<pre class="lang:as decode:true">        private _win:boolean = false;
-        public get win():boolean{
-            return this._win;
-        }
-
-        public set win(value:boolean){
-            if(value == this._win)
-                return;
-            this._win = value;
-            this.invalidateSkinState();
-        }
-
-        public getCurrentSkinState():string {
-            return this.win?"win":"failed";
-        }</pre>
-
-<p>当外界设置win的值时调用invalidateSkinState来失效皮肤状态，在框架下次渲染的时候，调用SkinnableComponent的validateSkinState方法同时通过getCurrentSkinState来获取皮肤状态，通知皮肤去改变视图。这又是失效验证机制的一次完美使用。我们只需要调用失效，然后重写对应的验证方法就行了。</p>
+<span class="keyword">public</span> <span class="title">getCurrentSkinState</span>():<span class="keyword">string</span> {
+    <span class="keyword">return</span> <span class="keyword">this</span>.win?<span class="string">"win"</span>:<span class="string">"failed"</span>;
+}
+</code></pre><p>当外界设置win的值时调用invalidateSkinState来失效皮肤状态，在框架下次渲染的时候，调用SkinnableComponent的validateSkinState方法同时通过getCurrentSkinState来获取皮肤状态，通知皮肤去改变视图。这又是失效验证机制的一次完美使用。我们只需要调用失效，然后重写对应的验证方法就行了。事实上，按钮的up，down，disable之类的状态也是这样实现的。</p>
 <p>egret的GUI库，集合了Flex和<a href="http://flexlite.org" target="_blank" rel="external">FlexLite</a>的核心思想。实现了自动布局，皮肤分离，组件的三层失效验证机制。快来膜拜作者<a href="http://blog.domlib.com/" target="_blank" rel="external">DOM</a>大神吧。</p>
 <p><strong>6.优化游戏</strong></p>
 <p><strong>①使用对象池</strong></p>
 <p>在游戏里面随着游戏的进行，每一次移动都有一个格子组件TileUI的创建，当游戏久了会造成巨大的内存开销。这里使用对象池技术。当一个对象使用完毕时，放入对象池，下次需要使用时取出来，这样避免了对象的重复创建，节约了内存。具体的实现参考ObjectPool这个类。具体使用在MainGameUI里面，如下：</p>
-<pre class="lang:as decode:true">        /**
-         * 创建一个格子
-         */
-        public createTile(tileVO:TileVO):void{
-            var tile:TileUI = &lt;TileUI&gt;(ObjectPool.getPool("game.TileUI").borrowObject());  //从对象池创建
-           ......
-           ......
-        }</pre>
-
-<p>当对象池里面没有TileUI时使用会new一个出来，否则直接从对象池获取。</p>
-<pre class="lang:as decode:true">        /**
-         * 清除一个格子
-         */
-        public removeTile(tileVO:TileVO):void{
-            var tileUI:TileUI = this.getTileUI(tileVO.x , tileVO.y);
-            if(tileUI){
-                this.tileGroup.removeElement(tileUI);
-                ObjectPool.getPool("game.TileUI").returnObject(tileUI);
-            }
-        }</pre>
-
-<p>当格子销毁时，回收到对象池，以备下次使用。</p>
+<pre><code><span class="javadoc">/**
+ * 创建一个格子
+ */</span>
+<span class="keyword">public</span> <span class="title">createTile</span>(tileVO:TileVO):<span class="keyword">void</span>{
+    var tile:TileUI = &amp;lt;TileUI&amp;gt;(ObjectPool.getPool(<span class="string">"game.TileUI"</span>).borrowObject());  <span class="comment">//从对象池创建</span>
+   ......
+   ......
+}
+</code></pre><p>当对象池里面没有TileUI时使用会new一个出来，否则直接从对象池获取。</p>
+<pre><code><span class="javadoc">/**
+ * 清除一个格子
+ */</span>
+<span class="keyword">public</span> <span class="title">removeTile</span>(tileVO:TileVO):<span class="keyword">void</span>{
+    var tileUI:TileUI = <span class="keyword">this</span>.getTileUI(tileVO.x , tileVO.y);
+    <span class="keyword">if</span>(tileUI){
+        <span class="keyword">this</span>.tileGroup.removeElement(tileUI);
+        ObjectPool.getPool(<span class="string">"game.TileUI"</span>).returnObject(tileUI);
+    }
+}
+</code></pre><p>当格子销毁时，回收到对象池，以备下次使用。</p>
 <p>另外由于js没有提供弱引用特性，在对象池里面的对象要彻底销毁就需要手动了。</p>
 <p><strong>②针对不同设备</strong></p>
-<p>游戏在PC我们使用键盘上的方向键操控游戏，但是在移动设备上就需要使用手势来操控了，通过egret.Browser.getInstance().isMobile这个值来获取平台 。具体实现在ApplicationMediator中：</p>
-<pre class="lang:as decode:true">            //为PC和移动端设置不同的移动策略
-            if(!egret.Browser.getInstance().isMobile)
-            {
-                var self = this;
-                document.addEventListener("keydown",function(event:KeyboardEvent){
-                    switch (event.keyCode) {
-                        ....省略键盘事件......
-                    }
-                });
-            }
-            else
-            {
-                this.main.addEventListener(egret.TouchEvent.TOUCH_BEGIN , this.mouseDownHandle , this)
-            }</pre>
-
-<p>由于egret目前没有提供手势的API，这里我们自己实现手势。监听TOUCH_BEGIN，TOUCH_MOVE，TOUCH_END和LEAVE_STAGE这四个事件。具体实现如下：</p>
-<pre class="lang:as decode:true">        private downPoint:egret.Point;
-        private movePoint:egret.Point;
-        private mouseDownHandle(event:egret.TouchEvent):void
-        {
-            egret.UIGlobals.stage.addEventListener(egret.TouchEvent.TOUCH_MOVE,this.stage_mouseMoveHandler,this);
-            egret.UIGlobals.stage.addEventListener(egret.TouchEvent.TOUCH_END,this.stage_mouseUpHandler,this);
-            egret.UIGlobals.stage.addEventListener(egret.Event.LEAVE_STAGE,this.stage_mouseUpHandler,this);
-
-            this.downPoint = this.main.globalToLocal(event.stageX, event.stageY);
+<p>游戏在PC我们使用键盘上的方向键操控游戏，但是在移动设备上就需要使用手势来操控了，通过egret.MainContext.deviceType这个值来获取平台 。具体实现在ApplicationMediator中：</p>
+<pre><code><span class="comment">//为PC和移动端设置不同的移动策略</span>
+<span class="keyword">if</span>(egret.MainContext.deviceType != egret.MainContext.DEVICE_MOBILE)
+{
+    <span class="keyword">var</span> self = <span class="keyword">this</span>;
+    <span class="built_in">document</span>.addEventListener(<span class="string">"keydown"</span>,<span class="function"><span class="keyword">function</span><span class="params">(event:KeyboardEvent)</span></span>{
+        <span class="keyword">switch</span> (event.keyCode) {
+            ....省略键盘事件......
         }
+    });
+}
+<span class="keyword">else</span>
+{
+    <span class="keyword">this</span>.main.addEventListener(egret.TouchEvent.TOUCH_BEGIN , <span class="keyword">this</span>.mouseDownHandle , <span class="keyword">this</span>)
+}
+</code></pre><p>由于egret目前没有提供手势的API，这里我们自己实现手势。监听TOUCH_BEGIN，TOUCH_MOVE，TOUCH_END和LEAVE_STAGE这四个事件。具体实现如下：</p>
+<pre><code><span class="keyword">private</span> downPoint:egret.Point;
+<span class="keyword">private</span> movePoint:egret.Point;
+<span class="keyword">private</span> <span class="title">mouseDownHandle</span>(<span class="keyword">event</span>:egret.TouchEvent):<span class="keyword">void</span>
+{
+    egret.UIGlobals.stage.addEventListener(egret.TouchEvent.TOUCH_MOVE,<span class="keyword">this</span>.stage_mouseMoveHandler,<span class="keyword">this</span>);
+    egret.UIGlobals.stage.addEventListener(egret.TouchEvent.TOUCH_END,<span class="keyword">this</span>.stage_mouseUpHandler,<span class="keyword">this</span>);
+    egret.UIGlobals.stage.addEventListener(egret.Event.LEAVE_STAGE,<span class="keyword">this</span>.stage_mouseUpHandler,<span class="keyword">this</span>);
 
-        private needMove:boolean;
-        private stage_mouseMoveHandler(event:egret.TouchEvent):void{
-            if(!this.movePoint)
-                this.movePoint = new egret.Point();
-            this.movePoint.x = event.stageX;
-            this.movePoint.y = event.stageY;
-            if (this.needMove)
-                return;
-            this.needMove = true;
-        }
+    <span class="keyword">this</span>.downPoint = <span class="keyword">this</span>.main.globalToLocal(<span class="keyword">event</span>.stageX, <span class="keyword">event</span>.stageY);
+}
 
-        public stage_mouseUpHandler(event:egret.Event):void{
-            egret.UIGlobals.stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE,
-                this.stage_mouseMoveHandler,
-                this);
-            egret.UIGlobals.stage.removeEventListener(egret.TouchEvent.TOUCH_END,
-                this.stage_mouseUpHandler,
-                this);
-            egret.UIGlobals.stage.addEventListener(egret.Event.LEAVE_STAGE,
-                this.stage_mouseUpHandler,
-                this);
-            if(this.needMove){
-                this.updateWhenMouseUp();
-                this.needMove = false;
-            }
-        }
+<span class="keyword">private</span> needMove:boolean;
+<span class="keyword">private</span> <span class="title">stage_mouseMoveHandler</span>(<span class="keyword">event</span>:egret.TouchEvent):<span class="keyword">void</span>{
+    <span class="keyword">if</span>(!<span class="keyword">this</span>.movePoint)
+        <span class="keyword">this</span>.movePoint = <span class="keyword">new</span> egret.Point();
+    <span class="keyword">this</span>.movePoint.x = <span class="keyword">event</span>.stageX;
+    <span class="keyword">this</span>.movePoint.y = <span class="keyword">event</span>.stageY;
+    <span class="keyword">if</span> (<span class="keyword">this</span>.needMove)
+        <span class="keyword">return</span>;
+    <span class="keyword">this</span>.needMove = <span class="keyword">true</span>;
+}
 
-        /**
-         * 移动设备上，判断移动方向
-         */
-        private updateWhenMouseUp():void
-        {
-            var p:egret.Point = this.main.globalToLocal(this.movePoint.x, this.movePoint.y ,egret.Point.identity);
-            var offSetX:number = p.x - this.downPoint.x;
-            var offSetY:number = p.y - this.downPoint.y;
+<span class="keyword">public</span> <span class="title">stage_mouseUpHandler</span>(<span class="keyword">event</span>:egret.Event):<span class="keyword">void</span>{
+    egret.UIGlobals.stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE,
+        <span class="keyword">this</span>.stage_mouseMoveHandler,
+        <span class="keyword">this</span>);
+    egret.UIGlobals.stage.removeEventListener(egret.TouchEvent.TOUCH_END,
+        <span class="keyword">this</span>.stage_mouseUpHandler,
+        <span class="keyword">this</span>);
+    egret.UIGlobals.stage.addEventListener(egret.Event.LEAVE_STAGE,
+        <span class="keyword">this</span>.stage_mouseUpHandler,
+        <span class="keyword">this</span>);
+    <span class="keyword">if</span>(<span class="keyword">this</span>.needMove){
+        <span class="keyword">this</span>.updateWhenMouseUp();
+        <span class="keyword">this</span>.needMove = <span class="keyword">false</span>;
+    }
+}
 
-            if(offSetY&lt;0 &amp;&amp; Math.abs(offSetY)&gt;Math.abs(offSetX))  //上
-            {
-                this.doMove(0);
-            }
-            else if(offSetX&gt;0 &amp;&amp; offSetX&gt;Math.abs(offSetY))  //右
-            {
-                this.doMove(1);
-            }
-            else if(offSetY&gt;0 &amp;&amp; offSetY&gt;Math.abs(offSetX))  //下
-            {
-                this.doMove(2);
-            }
-            else if(offSetX&lt;0 &amp;&amp; Math.abs(offSetX)&gt;Math.abs(offSetY))  //左
-            {
-                this.doMove(3);
-            }
-        }</pre>
+<span class="comment">/**
+ * 移动设备上，判断移动方向
+ */</span>
+<span class="keyword">private</span> <span class="title">updateWhenMouseUp</span>():<span class="keyword">void</span>
+{
+    <span class="keyword">var</span> p:egret.Point = <span class="keyword">this</span>.main.globalToLocal(<span class="keyword">this</span>.movePoint.x, <span class="keyword">this</span>.movePoint.y ,egret.Point.identity);
+    <span class="keyword">var</span> offSetX:number = p.x - <span class="keyword">this</span>.downPoint.x;
+    <span class="keyword">var</span> offSetY:number = p.y - <span class="keyword">this</span>.downPoint.y;
 
-<p><strong>③动画效果</strong></p>
+    <span class="keyword">if</span>(offSetY&amp;lt;<span class="number">0</span> &amp;amp;&amp;amp; Math.abs(offSetY)&amp;gt;Math.abs(offSetX))  <span class="comment">//上</span>
+    {
+        <span class="keyword">this</span>.doMove(<span class="number">0</span>);
+    }
+    <span class="keyword">else</span> <span class="keyword">if</span>(offSetX&amp;gt;<span class="number">0</span> &amp;amp;&amp;amp; offSetX&amp;gt;Math.abs(offSetY))  <span class="comment">//右</span>
+    {
+        <span class="keyword">this</span>.doMove(<span class="number">1</span>);
+    }
+    <span class="keyword">else</span> <span class="keyword">if</span>(offSetY&amp;gt;<span class="number">0</span> &amp;amp;&amp;amp; offSetY&amp;gt;Math.abs(offSetX))  <span class="comment">//下</span>
+    {
+        <span class="keyword">this</span>.doMove(<span class="number">2</span>);
+    }
+    <span class="keyword">else</span> <span class="keyword">if</span>(offSetX&amp;lt;<span class="number">0</span> &amp;amp;&amp;amp; Math.abs(offSetX)&amp;gt;Math.abs(offSetY))  <span class="comment">//左</span>
+    {
+        <span class="keyword">this</span>.doMove(<span class="number">3</span>);
+    }
+}
+</code></pre><p><strong>③动画效果</strong></p>
 <p>游戏里面格子的创建，移动，合并，都需要一个缓动效果来支持。这里面最大的问题就是，缓动效果是持续时间的，而往往数据的改变是一瞬间。比如：一个操作合并了两个格子，其中一个需要移动，并且移动完成后要移除掉，此时新的格子也要出现。但是往往数据层把这些数据是同时发过来的，所以我们需要调节时机来让效果更好。比如格子的创建，我们延迟100毫秒显示在舞台上，因为在创建的同时其他格子会移动，所以等其他格子移动完成了后显示出来比较好。再比如格子的合并，实际上就是一个格子移动，移动完成后消失，目标位置格子改变数字并且出现缩放效果。这样要注意的就是移动之前调整将移动的格子的层级显示在最下面，避免移动的时候挡在目标位置格子的上面。</p>
 <p><strong>7.性能</strong></p>
 <p>egret的工作流还是很高效的，工具也不少，架构设计集各家所长。最后发布游戏在PC上运行是满帧运行，比原版甚至更快。在手机上运行也不错，体验超过了某些原生语言开发的2048。</p>
 <p>最后交出源代码：<a href="https://github.com/f111fei/2048egret" target="_blank" rel="external">点我传送</a></p>
-<p>原始素材点我下载：<a href="http://xzper.qiniudn.com/wp-content/uploads/2014/06/2048素材.rar" target="_blank" rel="external">2048素材</a></p>
 ]]></content>
-    <summary type="html"><![CDATA[<p>2048是最近很火的一个小游戏，<a href="http://gabrielecirulli.github.io/2048/" target="_blank" rel="external">原版</a>就是用JavaScript写的。恰巧最近egret PublicBeta，观望和学习了一阵后，发现egret正好适合开发这类游戏。egret使用TypeScript作为开发语言，最终编译为JavaScript，正好和原始版本PK一下。</p>
-<p>游戏预览：<a href="http://xzperproject.qiniudn.com/2048egret/launcher/release.html" target="_blank" rel="external">点我体验</a></p>
-]]></summary>
+    
     
       <category term="Egret" scheme="http://xzper.com/tags/Egret/"/>
     
@@ -1209,79 +1235,90 @@ node --debug-brk=<span class="number">5858</span> <span class="constant">E</span
     <link href="http://xzper.com/2014/06/15/%E6%96%B0%E6%89%8B%E5%BC%95%E5%AF%BC%E2%80%94%E8%84%9A%E6%9C%AC%E8%AE%BE%E8%AE%A1/"/>
     <id>http://xzper.com/2014/06/15/新手引导—脚本设计/</id>
     <published>2014-06-14T19:49:56.000Z</published>
-    <updated>2014-08-24T08:37:44.000Z</updated>
+    <updated>2014-09-05T16:46:59.000Z</updated>
     <content type="html"><![CDATA[<p>最近在做游戏的新手引导模块。由于是关卡式的引导，所以很适合用读取引导脚本的方式来开发。</p>
 <p><strong>脚本和命令配置</strong></p>
 <a id="more"></a>
 
 <p>程序中通过GuideLib这个类来解析命令配置和脚本。脚本以行为单位运行，每一行就是一条指令。每一条指令有指令的名称和指令的参数。就像下面这样。</p>
-<p><pre class="lang:xhtml decode:true">goto step:+1<br>showArrow direction:down position:[200,300] clickRect:[100,30]<br>delayCall step:-1 time:2</pre><br>第一个单词表示命令名称，然后后面的参数以空格分开，参数名称和参数值用冒号分开。由若干条命令就组成了一个完整的脚本。但是光有脚本还是不够，从脚本里面我们看不出来参数的类型。比如position应该是一个Number数组，所以我们还需要一个配置文件来说明每一条命令的详细细节。这里配置文件用xml表示。</p>
+<pre><code><span class="tag">goto</span> <span class="tag">step</span><span class="pseudo">:+1</span>
+<span class="tag">showArrow</span> <span class="tag">direction</span><span class="pseudo">:down</span> <span class="tag">position</span>:<span class="attr_selector">[200,300]</span> <span class="tag">clickRect</span>:<span class="attr_selector">[100,30]</span>
+<span class="tag">delayCall</span> <span class="tag">step</span><span class="pseudo">:-1</span> <span class="tag">time</span><span class="pseudo">:2</span>
+</code></pre><p>第一个单词表示命令名称，然后后面的参数以空格分开，参数名称和参数值用冒号分开。由若干条命令就组成了一个完整的脚本。但是光有脚本还是不够，从脚本里面我们看不出来参数的类型。比如position应该是一个Number数组，所以我们还需要一个配置文件来说明每一条命令的详细细节。这里配置文件用xml表示。</p>
 <p><pre class="lang:xhtml decode:true">&lt;?xml version=”1.0” encoding=”UTF-8”?&gt;<br>&lt;commands&gt;<br>    &lt;command name=”goto”&gt;<br>        &lt;param name=”step” type=”String”/&gt;<br>    &lt;/command&gt;<br>    &lt;command name=”delayCall”&gt;<br>        &lt;param name=”step” type=”String”/&gt;<br>        &lt;param name=”time” type=”Number”/&gt;<br>    &lt;/command&gt;<br>    &lt;command name=”showArrow”&gt;<br>        &lt;param name=”direction” type=”String”/&gt;<br>        &lt;param name=”position” type=”Array_Number”/&gt;<br>        &lt;param name=”clickRect” type=”Array_Number”/&gt;<br>    &lt;/command&gt;<br>&lt;/commands&gt;</pre><br>可以看到param有一个type的属性用来说明参数类型。查看GuideLib的源代码会发现有一个ITypeAdapter，这个就是用来解析参数类型的，在解析脚本的时候，调用ITypeAdapter的convert方法自动将脚本中param的值由字符串转换为命令配置文件中的type。默认的类型解释器是TypeAdapter。</p>
-<p><pre class="lang:as decode:true">        /**</pre></p>
-<pre><code>     * 将命令参数的值转换成正确的类型
-     */
-    <span class="keyword">public</span> <span class="keyword">function</span> convert(<span class="class"><span class="keyword">type</span>:<span class="title">String</span> , <span class="title">value</span>:<span class="title">String</span>):*</span>
+<pre><code><span class="javadoc">/**
+ * 将命令参数的值转换成正确的类型
+ */</span>
+public function convert(<span class="keyword">type</span>:String , value:String):*
+{
+    <span class="keyword">var</span> result:String = value;
+    <span class="keyword">if</span>(<span class="keyword">type</span> == <span class="string">"String"</span>)
     {
-        var result:String = value;
-        <span class="keyword">if</span>(<span class="class"><span class="keyword">type</span> </span>== <span class="string">"String"</span>)
+        <span class="keyword">return</span> value;
+    }
+    <span class="keyword">else</span> <span class="keyword">if</span>(<span class="keyword">type</span> == <span class="string">"Boolean"</span>)
+    {
+        <span class="keyword">return</span> value==<span class="string">"true"</span>?<span class="keyword">true</span>:<span class="keyword">false</span>;
+    }
+    <span class="keyword">else</span> <span class="keyword">if</span>(<span class="keyword">type</span>.indexOf(<span class="string">"Array"</span>) == <span class="number">0</span>)
+    {
+        <span class="keyword">if</span>(<span class="keyword">type</span>.split(<span class="string">"_"</span>,<span class="number">2</span>).length&amp;lt;<span class="number">2</span>)
         {
-            <span class="keyword">return</span> value;
-        }
-        <span class="keyword">else</span> <span class="keyword">if</span>(<span class="class"><span class="keyword">type</span> </span>== <span class="string">"Boolean"</span>)
-        {
-            <span class="keyword">return</span> value==<span class="string">"true"</span>?<span class="keyword">true</span>:<span class="keyword">false</span>;
-        }
-        <span class="keyword">else</span> <span class="keyword">if</span>(<span class="class"><span class="keyword">type</span>.<span class="title">indexOf</span></span>(<span class="string">"Array"</span>) == <span class="number">0</span>)
-        {
-            <span class="keyword">if</span>(<span class="class"><span class="keyword">type</span>.<span class="title">split</span></span>(<span class="string">"_"</span>,<span class="number">2</span>).length&amp;lt;<span class="number">2</span>)
-            {
-                <span class="keyword">return</span> convertStringToArray(<span class="string">"String"</span> , value);
-            }
-            <span class="keyword">else</span>
-            {
-                <span class="keyword">return</span> convertStringToArray(<span class="class"><span class="keyword">type</span>.<span class="title">split</span></span>(<span class="string">"_"</span>)[<span class="number">1</span>] , value);
-            }
+            <span class="keyword">return</span> convertStringToArray(<span class="string">"String"</span> , value);
         }
         <span class="keyword">else</span>
         {
-            <span class="keyword">return</span> getDefinitionByName(<span class="class"><span class="keyword">type</span>)</span>(value);
+            <span class="keyword">return</span> convertStringToArray(<span class="keyword">type</span>.split(<span class="string">"_"</span>)[<span class="number">1</span>] , value);
         }
-    }&lt;/pre&gt;
-</code></pre><p><strong> 执行命令</strong></p>
+    }
+    <span class="keyword">else</span>
+    {
+        <span class="keyword">return</span> getDefinitionByName(<span class="keyword">type</span>)(value);
+    }
+}
+</code></pre><p><strong>执行命令</strong></p>
 <p>GuideLib将通过getScript将脚本解析成一个数组。每一个元素就是一条命令，然后交给GuideSystem去处理每一条命令。在GuideSystem中又可以看到一个ICommandAdapter。这个就是用来运行命令的解释器，调用run方法执行命令。默认的命令解释器是CommandAdapter。</p>
-<p><pre class="lang:as decode:true">        /**</pre></p>
-<pre><code>     * 默认的函数库
-     */
-    <span class="keyword">private</span> <span class="keyword">var</span> guideFunction:GuideFunction = <span class="keyword">new</span> GuideFunction();
-    <span class="comment">/**
-     * 运行命令
-     * @param command 命令的名称
-     * @param param 命令的参数
-     * @param guideSystem 向导管理
-     */</span>
-    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">run</span><span class="params">(command:String, param:Object, guideSystem:GuideSystem)</span><span class="type">:void</span>
-    </span>{
-        <span class="keyword">var</span> fun:Function;
-        <span class="keyword">if</span>(guideFunction.hasOwnProperty(command))  <span class="comment">//函数库中存在这个函数</span>
-            fun = guideFunction[command];
-        fun(param);
-        <span class="keyword">if</span>(guideSystem.auto)
-            guideSystem.doNext();
-    }&lt;/pre&gt;
+<pre><code><span class="javadoc">/**
+ * 默认的函数库
+ */</span>
+<span class="keyword">private</span> var guideFunction:GuideFunction = <span class="keyword">new</span> GuideFunction();
+<span class="javadoc">/**
+ * 运行命令
+ *<span class="javadoctag"> @param</span> command 命令的名称
+ *<span class="javadoctag"> @param</span> param 命令的参数
+ *<span class="javadoctag"> @param</span> guideSystem 向导管理
+ */</span>
+<span class="keyword">public</span> function <span class="title">run</span>(command:String, param:Object, guideSystem:GuideSystem):<span class="keyword">void</span>
+{
+    var fun:Function;
+    <span class="keyword">if</span>(guideFunction.hasOwnProperty(command))  <span class="comment">//函数库中存在这个函数</span>
+        fun = guideFunction[command];
+    fun(param);
+    <span class="keyword">if</span>(guideSystem.auto)
+        guideSystem.doNext();
+}
 </code></pre><p>GuideFunction就是默认的函数库，如果命令配置是调用其他的类的函数，可以自己实现这个run方法。</p>
 <p><strong>函数库的自定义</strong></p>
 <p>脚本中的每一条命令实际上就是调用的某一个类的某一个函数。默认情况下这个类就是GuideFunction。所以我们要实现功能，为GuideFunction添加方法就行了。方法名保存和命令名一致，参数就是命令的参数组成的Object。例如delayCall这个命令的实现</p>
-<p><pre class="lang:as decode:true">/**</pre></p>
-<ul>
-<li>延时 多少秒执行哪一步<br>*/<br>public function delayCall(param:Object):void<br>{<br> var step:String = param[“step”];<br> var time:Number = param[“time”];<br> GuideSystem.getInstance().auto = false;<br> setTimeout(function():void{<pre><code> GuideSystem.getInstance().<span class="keyword">auto</span> = <span class="literal">true</span>;
- GuideSystem.getInstance().<span class="keyword">goto</span>(<span class="keyword">step</span>);
-</code></pre> } , time*1000);<br>}<br>我们可以根据业务逻辑的不同，自由的定制参数类型解析器，命令函数解析器和函数库。</li>
-</ul>
+<pre><code><span class="comment">/**
+ * 延时 多少秒执行哪一步
+ */</span>
+<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">delayCall</span><span class="params">(param:Object)</span><span class="type">:void</span>
+</span>{
+    <span class="keyword">var</span> step:String = param[<span class="string">"step"</span>];
+    <span class="keyword">var</span> time:Number = param[<span class="string">"time"</span>];
+    GuideSystem.getInstance().auto = <span class="literal">false</span>;
+    setTimeout(<span class="function"><span class="keyword">function</span><span class="params">()</span><span class="type">:void</span></span>{
+        GuideSystem.getInstance().auto = <span class="literal">true</span>;
+        GuideSystem.getInstance().goto(step);
+    } , time*<span class="number">1000</span>);
+}
+</code></pre><p>我们可以根据业务逻辑的不同，自由的定制参数类型解析器，命令函数解析器和函数库。</p>
 <p><strong>脚本编辑器</strong></p>
 <p>脚本编辑器是一个可视化的工具，能方便快速的创建脚本，你只需要先写好命令配置xml。编辑器会根据xml自动生成命令列表，然后向脚本中自由的加入命令。预览图：</p>
-<p><img src="http://xzper.qiniudn.com/wp-content/uploads/2014/06/QQ截图201406162029511.png" alt=""></p>
-<p>新手引导示例：<a href="http://xzper.qiniudn.com/wp-content/uploads/2014/06/Guide.rar" target="_blank" rel="external">Guide</a></p>
-<p>脚本编辑器：<a href="http://xzper.qiniudn.com/wp-content/uploads/2014/06/ScriptEditor.rar" target="_blank" rel="external">ScriptEditor</a></p>
+<p><img src="http://xzper.qiniudn.com/2014/06/editor.png" alt=""></p>
+<p>新手引导示例：<a href="http://xzper.qiniudn.com/2014/06/Guide.rar" target="_blank" rel="external">Guide</a></p>
+<p>脚本编辑器：<a href="http://xzper.qiniudn.com/2014/06/ScriptEditor.rar" target="_blank" rel="external">ScriptEditor</a></p>
 ]]></content>
     <summary type="html"><![CDATA[<p>最近在做游戏的新手引导模块。由于是关卡式的引导，所以很适合用读取引导脚本的方式来开发。</p>
 <p><strong>脚本和命令配置</strong></p>
@@ -1296,46 +1333,45 @@ node --debug-brk=<span class="number">5858</span> <span class="constant">E</span
     <link href="http://xzper.com/2014/04/27/%E4%BB%8E2048%E6%B8%B8%E6%88%8F%E8%B0%88PureMVC/"/>
     <id>http://xzper.com/2014/04/27/从2048游戏谈PureMVC/</id>
     <published>2014-04-26T18:03:56.000Z</published>
-    <updated>2014-08-24T08:37:44.000Z</updated>
-    <content type="html"><![CDATA[<p>最近2048比较火，然后我又正好在学习pureMVC，之前对于pureMVC的了解只停留在理论上，正好拿这个游戏来练练手。废话不多说，游戏预览：<a href="http://xzper.tk/wp-content/uploads/2014/04/2048flexlite/Main.html" target="_blank" rel="external">2048</a><a href="http://xzper.qiniudn.com/wp-content/uploads/2014/04/mvc结构图.png" target="_blank" rel="external">
-</a></p>
+    <updated>2014-09-05T17:04:50.000Z</updated>
+    <content type="html"><![CDATA[<p>最近2048比较火，然后我又正好在学习pureMVC，之前对于pureMVC的了解只停留在理论上，正好拿这个游戏来练练手。废话不多说，游戏预览：<a href="http://xzper.qiniudn.com/2014/04/2048flexlite/Main.html" target="_blank" rel="external">2048</a></p>
 <a id="more"></a>
 
 <p><strong>1.MVC的基本运行原理</strong></p>
-<p><img src="http://xzper.qiniudn.com/wp-content/uploads/2014/04/mvc结构图.png" alt="mvc结构图"></p>
+<p><img src="http://xzper.qiniudn.com/2014/04/mvc结构图.png" alt="mvc结构图"></p>
 <p><span style="font-family: 微软雅黑;"><span>图：</span></span><span><span style="font-family: Calibri;">MVC</span><span style="font-family: 微软雅黑;">结构图（实线——&gt;表示依赖；虚线</span><span style="font-family: Calibri;">——&gt;</span><span style="font-family: 微软雅黑;">表示事件</span><span style="font-family: Calibri;">/</span></span><span style="font-family: 微软雅黑;"><span>通知等</span><span>）</span></span></p>
 <ul>
 <li><p><strong>模型（Model）</strong> 用于封装与应用程序的业务逻辑相关的数据以及对数据的处理方法。“模型”有对数据直接访问的权力，例如对数据库的访问。“模型”不依赖“视图”和“控制器”，也就是说，模型不关心它会被如何显示或是如何被操作。但是模型中数据的变化一般会通过一种刷新机制被公布。为了实现这种机制，那些用于监视此模型的视图必须事先在此模型上注册，从而，视图可以了解在数据模型上发生的改变。（比较：<a href="http://zh.wikipedia.org/wiki/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F" title="观察者模式" target="_blank" rel="external">观察者模式</a>（<a href="http://zh.wikipedia.org/wiki/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F" title="软件设计模式" target="_blank" rel="external">软件设计模式</a>））</p>
 </li>
-<li><p><strong>视图（View）</strong>能够实现数据有目的的显示（理论上，这不是必需的）。在视图中一般没有程序上的逻辑。为了实现视图上的刷新功能，视图需要访问它监视的数据模型（Model），因此应该事先在被它监视的数据那里注册。</p>
+<li><p><strong>视图(View)</strong> 能够实现数据有目的的显示（理论上，这不是必需的）。在视图中一般没有程序上的逻辑。为了实现视图上的刷新功能，视图需要访问它监视的数据模型（Model），因此应该事先在被它监视的数据那里注册。</p>
 </li>
-<li><p><strong>控制器（Controller）</strong>起到不同层面间的组织作用，用于控制应用程序的流程。它处理事件并作出响应。“事件”包括用户的行为和数据模型上的改变。</p>
+<li><p><strong>控制器(Controller)</strong> 起到不同层面间的组织作用，用于控制应用程序的流程。它处理事件并作出响应。“事件”包括用户的行为和数据模型上的改变。</p>
 </li>
 </ul>
-<p><strong>2.pureMVC中的Proxy ， Mediator，Command</strong></p>
+<p><strong>2.pureMVC中的Proxy,Mediator,Command</strong></p>
 <ul>
-<li><strong>Proxy</strong> <strong>数据层(Model)   </strong>由于数据不关心视图是如何显示的，所以如果数据改变了引起了视图的改变，为了做到解耦，Proxy通过sendNotification方法向视图(Mediator)或者控制器(Command)发送通知，而不是获取视图实例调用里面的方法，通知发出去了Proxy的任务就完成了。另外Proxy通常还提供一些公共方法(public function)供控制器(Command)直接调用，从而改变数据（<strong><span style="text-decoration: underline;">注意：Proxy是不接收Notification的</span></strong>）。</li>
-<li><strong>Mediator视图层(View)  </strong>中介器(Mediator)持有对应视图的引用，他负责接收消息和发送消息，所以一般情况下Mediator只含有处理消息和发送消息的代码，不会有复杂的逻辑处理，逻辑处理放在视图组件(viewComponent)里面(<strong><span style="text-decoration: underline;">注意：如果你的Mediator含有过多的公共方法不用想肯定有问题</span></strong>)。当数据改变，Mediator收到消息时，调用viewComponent暴露的公共方法，处理视图的改变。另外，Mediator可以为视图组件添加事件监听器(addEventListener),发送消息(sendNotification)通知控制器(Command)视图的改变，而不是直接调用Proxy的公共方法改变数据。<strong>
-</strong></li>
-<li><strong>Command控制器(Controller) </strong>这个的使用比较灵活。最常用的就是收到Mediator发来的消息，调用Proxy的公共方法改变数据。还有可能是收到某一个Proxy的消息，调用另外一个Proxy改变数据等等。他起到了一个桥梁的作用。协调Mediator和Proxy，Proxy1和Proxy2，Mediator1和Mediator2。所以Command也不应该有复杂的逻辑。<br><strong>3.从实例学习pureMVC</strong></li>
+<li><strong>Proxy数据层(Model)</strong> 由于数据不关心视图是如何显示的，所以如果数据改变了引起了视图的改变，为了做到解耦，Proxy通过sendNotification方法向视图(Mediator)或者控制器(Command)发送通知，而不是获取视图实例调用里面的方法，通知发出去了Proxy的任务就完成了。另外Proxy通常还提供一些公共方法(public function)供控制器(Command)直接调用，从而改变数据（<strong>注意：Proxy是不接收Notification的</strong>）。</li>
+<li><strong>Mediator视图层(View)</strong> 中介器(Mediator)持有对应视图的引用，他负责接收消息和发送消息，所以一般情况下Mediator只含有处理消息和发送消息的代码，不会有复杂的逻辑处理，逻辑处理放在视图组件(viewComponent)里面（<strong>注意：如果你的Mediator含有过多的公共方法不用想肯定有问题</strong> ）。当数据改变，Mediator收到消息时，调用viewComponent暴露的公共方法，处理视图的改变。另外，Mediator可以为视图组件添加事件监听器(addEventListener),发送消息(sendNotification)通知控制器(Command)视图的改变，而不是直接调用Proxy的公共方法改变数据。</li>
+<li><strong>Command控制器(Controller)</strong> 这个的使用比较灵活。最常用的就是收到Mediator发来的消息，调用Proxy的公共方法改变数据。还有可能是收到某一个Proxy的消息，调用另外一个Proxy改变数据等等。他起到了一个桥梁的作用。协调Mediator和Proxy，Proxy1和Proxy2，Mediator1和Mediator2。所以Command也不应该有复杂的逻辑。</li>
 </ul>
+<p><strong>3.从实例学习pureMVC</strong></p>
 <p>先来看下工程目录结构</p>
-<p><img src="http://xzper.qiniudn.com/wp-content/uploads/2014/04/2048工程结构.png" alt="2048工程结构"><strong>1.xxxPrepCommand </strong>框架初始化时，注册对应必须的Command和Proxy。（另外说下由于FlexLite的组件需要在CreateComplete才能获取皮肤实例，所以Mediator的注册都是在viewComponent中完成的）</p>
-<p><strong>2.GameCommand </strong>处理各类事务。比如 玩家按下了方向键，收到消息调用GridProxy的移动方法改变数据，比如GridProxy移动格子分数改变了，通知GameCommand 调用GameProxy的更新分数方法改变分数，比如处理重置游戏的事务，通知各个数据模块重置数据</p>
-<p><strong>3.GameProxy </strong>处理游戏数据，比如更新分数，处理游戏结果</p>
-<p><strong>4.GridProxy </strong>这个游戏的核心数据，操作每一个格子的数据，通知视图格子的移动，添加，删除，重置</p>
-<p><strong>5.ApplicationMediator  </strong>监听键盘事件发送消息到GameCommand通知移动</p>
-<p><strong>6.MainGameMediator  </strong>接收消息，调用MainGameUI的方法处理格子的移动，添加，删除，重置，以及接收游戏结果，显示结果面板</p>
-<p><strong>7.**</strong>MainMenuMediator<strong> 接收更新分数的消息，调用MainGameUI的方法更新分数与重置</strong><br>**</p>
-<p><strong>8.ResultWindowMediator </strong>发送游戏重置的消息，以及自销毁。这是一个短生命的Mediator</p>
+<p><img src="http://xzper.qiniudn.com/2014/04/2048工程结构.png" alt="2048工程结构"></p>
+<p><strong>1.xxxPrepCommand</strong> 框架初始化时，注册对应必须的Command和Proxy。（另外说下由于FlexLite的组件需要在CreateComplete才能获取皮肤实例，所以Mediator的注册都是在viewComponent中完成的）</p>
+<p><strong>2.GameCommand</strong> 处理各类事务。比如 玩家按下了方向键，收到消息调用GridProxy的移动方法改变数据，比如GridProxy移动格子分数改变了，通知GameCommand 调用GameProxy的更新分数方法改变分数，比如处理重置游戏的事务，通知各个数据模块重置数据</p>
+<p><strong>3.GameProxy</strong> 处理游戏数据，比如更新分数，处理游戏结果</p>
+<p><strong>4.GridProxy</strong> 这个游戏的核心数据，操作每一个格子的数据，通知视图格子的移动，添加，删除，重置</p>
+<p><strong>5.ApplicationMediator</strong> 监听键盘事件发送消息到GameCommand通知移动</p>
+<p><strong>6.MainGameMediator</strong> 接收消息，调用MainGameUI的方法处理格子的移动，添加，删除，重置，以及接收游戏结果，显示结果面板</p>
+<p><strong>7.**</strong>MainMenuMediator** 接收更新分数的消息，调用MainGameUI的方法更新分数与重置</p>
+<p><strong>8.ResultWindowMediator</strong> 发送游戏重置的消息，以及自销毁。这是一个短生命的Mediator</p>
 <p>其实这个游戏本来一开始我是用Flex开发的，最后完成的时候发现swf太大加载太慢，于是换成了比较小巧的FlexLite。整个移植过程没有动Model和Controller的一行代码，Mediator改动的也很少。充分说明了MVC的代码重用和关注点分离。这也是我用pureMVC的初次尝试，可能理解还有很多不到位和错误的地方，在此抛砖引玉。最后附上源代码下载：</p>
-<p>FlexLite版：<a href="http://xzper.qiniudn.com/wp-content/uploads/2014/04/2048flexlite.rar" target="_blank" rel="external">2048flexlite</a></p>
-<p>Flex版：<a href="http://xzper.qiniudn.com/wp-content/uploads/2014/04/2048flex.rar" target="_blank" rel="external">2048flex</a></p>
+<p>FlexLite版：<a href="http://xzper.qiniudn.com/2014/04/2048flexlite.rar" target="_blank" rel="external">2048flexlite</a></p>
+<p>Flex版：<a href="http://xzper.qiniudn.com/2014/04/2048flex.rar" target="_blank" rel="external">2048flex</a></p>
 <p>参考文章：</p>
 <p>[1] <a href="http://www.cnblogs.com/skynet/archive/2012/12/29/2838303.html" target="_blank" rel="external">http://www.cnblogs.com/skynet/archive/2012/12/29/2838303.html</a></p>
 ]]></content>
-    <summary type="html"><![CDATA[<p>最近2048比较火，然后我又正好在学习pureMVC，之前对于pureMVC的了解只停留在理论上，正好拿这个游戏来练练手。废话不多说，游戏预览：<a href="http://xzper.tk/wp-content/uploads/2014/04/2048flexlite/Main.html" target="_blank" rel="external">2048</a><a href="http://xzper.qiniudn.com/wp-content/uploads/2014/04/mvc结构图.png" target="_blank" rel="external">
-</a></p>
+    <summary type="html"><![CDATA[<p>最近2048比较火，然后我又正好在学习pureMVC，之前对于pureMVC的了解只停留在理论上，正好拿这个游戏来练练手。废话不多说，游戏预览：<a href="http://xzper.qiniudn.com/2014/04/2048flexlite/Main.html" target="_blank" rel="external">2048</a></p>
 ]]></summary>
     
       <category term="框架" scheme="http://xzper.com/categories/%E6%A1%86%E6%9E%B6/"/>
@@ -1347,16 +1383,16 @@ node --debug-brk=<span class="number">5858</span> <span class="constant">E</span
     <link href="http://xzper.com/2014/04/21/%E5%9C%A8%E8%B7%AF%E4%B8%8A/"/>
     <id>http://xzper.com/2014/04/21/在路上/</id>
     <published>2014-04-21T15:51:00.000Z</published>
-    <updated>2014-08-24T08:37:44.000Z</updated>
+    <updated>2014-09-05T17:23:36.000Z</updated>
     <content type="html"><![CDATA[<p>博客建站以来也快有一个月了，每次想写点什么都不得而终。究其原因还是自己太懒了。所以现在趁自己不懒的时候，记录自己在前端开发路上的点滴。 希望此文能做一个好的开始，以此共勉。</p>
-<p>flash开发到了如今，也到了日落西山，穷途末路的时候吧。从官方上来看，Adobe已经对Flash力不从心了，停止了移动端的FP的更新 ，把Flex捐给了Apache 。从开发者来看，大量新技术如html5，cocos2d，unity3D的出现让开发者有了更多的选择，好多flash老程序员都转行了，这似乎成了一个趋势  。 从市场上来看，如今的页游市场，已经不复当年的辉煌了，前篇一律的感觉玩家会卖账么？而且各种坑爹的运营导致flash游戏的名声越来越臭。总之，对于即将毕业的我选择flash开发这条路显然不是一个明智的选择。</p>
+<p>Flash开发到了如今，也到了日落西山，穷途末路的时候吧。从官方上来看，Adobe已经对Flash力不从心了，停止了移动端的FP的更新 ，把Flex捐给了Apache 。从开发者来看，大量新技术如Html5，Cocos2d，Unity3D的出现让开发者有了更多的选择，好多Flash老程序员都转行了，这似乎成了一个趋势  。 从市场上来看，如今的页游市场，已经不复当年的辉煌了，前篇一律的感觉玩家会卖账么？而且各种坑爹的运营导致Flash游戏的名声越来越臭。总之，对于即将毕业的我选择Flash开发这条路显然不是一个明智的选择。</p>
 <a id="more"></a>
 
-<p>但是对于一个能把一件衣服从新买到一直穿到破的人来说，东西用惯了想换下来，不是那么容易的。至少目前这件衣服对于我来说还是新的就足够了，穿破了再说。我喜欢as3，喜欢flex，喜欢flash这就够了。我欣赏as3的语法，纯OOP语言很美，我欣赏flex架构，他的组件渲染机制让我折服。我欣赏flash游戏的外在的千变万化，内在的结构统一。尽管as3一直被人们说性能低下，但作为一个as3程序员，时刻都在为如何提升性能，而不断优化自己的代码这难道不是一种美么？</p>
-<p>从2012年5月到现在，接触flash编程也快有2年了。然而看了看flash的<a href="http://www.xmind.net/m/bCk4/" target="_blank" rel="external">技能树</a>当真自愧不如。最近没事的时候我喜欢反编译一些看起来不错的游戏和软件，看着别人的代码，体会别人的开发思路。收获不少，同时也在感叹自己会的东西太少了。我发现，看博客，看开源项目或者成熟的商业作品的源码对自己的提升很有用。之前1年的学习可能仅仅只是让我上路了，知道怎么写代码，如何实现。但这些显然是不够的，要真真的独当一面要会的东西还有太多。</p>
+<p>但是对于一个能把一件衣服从新买到一直穿到破的人来说，东西用惯了想换下来，不是那么容易的。至少目前这件衣服对于我来说还是新的就足够了，穿破了再说。我喜欢AS3，喜欢Flex，喜欢Flash这就够了。再说程序员都认为自己使用的语言是最NB的，讨论哪种语言的好坏根本没有意义。</p>
+<p>从2012年5月到现在，接触Flash编程也快有2年了。然而看了看Flash的<a href="http://www.xmind.net/m/bCk4/" target="_blank" rel="external">技能树</a>当真自愧不如。最近没事的时候我喜欢反编译一些看起来不错的游戏和软件，看着别人的代码，体会别人的开发思路。收获不少，同时也在感叹自己会的东西太少了。我发现，看博客，看开源项目或者成熟的商业作品的源码对自己的提升很有用。之前1年的学习可能仅仅只是让我上路了，知道怎么写代码，如何实现。但这些显然是不够的，要真真的独当一面要会的东西还有太多。</p>
 <p>对于前端开发，一些人认为就是显示下界面，放放特效之类的，其实哪有那么简单。这里按照技能书大致列举下我做前端的过程自己会与不会的知识。认为写前端很轻松的可以体会下。</p>
 <p><strong>1.显示对象基础</strong>。其实大多人对前端的认识也就留在这一块了。以为也就是操作下显示对象，把数据显示出来。且不说下面的11条，就这一条，也不是一个人能半年之内搞精通的。这个是基础，至少目前我还不能在不看API的情况下说出每一个显示对象的属性和方法，以及应用。</p>
-<p><strong>2.特效和动画</strong>。对于一部分特效我们搞开发的做不来，还得交给美工特效大大们去做，还有一部分特效是可以用代码写的。那我们需要知道什么，做什么呢。1.矢量动画和帧动画的区别。2.如何用代码写动画，比如各类缓动，各类滤镜动画，bitmap操作，matrix操作等等。目前比较流行的动画开源库和引擎有，TweenLite(感觉体积比较大，所以一般自己实现)，SpriteSheet ，DragonBones，这2个久仰大名有待学习。还有个PixelBender也是最近才知道的，搞的是高级图像处理，渣渣表示学不来。</p>
+<p><strong>2.特效和动画</strong>。对于一部分特效我们搞开发的做不来，还得交给美工特效大大们去做，还有一部分特效是可以用代码写的。那我们需要知道什么，做什么呢。1.矢量动画和帧动画的区别。2.如何用代码写动画，比如各类缓动，各类滤镜动画，Bitmap操作，Matrix操作等等。目前比较流行的动画开源库和引擎有，TweenLite(感觉体积比较大，所以一般自己实现)，SpriteSheet ，DragonBones，这2个久仰大名有待学习。还有个PixelBender也是最近才知道的，搞的是高级图像处理，渣渣表示学不来。</p>
 <p><strong>3.媒体处理</strong>。之前写组件的时候写过音视频播放啊之类的(最近在倒腾bilibili的弹幕播放器，不弄不知道一弄才发现很是复杂。关于视频流的分段处理，流的数据生成模式，与主流视频网站的对接看的头都大了) ，后来接触到了FMS，玩过P2P通讯的视频语音文字图片文件的共享与收发，其实这也只是冰山一角。FMS主要的在于直播，点播方面比较好用。至于那些编码处理之类的那我也只是只闻其名了。媒体处理类的坑很深估计掉下去了就爬不起来了。</p>
 <p><strong>4.文本处理</strong>。文本引擎FTE和TLF，看名字就看晕了。TLF是基于FTE的，对FTE做了一次封装，感觉这和Adobe的OSMF是基于底层的媒体处理类似。这些目前没有深入了解。对于一般的文本处理，目前遇到的图文混排算上要求最高的吧，我用的是RichTextField解决的，感觉还不错。最近关于文本的敏感词过滤好像也是要学的。</p>
 <p><strong>5.网络通信</strong>。资源类，各种Loader的使用，不过这些东西在项目里面最好做一下封装，目前比较喜欢用的是FlexLite里面的加载器感觉封装的比较彻底。流处理，URLStream啊NetStream这类的东西很多。后台交互，Socket，AMF(这个比较好用，用来实现HTTP通讯，实际上Flex的RemoteObject就是基于这个的)，另外还有RTMP，RTMFP协议，FMS上面用到的。</p>
@@ -1364,13 +1400,13 @@ node --debug-brk=<span class="number">5858</span> <span class="constant">E</span
 <p><strong>7.性能优化</strong>。每个ASer都在与名为性能的怪物战斗。这方面需要了解Flash的垃圾回收机制。常用的优化技巧有 ，事件的监听和移除，强引用弱引用，总之就是想办法去除不必要的引用，以便垃圾回收器能回收对象实例防止内存泄露。对于CPU的优化，主要是渲染方式的优化，像bitmap几个方法的快慢啊，矢量图与位图的区别啊。还有一些框架优化这类的。</p>
 <p><strong>8.flex</strong>。由于项目需要我完整的学习了FlexLite这个框架，核心思想就是Flex来的。我很喜欢这种架构设计(第2次说了)，他的组件生命周期，3层验证失效机制，布局管理，皮肤适配，UI层管理。无论哪一个拿出来都要说好久。所以这里就不说了，有时间单独补上。</p>
 <p><strong>9.air</strong>。air里面有很多新的东西我都没接触到，这个也是一个领域啊。不过我还是更喜欢web开发一下。</p>
-<p><strong>10.图形基础</strong>。说是图形基础，对于我这个色盲来说，真的很难。什么色相，颜色矩阵，bitmap操作什么的有待学习，教材已经订好，ActionScript3.0图像处理基础教程，根本一点都不基础好么。</p>
+<p><strong>10.图形基础</strong>。说是图形基础，对于我这个色盲来说，真的很难。什么色相，颜色矩阵，Bitmap操作什么的有待学习，教材已经订好，ActionScript3.0图像处理基础教程，根本一点都不基础好么。</p>
 <p><strong>11.架构设计</strong>。这也是目前我着重学习的，毕竟一个人要想独当一面这个东西不可或缺。目前很好的一个学习办法就是阅读商业项目的成熟代码去体会，然后在平时的码码中实际应用上去。</p>
-<p><strong>12.开源库</strong>。一个纯OOP开发语言当然离不开各类开源库以及引擎。上面说的几个是做动画用的比较多的开源库。像 UI框架之类的有,官方的Flex(Flex的架构设计简直赞，第3次了喂，可惜体积太大了), Aswing(没用过不说了) , FlexLite (很不错的一款国人开发的UI框架，包含了Flex4的精髓) ，Features(和Starling配合)。物理引擎有 Box2D ， Nape，这部分我暂时没接触。3D引擎有官方的3d底层Stage3D , 以及Away3D ，PV3D , Flar3D ，这些我都鲜有接触。MVC框架有 官方的Cairngorm(据说太大，所以应用的不是很广) ， pureMVC(最近看的比较多的，蛮不错)，Robotlegs(貌似比前者好，最近准备学)。游戏引擎类的有 Starling(移动平台应用比较多，没时间学) ， D5Power(国人开发的rpg引擎，比较感兴趣，很有可能是我以后学rpg开发的敲门砖)。还有各种开源的小组件，开源的工具库这些的，都是每个Aser或多或少需要了解的东西，如果能深入理解源码那就更好了。</p>
+<p><strong>12.开源库</strong>。一个纯OOP开发语言当然离不开各类开源库以及引擎。上面说的几个是做动画用的比较多的开源库。像 UI框架之类的有,官方的<code>Flex</code>(Flex的架构设计简直赞，第3次了喂，可惜体积太大了), <code>Aswing</code>(没用过不说了) , <code>FlexLite</code> (DOM大大开发的UI框架，包含了Flex4的精髓) ，<code>Features</code>(和<code>Starling</code>配合)。物理引擎有 <code>Box2D</code> ， <code>Nape</code>，这部分我暂时没接触。3D引擎有官方的3d底层Stage3D , 以及<code>Away3D</code> ，<code>PV3D</code> , <code>Flar3D</code> ，这些我都鲜有接触。MVC框架有 官方的<code>Cairngorm</code>(据说太大，所以应用的不是很广) ， <code>pureMVC</code>(最近看的比较多的，蛮不错)，<code>Robotlegs</code>(貌似比前者好，最近准备学)。游戏引擎类的有 <code>Starling</code>(移动平台应用比较多，没时间学) ， <code>D5Power</code>(国人开发的rpg引擎，比较感兴趣，很有可能是我以后学rpg开发的敲门砖)。还有各种开源的小组件，开源的工具库这些的，都是每个Aser或多或少需要了解的东西，如果能深入理解源码那就更好了。</p>
 <p>还有很多知识都是没有涉及到的比如各类游戏算法啊，工具啊之类的。<strong>希望此文能为我自己立一面旗帜(俗称立Flag)，在今后的学习路上，像这面旗帜看齐，总之，那句话怎么说来着，我不在乎路的尽头有什么，我只在乎路边的风景，路还很长，且行且珍惜</strong>。</p>
 ]]></content>
     <summary type="html"><![CDATA[<p>博客建站以来也快有一个月了，每次想写点什么都不得而终。究其原因还是自己太懒了。所以现在趁自己不懒的时候，记录自己在前端开发路上的点滴。 希望此文能做一个好的开始，以此共勉。</p>
-<p>flash开发到了如今，也到了日落西山，穷途末路的时候吧。从官方上来看，Adobe已经对Flash力不从心了，停止了移动端的FP的更新 ，把Flex捐给了Apache 。从开发者来看，大量新技术如html5，cocos2d，unity3D的出现让开发者有了更多的选择，好多flash老程序员都转行了，这似乎成了一个趋势  。 从市场上来看，如今的页游市场，已经不复当年的辉煌了，前篇一律的感觉玩家会卖账么？而且各种坑爹的运营导致flash游戏的名声越来越臭。总之，对于即将毕业的我选择flash开发这条路显然不是一个明智的选择。</p>
+<p>Flash开发到了如今，也到了日落西山，穷途末路的时候吧。从官方上来看，Adobe已经对Flash力不从心了，停止了移动端的FP的更新 ，把Flex捐给了Apache 。从开发者来看，大量新技术如Html5，Cocos2d，Unity3D的出现让开发者有了更多的选择，好多Flash老程序员都转行了，这似乎成了一个趋势  。 从市场上来看，如今的页游市场，已经不复当年的辉煌了，前篇一律的感觉玩家会卖账么？而且各种坑爹的运营导致Flash游戏的名声越来越臭。总之，对于即将毕业的我选择Flash开发这条路显然不是一个明智的选择。</p>
 ]]></summary>
     
       <category term="感悟" scheme="http://xzper.com/categories/%E6%84%9F%E6%82%9F/"/>

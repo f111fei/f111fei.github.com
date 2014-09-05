@@ -2,6 +2,31 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://xzper.com/2014/06/22/%E4%BD%BF%E7%94%A8egret%E5%BC%80%E5%8F%912048/</loc>
+    <lastmod>2014-09-05T18:04:51.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://xzper.com/2014/04/21/%E5%9C%A8%E8%B7%AF%E4%B8%8A/</loc>
+    <lastmod>2014-09-05T17:23:36.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://xzper.com/2014/07/02/%E8%A7%A3%E8%AF%BBDXML%E7%BC%96%E8%AF%91%E5%99%A8/</loc>
+    <lastmod>2014-09-05T17:18:21.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://xzper.com/2014/04/27/%E4%BB%8E2048%E6%B8%B8%E6%88%8F%E8%B0%88PureMVC/</loc>
+    <lastmod>2014-09-05T17:04:50.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://xzper.com/2014/06/15/%E6%96%B0%E6%89%8B%E5%BC%95%E5%AF%BC%E2%80%94%E8%84%9A%E6%9C%AC%E8%AE%BE%E8%AE%A1/</loc>
+    <lastmod>2014-09-05T16:46:59.000Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://xzper.com/2014/09/04/%E5%BF%AB%E6%8D%B7%E9%94%AE%E7%AE%A1%E7%90%86/</loc>
     <lastmod>2014-09-05T16:01:58.000Z</lastmod>
   </url>
@@ -12,22 +37,7 @@
   </url>
   
   <url>
-    <loc>http://xzper.com/2014/06/22/%E4%BD%BF%E7%94%A8egret%E5%BC%80%E5%8F%912048/</loc>
-    <lastmod>2014-09-04T16:04:44.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://xzper.com/2014/07/02/%E8%A7%A3%E8%AF%BBDXML%E7%BC%96%E8%AF%91%E5%99%A8/</loc>
-    <lastmod>2014-09-04T16:03:57.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://xzper.com/2014/04/21/%E5%9C%A8%E8%B7%AF%E4%B8%8A/</loc>
-    <lastmod>2014-08-24T08:37:44.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://xzper.com/2014/06/15/%E6%96%B0%E6%89%8B%E5%BC%95%E5%AF%BC%E2%80%94%E8%84%9A%E6%9C%AC%E8%AE%BE%E8%AE%A1/</loc>
+    <loc>http://xzper.com/2014/08/17/%E6%B5%85%E6%9E%90Hexo%E7%9A%84Generate%E5%91%BD%E4%BB%A4/</loc>
     <lastmod>2014-08-24T08:37:44.000Z</lastmod>
   </url>
   
@@ -37,13 +47,13 @@
   </url>
   
   <url>
-    <loc>http://xzper.com/2014/08/17/%E6%B5%85%E6%9E%90Hexo%E7%9A%84Generate%E5%91%BD%E4%BB%A4/</loc>
-    <lastmod>2014-08-24T08:37:44.000Z</lastmod>
+    <loc>http://xzper.com/resource/2014/04/2048flexlite/Main.html</loc>
+    <lastmod>2014-04-26T17:56:11.000Z</lastmod>
   </url>
   
   <url>
-    <loc>http://xzper.com/2014/04/27/%E4%BB%8E2048%E6%B8%B8%E6%88%8F%E8%B0%88PureMVC/</loc>
-    <lastmod>2014-08-24T08:37:44.000Z</lastmod>
+    <loc>http://xzper.com/resource/2014/04/2048flexlite/history/historyFrame.html</loc>
+    <lastmod>2014-04-26T17:42:19.000Z</lastmod>
   </url>
   
 </urlset>

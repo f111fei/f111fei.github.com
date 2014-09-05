@@ -61,73 +61,84 @@
 <a id="more"></a>
 
 <p>程序中通过GuideLib这个类来解析命令配置和脚本。脚本以行为单位运行，每一行就是一条指令。每一条指令有指令的名称和指令的参数。就像下面这样。</p>
-<p><pre class="lang:xhtml decode:true">goto step:+1<br>showArrow direction:down position:[200,300] clickRect:[100,30]<br>delayCall step:-1 time:2</pre><br>第一个单词表示命令名称，然后后面的参数以空格分开，参数名称和参数值用冒号分开。由若干条命令就组成了一个完整的脚本。但是光有脚本还是不够，从脚本里面我们看不出来参数的类型。比如position应该是一个Number数组，所以我们还需要一个配置文件来说明每一条命令的详细细节。这里配置文件用xml表示。</p>
+<pre><code><span class="tag">goto</span> <span class="tag">step</span><span class="pseudo">:+1</span>
+<span class="tag">showArrow</span> <span class="tag">direction</span><span class="pseudo">:down</span> <span class="tag">position</span>:<span class="attr_selector">[200,300]</span> <span class="tag">clickRect</span>:<span class="attr_selector">[100,30]</span>
+<span class="tag">delayCall</span> <span class="tag">step</span><span class="pseudo">:-1</span> <span class="tag">time</span><span class="pseudo">:2</span>
+</code></pre><p>第一个单词表示命令名称，然后后面的参数以空格分开，参数名称和参数值用冒号分开。由若干条命令就组成了一个完整的脚本。但是光有脚本还是不够，从脚本里面我们看不出来参数的类型。比如position应该是一个Number数组，所以我们还需要一个配置文件来说明每一条命令的详细细节。这里配置文件用xml表示。</p>
 <p><pre class="lang:xhtml decode:true">&lt;?xml version=”1.0” encoding=”UTF-8”?&gt;<br>&lt;commands&gt;<br>    &lt;command name=”goto”&gt;<br>        &lt;param name=”step” type=”String”/&gt;<br>    &lt;/command&gt;<br>    &lt;command name=”delayCall”&gt;<br>        &lt;param name=”step” type=”String”/&gt;<br>        &lt;param name=”time” type=”Number”/&gt;<br>    &lt;/command&gt;<br>    &lt;command name=”showArrow”&gt;<br>        &lt;param name=”direction” type=”String”/&gt;<br>        &lt;param name=”position” type=”Array_Number”/&gt;<br>        &lt;param name=”clickRect” type=”Array_Number”/&gt;<br>    &lt;/command&gt;<br>&lt;/commands&gt;</pre><br>可以看到param有一个type的属性用来说明参数类型。查看GuideLib的源代码会发现有一个ITypeAdapter，这个就是用来解析参数类型的，在解析脚本的时候，调用ITypeAdapter的convert方法自动将脚本中param的值由字符串转换为命令配置文件中的type。默认的类型解释器是TypeAdapter。</p>
-<p><pre class="lang:as decode:true">        /**</pre></p>
-<pre><code>     * 将命令参数的值转换成正确的类型
-     */
-    <span class="keyword">public</span> <span class="keyword">function</span> convert(<span class="class"><span class="keyword">type</span>:<span class="title">String</span> , <span class="title">value</span>:<span class="title">String</span>):*</span>
+<pre><code><span class="javadoc">/**
+ * 将命令参数的值转换成正确的类型
+ */</span>
+public function convert(<span class="keyword">type</span>:String , value:String):*
+{
+    <span class="keyword">var</span> result:String = value;
+    <span class="keyword">if</span>(<span class="keyword">type</span> == <span class="string">"String"</span>)
     {
-        var result:String = value;
-        <span class="keyword">if</span>(<span class="class"><span class="keyword">type</span> </span>== <span class="string">"String"</span>)
+        <span class="keyword">return</span> value;
+    }
+    <span class="keyword">else</span> <span class="keyword">if</span>(<span class="keyword">type</span> == <span class="string">"Boolean"</span>)
+    {
+        <span class="keyword">return</span> value==<span class="string">"true"</span>?<span class="keyword">true</span>:<span class="keyword">false</span>;
+    }
+    <span class="keyword">else</span> <span class="keyword">if</span>(<span class="keyword">type</span>.indexOf(<span class="string">"Array"</span>) == <span class="number">0</span>)
+    {
+        <span class="keyword">if</span>(<span class="keyword">type</span>.split(<span class="string">"_"</span>,<span class="number">2</span>).length&amp;lt;<span class="number">2</span>)
         {
-            <span class="keyword">return</span> value;
-        }
-        <span class="keyword">else</span> <span class="keyword">if</span>(<span class="class"><span class="keyword">type</span> </span>== <span class="string">"Boolean"</span>)
-        {
-            <span class="keyword">return</span> value==<span class="string">"true"</span>?<span class="keyword">true</span>:<span class="keyword">false</span>;
-        }
-        <span class="keyword">else</span> <span class="keyword">if</span>(<span class="class"><span class="keyword">type</span>.<span class="title">indexOf</span></span>(<span class="string">"Array"</span>) == <span class="number">0</span>)
-        {
-            <span class="keyword">if</span>(<span class="class"><span class="keyword">type</span>.<span class="title">split</span></span>(<span class="string">"_"</span>,<span class="number">2</span>).length&amp;lt;<span class="number">2</span>)
-            {
-                <span class="keyword">return</span> convertStringToArray(<span class="string">"String"</span> , value);
-            }
-            <span class="keyword">else</span>
-            {
-                <span class="keyword">return</span> convertStringToArray(<span class="class"><span class="keyword">type</span>.<span class="title">split</span></span>(<span class="string">"_"</span>)[<span class="number">1</span>] , value);
-            }
+            <span class="keyword">return</span> convertStringToArray(<span class="string">"String"</span> , value);
         }
         <span class="keyword">else</span>
         {
-            <span class="keyword">return</span> getDefinitionByName(<span class="class"><span class="keyword">type</span>)</span>(value);
+            <span class="keyword">return</span> convertStringToArray(<span class="keyword">type</span>.split(<span class="string">"_"</span>)[<span class="number">1</span>] , value);
         }
-    }&lt;/pre&gt;
-</code></pre><p><strong> 执行命令</strong></p>
+    }
+    <span class="keyword">else</span>
+    {
+        <span class="keyword">return</span> getDefinitionByName(<span class="keyword">type</span>)(value);
+    }
+}
+</code></pre><p><strong>执行命令</strong></p>
 <p>GuideLib将通过getScript将脚本解析成一个数组。每一个元素就是一条命令，然后交给GuideSystem去处理每一条命令。在GuideSystem中又可以看到一个ICommandAdapter。这个就是用来运行命令的解释器，调用run方法执行命令。默认的命令解释器是CommandAdapter。</p>
-<p><pre class="lang:as decode:true">        /**</pre></p>
-<pre><code>     * 默认的函数库
-     */
-    <span class="keyword">private</span> <span class="keyword">var</span> guideFunction:GuideFunction = <span class="keyword">new</span> GuideFunction();
-    <span class="comment">/**
-     * 运行命令
-     * @param command 命令的名称
-     * @param param 命令的参数
-     * @param guideSystem 向导管理
-     */</span>
-    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">run</span><span class="params">(command:String, param:Object, guideSystem:GuideSystem)</span><span class="type">:void</span>
-    </span>{
-        <span class="keyword">var</span> fun:Function;
-        <span class="keyword">if</span>(guideFunction.hasOwnProperty(command))  <span class="comment">//函数库中存在这个函数</span>
-            fun = guideFunction[command];
-        fun(param);
-        <span class="keyword">if</span>(guideSystem.auto)
-            guideSystem.doNext();
-    }&lt;/pre&gt;
+<pre><code><span class="javadoc">/**
+ * 默认的函数库
+ */</span>
+<span class="keyword">private</span> var guideFunction:GuideFunction = <span class="keyword">new</span> GuideFunction();
+<span class="javadoc">/**
+ * 运行命令
+ *<span class="javadoctag"> @param</span> command 命令的名称
+ *<span class="javadoctag"> @param</span> param 命令的参数
+ *<span class="javadoctag"> @param</span> guideSystem 向导管理
+ */</span>
+<span class="keyword">public</span> function <span class="title">run</span>(command:String, param:Object, guideSystem:GuideSystem):<span class="keyword">void</span>
+{
+    var fun:Function;
+    <span class="keyword">if</span>(guideFunction.hasOwnProperty(command))  <span class="comment">//函数库中存在这个函数</span>
+        fun = guideFunction[command];
+    fun(param);
+    <span class="keyword">if</span>(guideSystem.auto)
+        guideSystem.doNext();
+}
 </code></pre><p>GuideFunction就是默认的函数库，如果命令配置是调用其他的类的函数，可以自己实现这个run方法。</p>
 <p><strong>函数库的自定义</strong></p>
 <p>脚本中的每一条命令实际上就是调用的某一个类的某一个函数。默认情况下这个类就是GuideFunction。所以我们要实现功能，为GuideFunction添加方法就行了。方法名保存和命令名一致，参数就是命令的参数组成的Object。例如delayCall这个命令的实现</p>
-<p><pre class="lang:as decode:true">/**</pre></p>
-<ul>
-<li>延时 多少秒执行哪一步<br>*/<br>public function delayCall(param:Object):void<br>{<br> var step:String = param[“step”];<br> var time:Number = param[“time”];<br> GuideSystem.getInstance().auto = false;<br> setTimeout(function():void{<pre><code> GuideSystem.getInstance().<span class="keyword">auto</span> = <span class="literal">true</span>;
- GuideSystem.getInstance().<span class="keyword">goto</span>(<span class="keyword">step</span>);
-</code></pre> } , time*1000);<br>}<br>我们可以根据业务逻辑的不同，自由的定制参数类型解析器，命令函数解析器和函数库。</li>
-</ul>
+<pre><code><span class="comment">/**
+ * 延时 多少秒执行哪一步
+ */</span>
+<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">delayCall</span><span class="params">(param:Object)</span><span class="type">:void</span>
+</span>{
+    <span class="keyword">var</span> step:String = param[<span class="string">"step"</span>];
+    <span class="keyword">var</span> time:Number = param[<span class="string">"time"</span>];
+    GuideSystem.getInstance().auto = <span class="literal">false</span>;
+    setTimeout(<span class="function"><span class="keyword">function</span><span class="params">()</span><span class="type">:void</span></span>{
+        GuideSystem.getInstance().auto = <span class="literal">true</span>;
+        GuideSystem.getInstance().goto(step);
+    } , time*<span class="number">1000</span>);
+}
+</code></pre><p>我们可以根据业务逻辑的不同，自由的定制参数类型解析器，命令函数解析器和函数库。</p>
 <p><strong>脚本编辑器</strong></p>
 <p>脚本编辑器是一个可视化的工具，能方便快速的创建脚本，你只需要先写好命令配置xml。编辑器会根据xml自动生成命令列表，然后向脚本中自由的加入命令。预览图：</p>
-<p><img src="http://xzper.qiniudn.com/wp-content/uploads/2014/06/QQ截图201406162029511.png" alt=""></p>
-<p>新手引导示例：<a href="http://xzper.qiniudn.com/wp-content/uploads/2014/06/Guide.rar" target="_blank" rel="external">Guide</a></p>
-<p>脚本编辑器：<a href="http://xzper.qiniudn.com/wp-content/uploads/2014/06/ScriptEditor.rar" target="_blank" rel="external">ScriptEditor</a></p>
+<p><img src="http://xzper.qiniudn.com/2014/06/editor.png" alt=""></p>
+<p>新手引导示例：<a href="http://xzper.qiniudn.com/2014/06/Guide.rar" target="_blank" rel="external">Guide</a></p>
+<p>脚本编辑器：<a href="http://xzper.qiniudn.com/2014/06/ScriptEditor.rar" target="_blank" rel="external">ScriptEditor</a></p>
 
     
   </div>
@@ -190,13 +201,15 @@
   <h3 class="title">标签</h3>
   <ul class="entry">
   
+    <li><a href="/tags/ActionScript3/">ActionScript3</a><small>1</small></li>
+  
     <li><a href="/tags/Egret/">Egret</a><small>1</small></li>
   
     <li><a href="/tags/FlexLite/">FlexLite</a><small>0</small></li>
   
     <li><a href="/tags/Hexo/">Hexo</a><small>1</small></li>
   
-    <li><a href="/tags/actionscript3/">actionscript3</a><small>1</small></li>
+    <li><a href="/tags/actionscript3/">actionscript3</a><small>0</small></li>
   
     <li><a href="/tags/架构/">架构</a><small>1</small></li>
   
@@ -210,7 +223,7 @@
 <div class="widget tagcloud">
   <h3 class="title">标签云</h3>
   <div class="entry">
-    <a href="/tags/Egret/" style="font-size: 20.00px;">Egret</a><a href="/tags/FlexLite/" style="font-size: 10.00px;">FlexLite</a><a href="/tags/Hexo/" style="font-size: 20.00px;">Hexo</a><a href="/tags/actionscript3/" style="font-size: 20.00px;">actionscript3</a><a href="/tags/架构/" style="font-size: 20.00px;">架构</a>
+    <a href="/tags/ActionScript3/" style="font-size: 20.00px;">ActionScript3</a><a href="/tags/Egret/" style="font-size: 20.00px;">Egret</a><a href="/tags/FlexLite/" style="font-size: 10.00px;">FlexLite</a><a href="/tags/Hexo/" style="font-size: 20.00px;">Hexo</a><a href="/tags/actionscript3/" style="font-size: 10.00px;">actionscript3</a><a href="/tags/架构/" style="font-size: 20.00px;">架构</a>
   </div>
 </div>
 

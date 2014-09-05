@@ -1,8 +1,7 @@
 title: 解读DXML编译器
-id: 179
 categories: FlexLite
 date: 2014-07-02 16:22:49
-tags: actionscript3
+tags: ActionScript3
 ---
 
 DXML就是FlexLite中由FlexLiteStdio生成的皮肤文件，类似于Flex中的MXML。实际上区别没多少，可能最大的区别就是MXML支持Script脚本。DXML架构设计对编写各类UI编辑器，各类代码生成工具都有很好的参考价值。这里主要分析DXML编译器是如何将DXML文件转换为as代码。
@@ -12,12 +11,17 @@ DXML就是FlexLite中由FlexLiteStdio生成的皮肤文件，类似于Flex中的
 **1.如何使用DXML编译器**
 
 DXML编译器在源代码在FlexLiteExtends中的org.flexlite.domCompile包下。导入相应的类后，先导入配置文件manifest.xml(这个文件可以在FlexLiteStdio的安装目录的bin文件夹下可以找到，也可以通过ManifestUtil这个类生成)。这是一个全局静态属性，导入代码如下:
-<pre class="lang:as decode:true">DXMLCompiler.configData = manifestXml;</pre>
+
+	DXMLCompiler.configData = manifestXml;
+
 然后创建一个DXMLCompiler实例，调用compile方法得到编译后的结果:
-<pre class="lang:as decode:true">var compiler:DXMLCompiler = new DXMLCompiler();
-var result:String  = compiler.compile(buttonSkinXml , "Button");</pre>
+
+	var compiler:DXMLCompiler = new DXMLCompiler();
+	var result:String  = compiler.compile(buttonSkinXml , "Button");
+
 完整的代码如下:
-<pre class="lang:as decode:true">	public class DXMLCompilerTest extends Sprite
+
+	public class DXMLCompilerTest extends Sprite
 	{
 		[Embed(source="resource/xml/flexlite-manifest.xml" , mimeType = "application/octet-stream")]
 		private var manifest:Class;
@@ -44,16 +48,19 @@ var result:String  = compiler.compile(buttonSkinXml , "Button");</pre>
 			var result:String  = compiler.compile(buttonSkinXml , "Button");
 			trace(result);
 		}
-	}</pre>
+	}
+
 **2.配置文件manifest**
 
 manifest是由编译器使用的配置文件，定义了编译器能识别的各类组件。
-<pre class="lang:as decode:true">&lt;componentPackage crc32="a32782dd"&gt;
-  &lt;component id="ArrayCollection" p="org.flexlite.domUI.collections.ArrayCollection" s="flash.utils.Proxy" d="source" array="true"/&gt;
-   &lt;component id="Button" p="org.flexlite.domUI.components.Button" s="org.flexlite.domUI.components.supportClasses.ButtonBase" show="true"/&gt;
-  &lt;component id="ButtonBase" p="org.flexlite.domUI.components.supportClasses.ButtonBase" s="org.flexlite.domUI.components.SkinnableComponent" d="label" state="up,over,down,disabled"/&gt;
-  &lt;component id="Group" p="org.flexlite.domUI.components.Group" s="org.flexlite.domUI.components.supportClasses.GroupBase" d="elementsContent" show="true" array="true"/&gt;
-&lt;/componentPackage&gt;</pre>
+
+    <componentPackage crc32="a32782dd">
+		<component id="ArrayCollection" p="org.flexlite.domUI.collections.ArrayCollection" s="flash.utils.Proxy" d="source" array="true"/>
+		<component id="Button" p="org.flexlite.domUI.components.Button" s="org.flexlite.domUI.components.supportClasses.ButtonBase" show="true"/>
+		<component id="ButtonBase" p="org.flexlite.domUI.components.supportClasses.ButtonBase" s="org.flexlite.domUI.components.SkinnableComponent" d="label" state="up,over,down,disabled"/>
+		<component id="Group" p="org.flexlite.domUI.components.Group" s="org.flexlite.domUI.components.supportClasses.GroupBase" d="elementsContent" show="true" array="true"/>
+    </componentPackage>
+
 以上节选自flexlite-manifest.xml。manifest.xml由各类component组成，包括但不限于UI组件。主要是用来配置对dxml文件中可能出现的节点的定义供编译器解析。component节点对应编译器中的Component类，各个属性解释如下
 
 **id**，这个组件的短名ID，对应Component的id属性
@@ -69,9 +76,11 @@ manifest是由编译器使用的配置文件，定义了编译器能识别的各
 **states**，视图状态列表，对应Component的states属性
 
 比如：
-<pre class="lang:as decode:true">	&lt;dx:Group left="16" right="16" top="41" id="contentGroup" bottom="42"&gt;
-		&lt;dx:Label text="标签" size="14" maxWidth="310" textColor="0xFFFFFF"/&gt;
-	&lt;/dx:Group&gt;</pre>
+
+	<dx:Group left="16" right="16" top="41" id="contentGroup" bottom="42"/>
+		<dx:Label text="标签" size="14" maxWidth="310" textColor="0xFFFFFF"/>
+	</dx:Group>
+
 这里有一个Group组件，然后对应一个子节点Label。那么Group的defaultProp也就是elementsContent这个属性对应的值是个数组，其中的一项就是Label。同理，比如ArrayCollection节点有子节点，那么source属性对应的值就是这些子节点。
 
 **2. 代码定义CodeBase**
@@ -89,49 +98,52 @@ CodeBase是代码定义的基类，其中的toCode方法就是生成代码的关
 **3.解析配置文件DXMLConfig**
 
 manifest.xml的解析交给DXMLConfig来完成，DXMLConfig解析完成后存储配置文件中的组件对应的基本属性已经映射关系。解析完成后，外界可以使用的主要方法有:
-<pre class="lang:as decode:true">		/**
-		 * 根据类的短名ID和命名空间获取完整类名(以"."分隔)
-		 * @param id 类的短名ID
-		 * @param ns 命名空间
-		 */				
-		function getClassNameById(id:String,ns:Namespace):String;
+	/**
+	 * 根据类的短名ID和命名空间获取完整类名(以"."分隔)
+	 * @param id 类的短名ID
+	 * @param ns 命名空间
+	 */				
+	function getClassNameById(id:String,ns:Namespace):String;
 
-		/**
-		 * 根据ID获取对应的默认属性
-		 * @param id 类的短名ID
-		 * @param ns 命名空间
-		 * @return {name:属性名(String),isArray:该属性是否为数组(Boolean)}
-		 */		
-		function getDefaultPropById(id:String,ns:Namespace):Object;
+	/**
+	 * 根据ID获取对应的默认属性
+	 * @param id 类的短名ID
+	 * @param ns 命名空间
+	 * @return {name:属性名(String),isArray:该属性是否为数组(Boolean)}
+	 */		
+	function getDefaultPropById(id:String,ns:Namespace):Object;
 
-		/**
-		 * 获取指定属性的类型,返回基本数据类型："uint","int","Boolean","String","Number","Class"。
-		 * @param prop 属性名
-		 * @param className 要查询的完整类名
-		 * @param value 属性值
-		 */			
-		function getPropertyType(prop:String,className:String,value:String):String;</pre>
+	/**
+	 * 获取指定属性的类型,返回基本数据类型："uint","int","Boolean","String","Number","Class"。
+	 * @param prop 属性名
+	 * @param className 要查询的完整类名
+	 * @param value 属性值
+	 */			
+	function getPropertyType(prop:String,className:String,value:String):String;
+
 **4.了解DXML文件结构**
 
 在了解编译器是如何工作之前，需要了解DXML文件的结构。这里通过一个典型例子来了解DXML的结构。
-<pre class="lang:as decode:true">&lt;?xml version="1.0" encoding="utf-8"?&gt;
-&lt;dx:StateSkin width="100" xmlns:dx="http://www.flexlite.org/dxml/2012" xmlns:fs="http://www.flexlite.org/studio/2012"&gt;
-	&lt;fs:HostComponent name="org.flexlite.domUI.components.Button"/&gt;
-	&lt;fs:Declarations&gt;
-		&lt;dx:DropShadowFilter alpha="1.00" angle="0.00" blurY="4" color="0x000000" quality="1" blurX="4" hideObject="false" distance="0" inner="false" strength="10" knockout="false" id="__DropShadowFilter0"/&gt;
-	&lt;/fs:Declarations&gt;
-	&lt;dx:states&gt;
-		&lt;dx:State name="up"/&gt;
-		&lt;dx:State name="over"/&gt;
-		&lt;dx:State name="down"/&gt;
-		&lt;dx:State name="disabled"/&gt;
-	&lt;/dx:states&gt;	
-	&lt;dx:UIAsset left="0" y="0" top="0" right="0" skinName="DXR__1C5D2D62" bottom="0" x="0" includeIn="disabled"/&gt;
-	&lt;dx:UIAsset left="0" top="0" bottom="0" skinName="DXR__276F2CB5" right="0" includeIn="up"/&gt;
-	&lt;dx:UIAsset left="0" top="0" bottom="0" skinName="DXR__7905FD81" right="0" includeIn="down"/&gt;
-	&lt;dx:UIAsset left="0" top="0" bottom="0" skinName="DXR__F2888F03" right="0" includeIn="over"/&gt;
-	&lt;dx:Label paddingTop="4" id="labelDisplay" horizontalCenter="0" text="按钮" size="14" textAlign="center" paddingBottom="4" filters="{[__DropShadowFilter0]}" paddingLeft="10" bold="false" textColor="0xFFFFCD" paddingRight="10" fontFamily="FZShaoEr-M11S" verticalCenter="0"/&gt;
-&lt;/dx:StateSkin&gt;</pre>
+
+	<xml version="1.0" encoding="utf-8">
+	<dx:StateSkin width="100" xmlns:dx="http://www.flexlite.org/dxml/2012" xmlns:fs="http://www.flexlite.org/studio/2012">
+		<fs:HostComponent name="org.flexlite.domUI.components.Button"/>
+		<fs:Declarations>
+			<dx:DropShadowFilter alpha="1.00" angle="0.00" blurY="4" color="0x000000" quality="1" blurX="4" hideObject="false" distance="0" inner="false" strength="10" knockout="false" id="__DropShadowFilter0"/>
+		</fs:Declarations>
+		<dx:states>
+			<dx:State name="up"/>
+			<dx:State name="over"/>
+			<dx:State name="down"/>
+			<dx:State name="disabled"/>
+		</dx:states>
+		<dx:UIAsset left="0" y="0" top="0" right="0" skinName="DXR__1C5D2D62" bottom="0" x="0" includeIn="disabled"/>
+		<dx:UIAsset left="0" top="0" bottom="0" skinName="DXR__276F2CB5" right="0" includeIn="up"/>
+		<dx:UIAsset left="0" top="0" bottom="0" skinName="DXR__7905FD81" right="0" includeIn="down"/>
+		<dx:UIAsset left="0" top="0" bottom="0" skinName="DXR__F2888F03" right="0" includeIn="over"/>
+		<dx:Label paddingTop="4" id="labelDisplay" horizontalCenter="0" text="按钮" size="14" textAlign="center" paddingBottom="4" filters="{[__DropShadowFilter0]}" paddingLeft="10" bold="false" textColor="0xFFFFCD" paddingRight="10" fontFamily="FZShaoEr-M11S" verticalCenter="0"/>
+	</dx:StateSkin>
+
 **根节点**。每个DXML文件对应一个as类，根节点就是这个类定义，在这里可以定义类的属性以及对应的值。另外这里还有命名空间NameSpace的定义。默认的命名空间有dx和fs。命名空间主要用来快速区别节点，从而快速过滤对节点执行对应操作。
 
 **声明节点**。DXML中一些不可视的一些元素可以定义在声明节点中，作为fs:Declarations这个节点的子节点。上述例子中的阴影滤镜就是在这个节点中。
@@ -140,7 +152,7 @@ manifest.xml的解析交给DXMLConfig来完成，DXMLConfig解析完成后存储
 
 **组件节点**。一般以dx开头的节点就是组件节点，当然组件节点也可以自定义(使用自定义组件所在的包作为新的命名空间，添加到根节点中)。这里可使用的组件是和manifest.xml中对应的。在组件节点中可以对组件的各个属性赋值。另外，组件节点有一些共有的特殊属性，比如: id 表示组件对应的实例名，includeIn，excludeFrom表示组件对应的状态。还有上面提到的，组件如果有子节点，那么这些子节点就是组件对应的默认值。
 
-**5.DXML****编译器**
+**5.DXML编译器**
 
 **编译开始的准备工作**
 
@@ -150,11 +162,11 @@ manifest.xml的解析交给DXMLConfig来完成，DXMLConfig解析完成后存储
 
 调用startCompile编译开始，通过getStateNames方法获取dxml中定义的所有状态并使用stateCode保存。然后为根节点加入currentState的属性并赋值。使用declarations保存dxml的声明节点。然后调用addIds方法遍历各个节点添加成员变量以及函数。最后是生成构造函数。
 
-**导入包，添加****import****区块**
+**导入包，添加import区块**
 
 包的导入，并不是一次性导入，而是贯彻在整个编译过程中。通常在调用getPackageByNode这个方法时来添加import区块。因为每个节点一般对应一个class，这样在分析节点时就能获取到节点的className，从而导入。
 
-**依据****id****添加成员变量，以及自动为组件添加****id****属性**
+**依据id添加成员变量，以及自动为组件添加id属性**
 
 某些节点具有id属性，那么一般这个节点对应的实例就是这个类的成员变量，实例名就是这个id的值，调用createVarForNode方法将节点添加进成员变量列表。某些组件没有id属性，那么调用createIdForNode给每一个组件节点加上id属性，赋值也遵循一定规范不会重复。另外有些组件是只存在于某些特定状态下的，这时会使用stateIds记录下来，随后在构造函数里面单独实例化。以上过程的具体实现参考addIds这个方法，整个过程是递归的。
 
@@ -166,7 +178,7 @@ manifest.xml的解析交给DXMLConfig来完成，DXMLConfig解析完成后存储
 
 **重要方法解析**
 
-**createVarForNode **
+**createVarForNode**
 
 创建成员变量。一般带有id的组件节点都会被调用这个方法创建对应id的实例名变量。
 
