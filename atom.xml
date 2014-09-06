@@ -4,7 +4,7 @@
   <subtitle><![CDATA[前行在被夕阳染红的街道]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://xzper.com/"/>
-  <updated>2014-09-05T18:32:02.027Z</updated>
+  <updated>2014-09-06T04:55:59.654Z</updated>
   <id>http://xzper.com/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://xzper.com/2014/09/04/%E5%BF%AB%E6%8D%B7%E9%94%AE%E7%AE%A1%E7%90%86/"/>
     <id>http://xzper.com/2014/09/04/快捷键管理/</id>
     <published>2014-09-04T13:58:03.000Z</published>
-    <updated>2014-09-05T16:01:58.000Z</updated>
+    <updated>2014-09-06T04:55:37.000Z</updated>
     <content type="html"><![CDATA[<p>最近要完成软件中的快捷键模块。基本需求就是能做到让用户自由设置。基本之前的所有按键都是写死在代码中的，就像下面这样糟糕：</p>
 <pre><code><span class="keyword">this</span>.addEventListener(KeyboardEvent.KEY_DOWN,onKeyDown);
 
@@ -53,7 +53,7 @@
     <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">const</span> SAVE:String = <span class="string">"save"</span>;
 }
 </code></pre><p>基本上API就是这样，使用很简单，也很灵活。然后是重点<code>No Code You Say A Diao</code></p>
-<pre><code><span class="package"><span class="keyword">package</span> <span class="title">code</span>.<span class="title">common</span>.<span class="title">keyboard</span>
+<pre><code><span class="package"><span class="keyword">package</span>
 {</span>
     <span class="preprocessor"><span class="keyword">import</span> flash.display.InteractiveObject;</span>
     <span class="preprocessor"><span class="keyword">import</span> flash.display.Stage;</span>
@@ -456,7 +456,7 @@
     <link href="http://xzper.com/2014/08/17/%E6%B5%85%E6%9E%90Hexo%E7%9A%84Generate%E5%91%BD%E4%BB%A4/"/>
     <id>http://xzper.com/2014/08/17/浅析Hexo的Generate命令/</id>
     <published>2014-08-16T22:54:10.000Z</published>
-    <updated>2014-08-24T08:37:44.000Z</updated>
+    <updated>2014-09-06T04:48:49.000Z</updated>
     <content type="html"><![CDATA[<p><a href="https://github.com/hexojs/hexo" target="_blank" rel="external">Hexo</a>是一个轻量级的静态博客站点生成框架，使用NodeJS开发。经过我两个通宵的努力总算把这个东西研究了一个大概，这里拿来分享一下。</p>
 <a id="more"></a>
 
@@ -528,7 +528,7 @@ node --debug-brk=<span class="number">5858</span> <span class="constant">E</span
     
       <category term="Hexo" scheme="http://xzper.com/tags/Hexo/"/>
     
-      <category term="Hexo" scheme="http://xzper.com/categories/Hexo/"/>
+      <category term="解读" scheme="http://xzper.com/categories/%E8%A7%A3%E8%AF%BB/"/>
     
   </entry>
   
@@ -560,7 +560,7 @@ node --debug-brk=<span class="number">5858</span> <span class="constant">E</span
     <link href="http://xzper.com/2014/07/02/%E8%A7%A3%E8%AF%BBDXML%E7%BC%96%E8%AF%91%E5%99%A8/"/>
     <id>http://xzper.com/2014/07/02/解读DXML编译器/</id>
     <published>2014-07-02T08:22:49.000Z</published>
-    <updated>2014-09-05T18:31:08.000Z</updated>
+    <updated>2014-09-06T04:48:09.000Z</updated>
     <content type="html"><![CDATA[<p>DXML就是FlexLite中由FlexLiteStdio生成的皮肤文件，类似于Flex中的MXML。实际上区别没多少，可能最大的区别就是MXML支持Script脚本。DXML架构设计对编写各类UI编辑器，各类代码生成工具都有很好的参考价值。这里主要分析DXML编译器是如何将DXML文件转换为as代码。</p>
 <a id="more"></a>
 
@@ -699,9 +699,11 @@ node --debug-brk=<span class="number">5858</span> <span class="constant">E</span
     <summary type="html"><![CDATA[<p>DXML就是FlexLite中由FlexLiteStdio生成的皮肤文件，类似于Flex中的MXML。实际上区别没多少，可能最大的区别就是MXML支持Script脚本。DXML架构设计对编写各类UI编辑器，各类代码生成工具都有很好的参考价值。这里主要分析DXML编译器是如何将DXML文件转换为as代码。</p>
 ]]></summary>
     
-      <category term="FlexLite" scheme="http://xzper.com/categories/FlexLite/"/>
+      <category term="FlexLite" scheme="http://xzper.com/tags/FlexLite/"/>
     
-      <category term="ActionScript3" scheme="http://xzper.com/categories/FlexLite/ActionScript3/"/>
+      <category term="ActionScript3" scheme="http://xzper.com/tags/ActionScript3/"/>
+    
+      <category term="解读" scheme="http://xzper.com/categories/%E8%A7%A3%E8%AF%BB/"/>
     
   </entry>
   
@@ -1337,7 +1339,7 @@ public function convert(<span class="keyword">type</span>:String , value:String)
     <link href="http://xzper.com/2014/04/27/%E4%BB%8E2048%E6%B8%B8%E6%88%8F%E8%B0%88PureMVC/"/>
     <id>http://xzper.com/2014/04/27/从2048游戏谈PureMVC/</id>
     <published>2014-04-26T18:03:56.000Z</published>
-    <updated>2014-09-05T17:04:50.000Z</updated>
+    <updated>2014-09-06T04:49:57.000Z</updated>
     <content type="html"><![CDATA[<p>最近2048比较火，然后我又正好在学习pureMVC，之前对于pureMVC的了解只停留在理论上，正好拿这个游戏来练练手。废话不多说，游戏预览：<a href="http://xzper.qiniudn.com/2014/04/2048flexlite/Main.html" target="_blank" rel="external">2048</a></p>
 <a id="more"></a>
 
@@ -1378,6 +1380,8 @@ public function convert(<span class="keyword">type</span>:String , value:String)
     <summary type="html"><![CDATA[<p>最近2048比较火，然后我又正好在学习pureMVC，之前对于pureMVC的了解只停留在理论上，正好拿这个游戏来练练手。废话不多说，游戏预览：<a href="http://xzper.qiniudn.com/2014/04/2048flexlite/Main.html" target="_blank" rel="external">2048</a></p>
 ]]></summary>
     
+      <category term="puremvc" scheme="http://xzper.com/tags/puremvc/"/>
+    
       <category term="框架" scheme="http://xzper.com/categories/%E6%A1%86%E6%9E%B6/"/>
     
   </entry>
@@ -1387,7 +1391,7 @@ public function convert(<span class="keyword">type</span>:String , value:String)
     <link href="http://xzper.com/2014/04/21/%E5%9C%A8%E8%B7%AF%E4%B8%8A/"/>
     <id>http://xzper.com/2014/04/21/在路上/</id>
     <published>2014-04-21T15:51:00.000Z</published>
-    <updated>2014-09-05T17:23:36.000Z</updated>
+    <updated>2014-09-06T04:49:14.000Z</updated>
     <content type="html"><![CDATA[<p>博客建站以来也快有一个月了，每次想写点什么都不得而终。究其原因还是自己太懒了。所以现在趁自己不懒的时候，记录自己在前端开发路上的点滴。 希望此文能做一个好的开始，以此共勉。</p>
 <p>Flash开发到了如今，也到了日落西山，穷途末路的时候吧。从官方上来看，Adobe已经对Flash力不从心了，停止了移动端的FP的更新 ，把Flex捐给了Apache 。从开发者来看，大量新技术如Html5，Cocos2d，Unity3D的出现让开发者有了更多的选择，好多Flash老程序员都转行了，这似乎成了一个趋势  。 从市场上来看，如今的页游市场，已经不复当年的辉煌了，前篇一律的感觉玩家会卖账么？而且各种坑爹的运营导致Flash游戏的名声越来越臭。总之，对于即将毕业的我选择Flash开发这条路显然不是一个明智的选择。</p>
 <a id="more"></a>

@@ -1,7 +1,7 @@
 title: 从2048游戏谈PureMVC
 categories: 框架
 date: 2014-04-27 02:03:56
-tags:
+tags: puremvc
 ---
 
 最近2048比较火，然后我又正好在学习pureMVC，之前对于pureMVC的了解只停留在理论上，正好拿这个游戏来练练手。废话不多说，游戏预览：[2048](http://xzper.qiniudn.com/2014/04/2048flexlite/Main.html)

@@ -1,6 +1,6 @@
 title: 浅析Hexo的Generate命令
 date: 2014-08-17 06:54:10
-categories: Hexo
+categories: 解读
 tags: Hexo
 ---
 [Hexo](https://github.com/hexojs/hexo)是一个轻量级的静态博客站点生成框架，使用NodeJS开发。经过我两个通宵的努力总算把这个东西研究了一个大概，这里拿来分享一下。
