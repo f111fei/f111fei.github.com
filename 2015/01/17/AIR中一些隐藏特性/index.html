@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="chrome=1">
   
-  <title>ActionScript3 | xzper</title>
+  <title>AIR中一些隐藏特性 | xzper</title>
   <meta name="author" content="xzper">
   
   <meta name="description" content="xzper | f111fei | egret | html5">
@@ -12,7 +12,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
-  
+  <meta property="og:title" content="AIR中一些隐藏特性"/>
   <meta property="og:site_name" content="xzper"/>
 
   <link rel="alternate" href="/atom.xml" title="xzper" type="application/atom+xml">
@@ -41,26 +41,87 @@
   <div class="clearfix"></div>
 </nav>
 <div class="clearfix"></div></header>
-    <div class="content">
-<h2 class="archive-title tag">ActionScript3</h2>
-
-
-  <div class="archive">
-    
-      
-        <article class="post">
+    <div class="content"><article class="post">
   <header>
-    <div class="icon"></div>
-    <time datetime="2014-07-02T08:22:49.000Z"><a href="/2014/07/02/解读DXML编译器/">7月 2 2014</a></time>
     
-      <h1 class="title"><a href="/2014/07/02/解读DXML编译器/">解读DXML编译器</a></h1>
+      <div class="icon"></div>
+      <time datetime="2015-01-17T13:52:01.000Z"><a href="/2015/01/17/AIR中一些隐藏特性/">1月 17 2015</a></time>
     
+    
+  
+    <h1 class="title">AIR中一些隐藏特性</h1>
+  
+
   </header>
-</article>
-      
+  
+  <div class="entry">
+    
+      <p>分享一下在使用AIR开发跨平台应用的几个坑。在此之前不得不说，stackoverflow这个网站帮了我很多。每次遇到一些棘手的技术问题寻找答案未果的情况下，stackoverflow总能找到令人满意的答案。这里分享两个我遇到的一些问题。</p>
+<a id="more"></a>
+
+<p><strong>1.打印异常堆栈信息</strong></p>
+<p>当产品发布时，没人能保证程序百分之百稳定运行。难免会有一些bug，而用户遇到了bug需要反馈的时候，报错的堆栈信息如果能够得到保留能省很多事。所幸AIR有这样的API能输出堆栈信息。看下面这段代码。</p>
+<pre><code>loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR,errorHandle);
+
+<span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">errorHandle</span><span class="params">(event:UncaughtErrorEvent)</span><span class="type">:void</span>
+</span>{
+    <span class="keyword">var</span> message:String; 
+    <span class="keyword">if</span> (event.error <span class="keyword">is</span> Error) { 
+        message = Error(event.error).message; 
+        message+=<span class="string">"\n"</span>+Error(event.error).getStackTrace();
+    } <span class="keyword">else</span> <span class="keyword">if</span> (event.error <span class="keyword">is</span> ErrorEvent) { 
+        message = ErrorEvent(event.error).text;
+    } <span class="keyword">else</span> { 
+        message = event.error.toString(); 
+    } 
+}
+</code></pre><p>当时这样做每次得到的结果却是这样的</p>
+<pre><code><span class="preprocessor">at</span> xxx/uncaughtErrorHandler()
+</code></pre><p>堆栈显示不全，但这不是我们想要的结果。解决办法就是将下面这一行</p>
+<pre><code>message+=<span class="string">"\n"</span>+<span class="keyword">Error</span>(<span class="keyword">event</span>.<span class="keyword">error</span>).getStackTrace();
+</code></pre><p>改为</p>
+<pre><code>message+=<span class="string">"\n"</span>+<span class="keyword">event</span>.<span class="keyword">error</span>.getStackTrace();
+</code></pre><p>去掉强制转换就行了。</p>
+<hr>
+<p><strong>2.重启AIR程序</strong></p>
+<p>重启AIR程序，这个问题似乎很好解决，百度或者Google之，发现几乎所有的相关文章都介绍了使用ProductManager的相关api实现。具体的实现参考<a href="http://blog.domlib.com/articles/577.html" target="_blank" rel="external">http://blog.domlib.com/articles/577.html</a></p>
+<p>可是这个方法有时并不管用。</p>
+<p>比如嵌入运行时的本地AIR程序，这种程序需要在应用程序描述文件里面配置</p>
+<pre><code><span class="tag">&lt;<span class="title">supportedProfiles</span>&gt;</span>extendedDesktop<span class="tag">&lt;/<span class="title">supportedProfiles</span>&gt;</span>
+</code></pre><p>打包好的程序在Windows下面是一个exe程序，mac下是一个app文件夹。这种程序的重启似乎有点麻烦，不过下面的代码确实能使程序重启。</p>
+<pre><code>var id:<span class="typename">String</span> = NativeApplication.nativeApplication.applicationID;
+var info:NativeProcessStartupInfo = <span class="keyword">new</span> NativeProcessStartupInfo();
+<span class="keyword">if</span>(Capabilities.os.indexOf(<span class="string">"Mac OS"</span>)&gt;=<span class="number">0</span>)
+    info.executable = <span class="keyword">new</span> <span class="keyword">File</span>(<span class="keyword">File</span>.applicationDirectory.nativePath).parent.resolvePath(<span class="string">"MacOS/"</span>+id);
+<span class="keyword">else</span>
+    info.executable = <span class="keyword">File</span>.applicationDirectory.resolvePath(id+<span class="string">".exe"</span>);
+var <span class="keyword">process</span>:NativeProcess = <span class="keyword">new</span> NativeProcess();
+<span class="keyword">process</span>.start(info);
+NativeApplication.nativeApplication.<span class="keyword">exit</span>();
+</code></pre><p>没错，先打开程序，然后立马执行退出就是重启。不过这种方式之所以生效还是有一定道理的，NativeProcess是系统级的东西，系统执行的时候有一定延迟，而exit是立马就生效的。</p>
+
     
   </div>
+  <footer>
+    
+      
+  
+  <div class="categories">
+    <a href="/categories/ActionScript3/">ActionScript3</a>
+  </div>
 
+      
+    
+    <div class="clearfix"></div>
+  </footer>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+  <div class="ds-thread" data-title="AIR中一些隐藏特性">
+  </div>
+</section>
 </div>
   </div>
   <div class="widget-wrapper">
