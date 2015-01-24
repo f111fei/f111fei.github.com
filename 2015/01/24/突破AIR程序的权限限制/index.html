@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="chrome=1">
   
-  <title>AIR中一些隐藏特性 | xzper</title>
+  <title>突破AIR程序的权限限制 | xzper</title>
   <meta name="author" content="xzper">
   
   <meta name="description" content="xzper | f111fei | egret | html5">
@@ -12,7 +12,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
-  <meta property="og:title" content="AIR中一些隐藏特性"/>
+  <meta property="og:title" content="突破AIR程序的权限限制"/>
   <meta property="og:site_name" content="xzper"/>
 
   <link rel="alternate" href="/atom.xml" title="xzper" type="application/atom+xml">
@@ -45,60 +45,71 @@
   <header>
     
       <div class="icon"></div>
-      <time datetime="2015-01-17T13:52:01.000Z"><a href="/2015/01/17/AIR中一些隐藏特性/">1月 17 2015</a></time>
+      <time datetime="2015-01-24T05:27:45.000Z"><a href="/2015/01/24/突破AIR程序的权限限制/">1月 24 2015</a></time>
     
     
   
-    <h1 class="title">AIR中一些隐藏特性</h1>
+    <h1 class="title">突破AIR程序的权限限制</h1>
   
 
   </header>
   
   <div class="entry">
     
-      <p>分享一下在使用AIR开发跨平台应用的几个坑。在此之前不得不说，stackoverflow这个网站帮了我很多。每次遇到一些棘手的技术问题寻找答案未果的情况下，stackoverflow总能找到令人满意的答案。这里分享两个我遇到的一些问题。</p>
+      <p>AIR中有些API在没有权限的情况下是不生效的，甚至不报错也没没有任何提示。例如文件系统中对敏感目录的文件操作，File.applicationDirectory这个API的文档是这样说的</p>
+<blockquote>
+<p>出于安全原因，不推荐修改应用程序目录中的内容，有些平台上的操作系统会阻止此操作。<br>如果要存储特定于应用程序的数据，请考虑使用应用程序存储目录 (File.applicationStorageDirectory)。</p>
+</blockquote>
+<p>可以看到File.applicationDirectory这个目录是无法保证有权限写入的。这篇文章讲解如何在Windows和Mac下突破这一限制，能获取系统中任何目录的操作权限。</p>
 <a id="more"></a>
 
-<p><strong>1.打印异常堆栈信息</strong></p>
-<p>当产品发布时，没人能保证程序百分之百稳定运行。难免会有一些bug，而用户遇到了bug需要反馈的时候，报错的堆栈信息如果能够得到保留能省很多事。所幸AIR有这样的API能输出堆栈信息。看下面这段代码。</p>
-<pre><code>loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR,errorHandle);
-
-<span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">errorHandle</span><span class="params">(event:UncaughtErrorEvent)</span><span class="type">:void</span>
+<p>解决这个问题基本思路是想办法让程序获得管理员所有权，一旦程序有了权限就可以肆无忌惮了。但是，一个没有权限的程序在运行时是无法提升权限的，只能在程序启动时，赋予权限。也就是说要想让程序有权限，必须通过另一个程序。假设我们的AIR程序叫A，这个可以提升其他AIR程序权限的程序叫elevate，调用elevate，传入A的路径，启动A就行了。这里有两种方案：</p>
+<p>1.使用一个壳，壳启动时调用elevate以管理员方式启动A，这样A就获得了权限。</p>
+<p>2.启动A，这时A是没有权限的，然后A调用elevate，启动程序B，由B来执行一切需要权限的敏感操作。</p>
+<p>elevate这个程序在为其他程序申请权限的时候是需要认证的。在Windows7及其以上，如果用户开启了用户账户控制(UAC)，那么会弹出提示框，让用户点击确认的。在Mac上是需要输入用户密码，来完成授权的。那么方案1，程序A在启动时，会提示用户确认，然后一劳永逸，A想干啥就干啥了。方案2，程序A只有在需要进行敏感操作时就会提示用户确认，如果B在执行完任务后退出了，那么下次需要权限时又得确认了。两种方案各有好处。我们最终选用了方案B，毕竟程序启动时来那么一个提示框对用户体验不太好。</p>
+<p>说了这么多，下面祭出大杀器elevate。</p>
+<p>Windows下使用下面提供的elevate.exe。<br>Mac下使用下面提供的elevate.scpt。</p>
+<p>有了elevate在AIR下使用NativeProcess启动elevate，并传入参数。用法如下：</p>
+<pre><code><span class="comment">/**
+ * 以管理员方式执行程序
+ * @param exePath 要执行的程序路径
+ * @param args 要传入的参数
+ */</span>
+<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">run</span><span class="params">(exePath:String , exeArgs:Vector.&lt;String&gt; = null)</span><span class="type">:void</span>
 </span>{
-    <span class="keyword">var</span> message:String; 
-    <span class="keyword">if</span> (event.error <span class="keyword">is</span> Error) { 
-        message = Error(event.error).message; 
-        message+=<span class="string">"\n"</span>+Error(event.error).getStackTrace();
-    } <span class="keyword">else</span> <span class="keyword">if</span> (event.error <span class="keyword">is</span> ErrorEvent) { 
-        message = ErrorEvent(event.error).text;
-    } <span class="keyword">else</span> { 
-        message = event.error.toString(); 
-    } 
+    <span class="keyword">var</span> elevateFolder:File = File.applicationDirectory.resolvePath(<span class="string">"bin"</span>);
+    <span class="keyword">var</span> nativeProcess:NativeProcess = <span class="keyword">new</span> NativeProcess();
+    <span class="keyword">var</span> nativeProcessInfo:NativeProcessStartupInfo = <span class="keyword">new</span> NativeProcessStartupInfo();
+    <span class="keyword">var</span> args:Vector.&lt;String&gt; = <span class="keyword">new</span> Vector.&lt;String&gt;();
+    <span class="keyword">if</span>(Capabilities.os.indexOf(<span class="string">"Mac OS"</span>)&gt;=<span class="number">0</span>)
+    {
+        nativeProcessInfo.executable = <span class="keyword">new</span> File(<span class="string">"/usr/bin/osascript"</span>);
+        args.push(elevateFolder.resolvePath(<span class="string">"elevate.scpt"</span>).nativePath);
+        args.push(exePath);
+    }
+    <span class="keyword">else</span>
+    {
+        <span class="keyword">if</span>(Capabilities.os.indexOf(<span class="string">"XP"</span>)&lt;<span class="number">0</span>)
+        {
+            <span class="comment">//非xp系统直接调用elevate申请权限</span>
+            nativeProcessInfo.executable = elevateFolder.resolvePath(<span class="string">"elevate.exe"</span>);
+            args.push(exePath);
+        }
+        <span class="keyword">else</span>
+        {
+            <span class="comment">//xp系统下没有UAC，直接运行目标程序即可</span>
+            nativeProcessInfo.executable = <span class="keyword">new</span> File(exePath);
+        }
+    }
+    <span class="keyword">if</span>(exeArgs)
+        args = args.concat(exeArgs);
+    nativeProcessInfo.arguments = args;
+    nativeProcess.start(nativeProcessInfo);
 }
-</code></pre><p>当时这样做每次得到的结果却是这样的</p>
-<pre><code><span class="preprocessor">at</span> xxx/uncaughtErrorHandler()
-</code></pre><p>堆栈显示不全，但这不是我们想要的结果。解决办法就是将下面这一行</p>
-<pre><code>message+=<span class="string">"\n"</span>+<span class="keyword">Error</span>(<span class="keyword">event</span>.<span class="keyword">error</span>).getStackTrace();
-</code></pre><p>改为</p>
-<pre><code>message+=<span class="string">"\n"</span>+<span class="keyword">event</span>.<span class="keyword">error</span>.getStackTrace();
-</code></pre><p>去掉强制转换就行了。</p>
-<hr>
-<p><strong>2.重启AIR程序</strong></p>
-<p>重启AIR程序，这个问题似乎很好解决，百度或者Google之，发现几乎所有的相关文章都介绍了使用ProductManager的相关api实现。具体的实现参考<a href="http://blog.domlib.com/articles/577.html" target="_blank" rel="external">http://blog.domlib.com/articles/577.html</a></p>
-<p>可是这个方法有时并不管用。</p>
-<p>比如嵌入运行时的本地AIR程序，这种程序需要在应用程序描述文件里面配置</p>
-<pre><code><span class="tag">&lt;<span class="title">supportedProfiles</span>&gt;</span>extendedDesktop<span class="tag">&lt;/<span class="title">supportedProfiles</span>&gt;</span>
-</code></pre><p>打包好的程序在Windows下面是一个exe程序，mac下是一个app文件夹。这种程序的重启似乎有点麻烦，不过下面的代码确实能使程序重启。</p>
-<pre><code>var id:<span class="typename">String</span> = NativeApplication.nativeApplication.applicationID;
-var info:NativeProcessStartupInfo = <span class="keyword">new</span> NativeProcessStartupInfo();
-<span class="keyword">if</span>(Capabilities.os.indexOf(<span class="string">"Mac OS"</span>)&gt;=<span class="number">0</span>)
-    info.executable = <span class="keyword">new</span> <span class="keyword">File</span>(<span class="keyword">File</span>.applicationDirectory.nativePath).parent.resolvePath(<span class="string">"MacOS/"</span>+id);
-<span class="keyword">else</span>
-    info.executable = <span class="keyword">File</span>.applicationDirectory.resolvePath(id+<span class="string">".exe"</span>);
-var <span class="keyword">process</span>:NativeProcess = <span class="keyword">new</span> NativeProcess();
-<span class="keyword">process</span>.start(info);
-NativeApplication.nativeApplication.<span class="keyword">exit</span>();
-</code></pre><p>没错，先打开程序，然后立马执行退出就是重启。不过这种方式之所以生效还是有一定道理的，NativeProcess是系统级的东西，系统执行的时候有一定延迟，而exit是立马就生效的。</p>
+</code></pre><p>如果觉得这种传参调用不好用，可以改一下。在目标程序启动后，可以实现A程序与B程序的进程通讯。A向B程序相互发消息就更加灵活了。我们的方案是把B程序也做成一个AIR应用，这样就可以使用LocalConnection实现两个AIR程序的通讯了。</p>
+<p>elevate的下载地址,有兴趣的可以hack下:</p>
+<p>Windows：<a href="http://xzper.qiniudn.com/2015/01/elevate.exe" target="_blank" rel="external">elevate.exe</a></p>
+<p>Mac：<a href="http://xzper.qiniudn.com/2015/01/elevate.scpt" target="_blank" rel="external">elevate.scpt</a></p>
 
     
   </div>
@@ -119,7 +130,7 @@ NativeApplication.nativeApplication.<span class="keyword">exit</span>();
 
 <section id="comment">
   <h1 class="title">留言</h1>
-  <div class="ds-thread" data-title="AIR中一些隐藏特性">
+  <div class="ds-thread" data-title="突破AIR程序的权限限制">
   </div>
 </section>
 </div>

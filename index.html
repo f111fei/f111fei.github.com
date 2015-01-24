@@ -46,6 +46,44 @@
   <header>
     
       <div class="icon"></div>
+      <time datetime="2015-01-24T05:27:45.000Z"><a href="/2015/01/24/突破AIR程序的权限限制/">1月 24 2015</a></time>
+    
+    
+  
+    <h1 class="title"><a href="/2015/01/24/突破AIR程序的权限限制/">突破AIR程序的权限限制</a></h1>
+  
+
+  </header>
+  
+  <div class="entry">
+    
+      <p>AIR中有些API在没有权限的情况下是不生效的，甚至不报错也没没有任何提示。例如文件系统中对敏感目录的文件操作，File.applicationDirectory这个API的文档是这样说的</p>
+<blockquote>
+<p>出于安全原因，不推荐修改应用程序目录中的内容，有些平台上的操作系统会阻止此操作。<br>如果要存储特定于应用程序的数据，请考虑使用应用程序存储目录 (File.applicationStorageDirectory)。</p>
+</blockquote>
+<p>可以看到File.applicationDirectory这个目录是无法保证有权限写入的。这篇文章讲解如何在Windows和Mac下突破这一限制，能获取系统中任何目录的操作权限。</p>
+
+    
+  </div>
+  <footer class="end-sep">
+    
+      
+        <div class="alignleft">
+          <a href="/2015/01/24/突破AIR程序的权限限制/#more" class="more-link">阅读全文</a>
+        </div>
+      
+      
+    
+    <div class="clearfix"></div>
+  </footer>
+</article>
+
+
+
+  <article class="post">
+  <header>
+    
+      <div class="icon"></div>
       <time datetime="2015-01-17T13:52:01.000Z"><a href="/2015/01/17/AIR中一些隐藏特性/">1月 17 2015</a></time>
     
     
@@ -359,44 +397,11 @@
 
 
 
-  <article class="post">
-  <header>
-    
-      <div class="icon"></div>
-      <time datetime="2014-04-21T15:51:00.000Z"><a href="/2014/04/21/在路上/">4月 21 2014</a></time>
-    
-    
-  
-    <h1 class="title"><a href="/2014/04/21/在路上/">在路上</a></h1>
-  
-
-  </header>
-  
-  <div class="entry">
-    
-      <p>博客建站以来也快有一个月了，每次想写点什么都不得而终。究其原因还是自己太懒了。所以现在趁自己不懒的时候，记录自己在前端开发路上的点滴。 希望此文能做一个好的开始，以此共勉。</p>
-<p>Flash开发到了如今，也到了日落西山，穷途末路的时候吧。从官方上来看，Adobe已经对Flash力不从心了，停止了移动端的FP的更新 ，把Flex捐给了Apache 。从开发者来看，大量新技术如Html5，Cocos2d，Unity3D的出现让开发者有了更多的选择，好多Flash老程序员都转行了，这似乎成了一个趋势  。 从市场上来看，如今的页游市场，已经不复当年的辉煌了，前篇一律的感觉玩家会卖账么？而且各种坑爹的运营导致Flash游戏的名声越来越臭。总之，对于即将毕业的我选择Flash开发这条路显然不是一个明智的选择。</p>
-
-    
-  </div>
-  <footer class="end-sep">
-    
-      
-        <div class="alignleft">
-          <a href="/2014/04/21/在路上/#more" class="more-link">阅读全文</a>
-        </div>
-      
-      
-    
-    <div class="clearfix"></div>
-  </footer>
-</article>
-
-
-
 
 <nav id="pagination">
   
+  
+    <a href="/page/2/" class="next">下一页</a>
   
   <div class="clearfix"></div>
 </nav></div>
@@ -413,7 +418,7 @@
   <h3 class="title">分类</h3>
   <ul class="entry">
   
-    <li><a href="/categories/ActionScript3/">ActionScript3</a><small>3</small></li>
+    <li><a href="/categories/ActionScript3/">ActionScript3</a><small>4</small></li>
   
     <li><a href="/categories/Egret/">Egret</a><small>1</small></li>
   
@@ -471,6 +476,10 @@
   <ul class="entry">
     
       <li>
+        <a href="/2015/01/24/突破AIR程序的权限限制/">突破AIR程序的权限限制</a>
+      </li>
+    
+      <li>
         <a href="/2015/01/17/AIR中一些隐藏特性/">AIR中一些隐藏特性</a>
       </li>
     
@@ -484,10 +493,6 @@
     
       <li>
         <a href="/2014/08/17/浅析Hexo的Generate命令/">浅析Hexo的Generate命令</a>
-      </li>
-    
-      <li>
-        <a href="/2014/08/09/框架包结构的设计/">框架包结构的设计</a>
       </li>
     
   </ul>
