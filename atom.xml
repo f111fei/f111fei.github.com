@@ -4,7 +4,7 @@
   <subtitle><![CDATA[前行在被夕阳染红的街道]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://xzper.com/"/>
-  <updated>2015-01-24T07:44:45.978Z</updated>
+  <updated>2015-05-11T16:05:40.563Z</updated>
   <id>http://xzper.com/</id>
   
   <author>
@@ -13,6 +13,168 @@
   </author>
   
   <generator uri="http://zespia.tw/hexo/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[一次曲折的调试经历]]></title>
+    <link href="http://xzper.com/2015/05/11/%E4%B8%80%E6%AC%A1%E6%9B%B2%E6%8A%98%E7%9A%84%E8%B0%83%E8%AF%95%E7%BB%8F%E5%8E%86/"/>
+    <id>http://xzper.com/2015/05/11/一次曲折的调试经历/</id>
+    <published>2015-05-11T13:31:26.000Z</published>
+    <updated>2015-05-11T16:05:27.000Z</updated>
+    <content type="html"><![CDATA[<p>前不久在FlexLite的开发者群里面遇到一个开发者的提问，说是在使用List的时候水平滚动条的大小有错误。截图大概是下面这样：</p>
+<p><img src="http://xzper.qiniudn.com/2015/05/01.png" alt=""></p>
+<a id="more"></a>
+
+<p>可以看到水平滚动条的宽度是不对的。经过简单的了解，发现代码没错。本着(好)助(奇)人(害)为(死)乐(猫)的精神，决定找出问题所在。我简化代码，写了个DEMO，也复现了这个问题。代码大致如下只有两个类：<br>主类：</p>
+<pre><code><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">FlexLiteTest</span><span class="params">()</span>
+</span>{
+    super();
+    Injector.mapClass(Theme, VectorTheme);
+    Debugger.initialize(stage);
+}
+
+override <span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">createChildren</span><span class="params">()</span>:<span class="title">void</span>
+</span>{
+    <span class="keyword">var</span> <span class="keyword">array</span>:<span class="keyword">Array</span> = [];
+    <span class="keyword">for</span> (<span class="keyword">var</span> i:int = <span class="number">0</span>; i &lt; <span class="number">20</span>; i++) 
+    {
+        <span class="keyword">array</span>.push(i);
+    }
+    <span class="keyword">var</span> <span class="keyword">list</span>:<span class="keyword">List</span> = <span class="keyword">new</span> <span class="keyword">List</span>();
+    <span class="keyword">list</span>.x = <span class="number">10</span>;
+    <span class="keyword">list</span>.y = <span class="number">10</span>;
+    <span class="keyword">list</span>.skinName = MyListSkin;
+    <span class="keyword">list</span>.width = <span class="number">400</span>;
+    <span class="keyword">var</span> hLayout:HorizontalLayout = <span class="keyword">new</span> HorizontalLayout();
+    hLayout.verticalAlign = VerticalAlign.CONTENT_JUSTIFY; 
+    <span class="keyword">list</span>.layout = hLayout;
+    <span class="keyword">list</span>.dataProvider = <span class="keyword">new</span> ArrayCollection(<span class="keyword">array</span>);
+    this.addElement(<span class="keyword">list</span>);
+}
+</code></pre><p>List皮肤类：</p>
+<pre><code><span class="package"><span class="keyword">package</span>
+{</span>
+    <span class="preprocessor"><span class="keyword">import</span> org.flexlite.domUI.skins.vector.ListSkin;</span>
+
+    <span class="comment">/**
+     * @author xzper
+     */</span>
+    <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyListSkin</span> <span class="keyword">extends</span> <span class="title">ListSkin</span>
+    </span>{
+        <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">MyListSkin</span><span class="params">()</span>
+        </span>{
+            <span class="keyword">super</span>();
+        }
+
+        <span class="keyword">override</span> <span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">createChildren</span><span class="params">()</span><span class="type">:void</span>
+        </span>{
+            <span class="keyword">super</span>.createChildren();
+            scroller.horizontalScrollBar.skinName = MyHScrollBarSkin;
+        }
+    }
+}
+<span class="preprocessor"><span class="keyword">import</span> org.flexlite.domUI.skins.vector.HScrollBarSkin;</span>
+
+<span class="class"><span class="keyword">class</span> <span class="title">MyHScrollBarSkin</span> <span class="keyword">extends</span> <span class="title">HScrollBarSkin</span>
+</span>{
+    <span class="keyword">override</span> <span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">createChildren</span><span class="params">()</span><span class="type">:void</span>
+    </span>{
+        <span class="keyword">super</span>.createChildren();
+    }
+}
+</code></pre><p>代码大意很简单，就是想换一下List的水平滚动条的皮肤，有不想写重复代码于是就是继承自ListSkin和HScrollBarSkin写了个皮肤。</p>
+<p>经过简单的一番排查，发现注释掉</p>
+<pre><code><span class="attribute">list.skinName </span>=<span class="string"> MyListSkin; </span>
+</code></pre><p>或者</p>
+<pre><code><span class="attribute">scroller.horizontalScrollBar.skinName </span>=<span class="string"> MyHScrollBarSkin; </span>
+</code></pre><p>最后的结果是没问题的，如下图：</p>
+<p><img src="http://xzper.qiniudn.com/2015/05/02.png" alt=""></p>
+<p>那么问题肯定就出在了那个滚动条皮肤上面了。细看代码，发现其实滚动条皮肤就重写了一个createChildren的方法，啥也没干。此时思维陷入僵局…看来此路不通。</p>
+<p>既然是显示结果的问题，那么换种思路，从结果入手，滚动条的宽度比预期值小了很多，通过FlexLite框架自带的一个调试工具，可以清楚地看到运行时各个组件大小位置的实际值测量值和布局结果。调试工具需要在项目开始初始化</p>
+<pre><code>Debugger.initialize(stage);
+</code></pre><p>然后默认按F11开启。通过调试面板定位到滚动条，如下图：</p>
+<p><img src="http://xzper.qiniudn.com/2015/05/03.png" alt=""></p>
+<p>发现水平滚动条的宽度是对的，布局宽为400，但是皮肤的宽是错的。<br>因为FlexLite里面有两种皮肤，一种是Skin可显示对象版的皮肤和StateSkin非显示对象皮肤。这里用到的是继承自Skin的可显示对象皮肤。布局的宽和测量宽是一样的都是86。</p>
+<p><img src="http://xzper.qiniudn.com/2015/05/04.png" alt=""></p>
+<p>那么问题就出在这里了。滚动条皮肤的布局宽(layoutBoundsWidth)是错误的，理应该也是400。这时可以回到代码了，在适当的地方下断点，找到原因，问题就能解决了。</p>
+<p>我给重写了下MyHScrollBarSkin的setLayoutBoundsSize，并在这里下断点。这样可以找出什么地方给MyHScrollBarSkin设置了一个错误的布局尺寸。</p>
+<p><img src="http://xzper.qiniudn.com/2015/05/05.png" alt=""></p>
+<p>启动程序。发现这个断点根本就进不去，也就是说没有任何地方设置水平滚动条的布局尺寸，那么滚动条的布局尺寸是哪里来的呢，通过UIComponent的源码发现，没有设置布局尺寸的话，通过getter方法获取到的layoutBoundsWidth值就是explicitWidth或者measuredWidth，显然这地方是使用的measuredWidth。看到这里，问题就变成了setLayoutBoundsSize这个方法为何没有被调用。</p>
+<p>通过查看调用层次结构，发现本来setLayoutBoundsSize应该在UIAssets的updateDisplayList方法里面被调用的（因为SkinnableComponent继承自UIAssets，刷新显示列表的时候会设置皮肤的布局属性）。于是我在UIAssets的updateDisplayList方法里面下断点，尝试找到皮肤没有被布局的原因。由于updateDisplayList会被反复调用，为了更精确我给断点加了条件表达式这样会少很多麻烦。</p>
+<p><img src="http://xzper.qiniudn.com/2015/05/06.png" alt=""></p>
+<p><img src="http://xzper.qiniudn.com/2015/05/07.png" alt=""></p>
+<p>因为只有滚动条才有value属性，用这个表达式可以确保断点每次进入时都是滚动条触发的。经过几次断点，发现问题是出了在一个scaleSkin的实例变量上面。这个变量不知是何原因变成了false，导致条件判断不通过，导致皮肤没有被布局。</p>
+<p><img src="http://xzper.qiniudn.com/2015/05/08.png" alt=""></p>
+<p>答案似乎近在眼前了，scaleSkin被设置成了false导致皮肤没有跟着主机组件进行缩放。那么找到设置scaleSkin这个值为false的位置就行了。理所当然的，我使用调用层次结构和查找引用的功能企图找到项目中设置这个值的地方，然而得到的结果却是除了初始化给这个属性赋值了一次true以外，没有任何地方给这个属性重新赋值。甚至使用了Ctrl+H全局搜索这个scaleSkin的字符串得到结果也是一样。这个结果难免让我无法接受。scaleSkin被莫名其妙地改了值？</p>
+<p>既然这样，我决定改一下UIAssets的代码，将scaleSkin的定义方式从public的声明方式改为getter/setter方法，这样可以下断点调试何时设置了scaleSkin的值。</p>
+<pre><code><span class="keyword">private</span> <span class="keyword">var</span> _scaleSkin:Boolean = <span class="literal">true</span>;
+<span class="comment">/**
+ * 是否缩放皮肤
+ */</span>
+<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">get</span> <span class="title">scaleSkin</span><span class="params">()</span><span class="type">:Boolean</span>
+</span>{
+    <span class="keyword">return</span> _scaleSkin;
+}
+<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">set</span> <span class="title">scaleSkin</span><span class="params">(value:Boolean)</span><span class="type">:void</span>
+</span>{
+    _scaleSkin = value;
+}
+</code></pre><p>编译，运行。还没来得及设置断点，结果让我又惊有喜。这次运行结果居然是对的，我有点不敢相信，再次编译运行，结果还是对的。改回去，结果就是错的了。</p>
+<p>心中暗骂，这他妈是什么gui。Flash编译器的bug？？？？反正不管怎样，这样写没错就是了，于是将解决方案告之。但是我心中总感觉似乎有哪里不对劲，难到这真的是编译器的bug？那么为什么将赋值皮肤的那一行去掉结果也没问题呢？</p>
+<p>就在我神情恍惚之际，我一步一步地断点调试。发现一开始scaleSkin确实是true，然后某一个步骤之后scaleSkin就变成了false。我开始逐渐缩小这个区间，最后将目标锁定到了SkinnableComponent的这个函数里面</p>
+<pre><code><span class="comment">/**
+ * 卸载皮肤
+ */</span>        
+<span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">detachSkin</span><span class="params">(skin:Object)</span><span class="type">:void</span>
+</span>{       
+    <span class="keyword">if</span>(hasCreatedSkinParts)
+    {
+        removeSkinParts();
+        hasCreatedSkinParts = <span class="literal">false</span>;
+    }
+    <span class="keyword">if</span>(skin <span class="keyword">is</span> ISkin)
+    {
+        <span class="keyword">var</span> skinParts:Vector.&lt;String&gt; = SkinPartUtil.getSkinParts(<span class="keyword">this</span>);
+        <span class="keyword">for</span> <span class="keyword">each</span>(<span class="keyword">var</span> partName:String <span class="keyword">in</span> skinParts)
+        {
+            <span class="keyword">if</span>(!(partName <span class="keyword">in</span> <span class="keyword">this</span>))
+                <span class="keyword">continue</span>;
+            <span class="keyword">if</span> (<span class="keyword">this</span>[partName] != <span class="literal">null</span>)
+            {
+                partRemoved(partName,<span class="keyword">this</span>[partName]);
+            }
+            <span class="keyword">this</span>[partName] = <span class="literal">null</span>;
+        }
+        (skin <span class="keyword">as</span> ISkin).hostComponent = <span class="literal">null</span>;
+    }
+}
+</code></pre><p>我发现在for each某一个循环之后，scaleSkin发生了变化。同时通过断点发现skinParts居然还包含了一个scaleSkin的值</p>
+<p><img src="http://xzper.qiniudn.com/2015/05/09.png" alt=""></p>
+<p>果然罪魁祸首找到了，就是这里。使用[]的方式对属性进行赋值，逃过了查找引用和全局搜索。真是天网恢恢，总会漏那么一点。</p>
+<p>在卸载旧皮肤的时候（因为在ListSkin里面HScroller添加到显示列表会有一个主题皮肤，然后在MyListSkin会又设置一次HScroller的皮肤，所以会触发卸载皮肤的方法）框架内部将scaleSkin当成了皮肤部件，使用了 this[“scaleSkin”] = null 的方式改变了这个属性的值。</p>
+<p>那么新的问题又产生了，scaleSkin怎么会成为了皮肤部件？通过查看SkinPartUtil的getSkinParts方法</p>
+<p><img src="http://xzper.qiniudn.com/2015/05/10.png" alt=""></p>
+<p>不难发现第47行，没有使用toString()，导致判断永远成立，这个类里面的所有public的属性都被当做了皮肤部件。解决办法就是加上toString()。</p>
+<pre><code><span class="keyword">if</span>(basicTypes.indexOf(node.@<span class="class"><span class="keyword">type</span>.<span class="title">toString</span></span>())==-<span class="number">1</span>)
+</code></pre><p>另外SkinnableComponent在卸载皮肤校验时,没有判断部件是否也存在与皮肤中，可以将</p>
+<pre><code><span class="keyword">if</span>(!(partName <span class="keyword">in</span> <span class="keyword">this</span>))
+    <span class="keyword">continue</span>;
+</code></pre><p>改为</p>
+<pre><code><span class="keyword">if</span>(!(partName <span class="keyword">in</span> <span class="keyword">this</span>)||!(partName <span class="keyword">in</span> <span class="keyword">this</span>.skin))
+    <span class="keyword">continue</span>;
+</code></pre><p>到这里问题才算是彻底解决了。遇到问题还是需要刨根问底，不然永远只能停留在表面上。<br>最后附上错误代码的DEMO项目，<s>留个纪念</s>：</p>
+<p><a href="http://xzper.qiniudn.com/2015/05/FlexLiteTest.zip" title="FlexLiteTest" target="_blank" rel="external">http://xzper.qiniudn.com/2015/05/FlexLiteTest.zip</a></p>
+]]></content>
+    <summary type="html"><![CDATA[<p>前不久在FlexLite的开发者群里面遇到一个开发者的提问，说是在使用List的时候水平滚动条的大小有错误。截图大概是下面这样：</p>
+<p><img src="http://xzper.qiniudn.com/2015/05/01.png" alt=""></p>
+]]></summary>
+    
+      <category term="FlexLite" scheme="http://xzper.com/tags/FlexLite/"/>
+    
+      <category term="ActionScript3" scheme="http://xzper.com/tags/ActionScript3/"/>
+    
+      <category term="未分类" scheme="http://xzper.com/categories/%E6%9C%AA%E5%88%86%E7%B1%BB/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[突破AIR程序的权限限制]]></title>
