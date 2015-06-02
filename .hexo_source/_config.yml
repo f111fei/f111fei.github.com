@@ -24,7 +24,7 @@ permalink_defaults:
 # Directory
 source_dir: source
 public_dir: ..
-copyAssets: project,resource
+copyAssets: project,resource,baidu_verify_BzKCsLWu2Z.html
 
 # Writing
 new_post_name: :title.md # File name of new posts
