@@ -16,7 +16,7 @@ html {
 body {
   padding: 50px 0;
   margin: 0;
-  font: 14px/1.5 "Droid Serif", Helvetica Neue, Helvetica, Arial, sans-serif;
+  font: 14px/1.5 "ff-tisa-web-pro-1", "ff-tisa-web-pro-2", "Lucida Grande", "Helvetica Neue", Helvetica, Arial, "Hiragino Sans GB", "Hiragino Sans GB W3", "Microsoft YaHei UI", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
   color: #555;
   font-weight: 300;
 }
@@ -378,10 +378,13 @@ article .entry code {
   font-size: 12px;
 }
 article .entry pre {
-  padding: 10px 30px;
-  background: #3a3c42;
+  padding: 10px 16px;
+  background: #f6f6f6;
   color: #f8f8f2;
-  margin: 0 -30px 16px;
+  margin: 0 0 10px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
 }
 @media screen and (max-width: 580px) {
   article .entry pre {
@@ -390,7 +393,7 @@ article .entry pre {
   }
 }
 article .entry pre code {
-  color: #f8f8f2;
+  color: #a7195d;
 }
 li article .entry pre {
   margin-left: -60px;
@@ -715,28 +718,30 @@ pre .doctype,
 pre .pi,
 pre .lisp .string,
 pre .javadoc {
-  color: #93a1a1;
-  font-style: italic;
+  color: #969896;
 }
-pre .keyword,
 pre .winutils,
+pre .class .title,
 pre .method,
 pre .addition,
 pre .css .tag,
 pre .request,
 pre .status,
 pre .nginx .title {
-  color: #859900;
+  color: #795da3;
 }
+pre .keyword,
 pre .number,
 pre .command,
-pre .string,
 pre .tag .value,
 pre .phpdoc,
 pre .tex .formula,
 pre .regexp,
 pre .hexcolor {
-  color: #2aa198;
+  color: #0086b3;
+}
+pre .string {
+  color: #183691;
 }
 pre .title,
 pre .localvars,
@@ -754,7 +759,6 @@ pre .variable,
 pre .lisp .body,
 pre .smalltalk .number,
 pre .constant,
-pre .class .title,
 pre .parent,
 pre .haskell .type {
   color: #b58900;
