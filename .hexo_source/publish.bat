@@ -1,1 +1,2 @@
-hexo generate
+call hexo generate
+pause
