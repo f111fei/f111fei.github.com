@@ -1,0 +1,317 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  
+  <title>新手引导—脚本设计 | xzper</title>
+  <meta name="author" content="xzper">
+  
+  <meta name="description" content="xzper | f111fei | egret | html5">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+  <meta property="og:title" content="新手引导—脚本设计"/>
+  <meta property="og:site_name" content="xzper"/>
+
+  <link rel="alternate" href="/atom.xml" title="xzper" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  <script src="//libs.useso.com/js/jquery/1.8.0/jquery.min.js"></script>
+  
+</head>
+
+
+<body>
+  <div class="wrapper">
+    <header id="header"><div class="title">
+  <h1><a href="/">xzper</a></h1>
+  <p><a href="/">前行在被夕阳染红的街道</a></p>
+</div>
+<nav class="nav">
+  <ul>
+    
+      <li><a href="/">主页</a></li>
+    
+      <li><a href="/archives">所有文章</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div></header>
+    <div class="content"><article class="post">
+  <header>
+    
+      <div class="icon"></div>
+      <time datetime="2014-06-14T19:49:56.000Z"><a href="/2014/06/15/新手引导—脚本设计/">6月 15 2014</a></time>
+    
+    
+  
+    <h1 class="title">新手引导—脚本设计</h1>
+  
+
+  </header>
+  
+  <div class="entry">
+    
+      <p>最近在做游戏的新手引导模块。由于是关卡式的引导，所以很适合用读取引导脚本的方式来开发。</p>
+<p><strong>脚本和命令配置</strong></p>
+<a id="more"></a>
+
+<p>程序中通过GuideLib这个类来解析命令配置和脚本。脚本以行为单位运行，每一行就是一条指令。每一条指令有指令的名称和指令的参数。就像下面这样。</p>
+<pre><code><span class="tag">goto</span> <span class="tag">step</span><span class="pseudo">:+1</span>
+<span class="tag">showArrow</span> <span class="tag">direction</span><span class="pseudo">:down</span> <span class="tag">position</span>:<span class="attr_selector">[200,300]</span> <span class="tag">clickRect</span>:<span class="attr_selector">[100,30]</span>
+<span class="tag">delayCall</span> <span class="tag">step</span><span class="pseudo">:-1</span> <span class="tag">time</span><span class="pseudo">:2</span>
+</code></pre><p>第一个单词表示命令名称，然后后面的参数以空格分开，参数名称和参数值用冒号分开。由若干条命令就组成了一个完整的脚本。但是光有脚本还是不够，从脚本里面我们看不出来参数的类型。比如position应该是一个Number数组，所以我们还需要一个配置文件来说明每一条命令的详细细节。这里配置文件用xml表示。</p>
+<p><pre class="lang:xhtml decode:true">&lt;?xml version=”1.0” encoding=”UTF-8”?&gt;<br>&lt;commands&gt;<br>    &lt;command name=”goto”&gt;<br>        &lt;param name=”step” type=”String”/&gt;<br>    &lt;/command&gt;<br>    &lt;command name=”delayCall”&gt;<br>        &lt;param name=”step” type=”String”/&gt;<br>        &lt;param name=”time” type=”Number”/&gt;<br>    &lt;/command&gt;<br>    &lt;command name=”showArrow”&gt;<br>        &lt;param name=”direction” type=”String”/&gt;<br>        &lt;param name=”position” type=”Array_Number”/&gt;<br>        &lt;param name=”clickRect” type=”Array_Number”/&gt;<br>    &lt;/command&gt;<br>&lt;/commands&gt;</pre><br>可以看到param有一个type的属性用来说明参数类型。查看GuideLib的源代码会发现有一个ITypeAdapter，这个就是用来解析参数类型的，在解析脚本的时候，调用ITypeAdapter的convert方法自动将脚本中param的值由字符串转换为命令配置文件中的type。默认的类型解释器是TypeAdapter。</p>
+<pre><code><span class="javadoc">/**
+ * 将命令参数的值转换成正确的类型
+ */</span>
+public function convert(<span class="keyword">type</span>:String , value:String):*
+{
+    <span class="keyword">var</span> result:String = value;
+    <span class="keyword">if</span>(<span class="keyword">type</span> == <span class="string">"String"</span>)
+    {
+        <span class="keyword">return</span> value;
+    }
+    <span class="keyword">else</span> <span class="keyword">if</span>(<span class="keyword">type</span> == <span class="string">"Boolean"</span>)
+    {
+        <span class="keyword">return</span> value==<span class="string">"true"</span>?<span class="keyword">true</span>:<span class="keyword">false</span>;
+    }
+    <span class="keyword">else</span> <span class="keyword">if</span>(<span class="keyword">type</span>.indexOf(<span class="string">"Array"</span>) == <span class="number">0</span>)
+    {
+        <span class="keyword">if</span>(<span class="keyword">type</span>.split(<span class="string">"_"</span>,<span class="number">2</span>).length&amp;lt;<span class="number">2</span>)
+        {
+            <span class="keyword">return</span> convertStringToArray(<span class="string">"String"</span> , value);
+        }
+        <span class="keyword">else</span>
+        {
+            <span class="keyword">return</span> convertStringToArray(<span class="keyword">type</span>.split(<span class="string">"_"</span>)[<span class="number">1</span>] , value);
+        }
+    }
+    <span class="keyword">else</span>
+    {
+        <span class="keyword">return</span> getDefinitionByName(<span class="keyword">type</span>)(value);
+    }
+}
+</code></pre><p><strong>执行命令</strong></p>
+<p>GuideLib将通过getScript将脚本解析成一个数组。每一个元素就是一条命令，然后交给GuideSystem去处理每一条命令。在GuideSystem中又可以看到一个ICommandAdapter。这个就是用来运行命令的解释器，调用run方法执行命令。默认的命令解释器是CommandAdapter。</p>
+<pre><code><span class="javadoc">/**
+ * 默认的函数库
+ */</span>
+<span class="keyword">private</span> var guideFunction:GuideFunction = <span class="keyword">new</span> GuideFunction();
+<span class="javadoc">/**
+ * 运行命令
+ *<span class="javadoctag"> @param</span> command 命令的名称
+ *<span class="javadoctag"> @param</span> param 命令的参数
+ *<span class="javadoctag"> @param</span> guideSystem 向导管理
+ */</span>
+<span class="keyword">public</span> function <span class="title">run</span>(command:String, param:Object, guideSystem:GuideSystem):<span class="keyword">void</span>
+{
+    var fun:Function;
+    <span class="keyword">if</span>(guideFunction.hasOwnProperty(command))  <span class="comment">//函数库中存在这个函数</span>
+        fun = guideFunction[command];
+    fun(param);
+    <span class="keyword">if</span>(guideSystem.auto)
+        guideSystem.doNext();
+}
+</code></pre><p>GuideFunction就是默认的函数库，如果命令配置是调用其他的类的函数，可以自己实现这个run方法。</p>
+<p><strong>函数库的自定义</strong></p>
+<p>脚本中的每一条命令实际上就是调用的某一个类的某一个函数。默认情况下这个类就是GuideFunction。所以我们要实现功能，为GuideFunction添加方法就行了。方法名保存和命令名一致，参数就是命令的参数组成的Object。例如delayCall这个命令的实现</p>
+<pre><code><span class="comment">/**
+ * 延时 多少秒执行哪一步
+ */</span>
+<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">delayCall</span><span class="params">(param:Object)</span><span class="type">:void</span>
+</span>{
+    <span class="keyword">var</span> step:String = param[<span class="string">"step"</span>];
+    <span class="keyword">var</span> time:Number = param[<span class="string">"time"</span>];
+    GuideSystem.getInstance().auto = <span class="literal">false</span>;
+    setTimeout(<span class="function"><span class="keyword">function</span><span class="params">()</span><span class="type">:void</span></span>{
+        GuideSystem.getInstance().auto = <span class="literal">true</span>;
+        GuideSystem.getInstance().goto(step);
+    } , time*<span class="number">1000</span>);
+}
+</code></pre><p>我们可以根据业务逻辑的不同，自由的定制参数类型解析器，命令函数解析器和函数库。</p>
+<p><strong>脚本编辑器</strong></p>
+<p>脚本编辑器是一个可视化的工具，能方便快速的创建脚本，你只需要先写好命令配置xml。编辑器会根据xml自动生成命令列表，然后向脚本中自由的加入命令。预览图：</p>
+<p><img src="http://xzper.qiniudn.com/2014/06/editor.png" alt=""></p>
+<p>新手引导示例：<a href="http://xzper.qiniudn.com/2014/06/Guide.rar" target="_blank" rel="external">Guide</a></p>
+<p>脚本编辑器：<a href="http://xzper.qiniudn.com/2014/06/ScriptEditor.rar" target="_blank" rel="external">ScriptEditor</a></p>
+
+    
+  </div>
+  <footer>
+    
+      
+  
+  <div class="categories">
+    <a href="/categories/未分类/">未分类</a>
+  </div>
+
+      
+    
+    <div class="clearfix"></div>
+  </footer>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+  <div class="ds-thread" data-title="新手引导—脚本设计">
+  </div>
+</section>
+</div>
+  </div>
+  <div class="widget-wrapper">
+    <aside id="sidebar">
+  
+  
+    
+      
+      
+
+<div class="widget tag first">
+  <h3 class="title">分类</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/ActionScript3/">ActionScript3</a><small>4</small></li>
+  
+    <li><a href="/categories/Egret/">Egret</a><small>1</small></li>
+  
+    <li><a href="/categories/感悟/">感悟</a><small>1</small></li>
+  
+    <li><a href="/categories/未分类/">未分类</a><small>3</small></li>
+  
+    <li><a href="/categories/框架/">框架</a><small>2</small></li>
+  
+    <li><a href="/categories/解读/">解读</a><small>2</small></li>
+  
+  </ul>
+</div>
+
+    
+      
+      
+
+<div class="widget tag">
+  <h3 class="title">标签</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/ActionScript3/">ActionScript3</a><small>2</small></li>
+  
+    <li><a href="/tags/Egret/">Egret</a><small>1</small></li>
+  
+    <li><a href="/tags/FlexLite/">FlexLite</a><small>2</small></li>
+  
+    <li><a href="/tags/Hexo/">Hexo</a><small>1</small></li>
+  
+    <li><a href="/tags/puremvc/">puremvc</a><small>1</small></li>
+  
+    <li><a href="/tags/架构/">架构</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+    
+      
+      
+
+<div class="widget tagcloud">
+  <h3 class="title">标签云</h3>
+  <div class="entry">
+    <a href="/tags/ActionScript3/" style="font-size: 20.00px;">ActionScript3</a><a href="/tags/Egret/" style="font-size: 10.00px;">Egret</a><a href="/tags/FlexLite/" style="font-size: 20.00px;">FlexLite</a><a href="/tags/Hexo/" style="font-size: 10.00px;">Hexo</a><a href="/tags/puremvc/" style="font-size: 10.00px;">puremvc</a><a href="/tags/架构/" style="font-size: 10.00px;">架构</a>
+  </div>
+</div>
+
+    
+      
+      
+
+<div class="widget recent-posts first newline">
+  <h3 class="title">最近的文章</h3>
+  <ul class="entry">
+    
+      <li>
+        <a href="/2015/07/11/TP-MR12U刷openwrt-不死boot/">TP-MR12U路由器刷openwrt和不死boot</a>
+      </li>
+    
+      <li>
+        <a href="/2015/05/11/一次曲折的调试经历/">一次曲折的调试经历</a>
+      </li>
+    
+      <li>
+        <a href="/2015/01/24/突破AIR程序的权限限制/">突破AIR程序的权限限制</a>
+      </li>
+    
+      <li>
+        <a href="/2015/01/17/AIR中一些隐藏特性/">AIR中一些隐藏特性</a>
+      </li>
+    
+      <li>
+        <a href="/2014/10/25/Flex框架中样式的实现原理与AS3中的原型链继承/">Flex框架中样式的实现原理与AS3中的原型链继承</a>
+      </li>
+    
+  </ul>
+</div>
+
+    
+      
+      
+
+<div class="widget blogroll">
+  <h3 class="title">友情链接</h3>
+  <ul class="entry">
+  
+    
+    <li><a href="http://blog.domlib.com/" target="_blank">domlib</a></li>
+  
+  </ul>
+</div>
+
+    
+  
+</aside>
+<div class="clearfix"></div>
+  </div>
+  <footer id="footer"><div class="copyright">
+  
+  &copy; 2015 <a href="/">xzper</a>
+  
+</div>
+<div class="theme-copyright">
+  Theme by <a href="https://github.com/orderedlist" target="_blank">orderedlist</a>
+   | 
+  Redesign by <a href="http://heroicyang.com/" target="_blank">Heroic Yang</a>
+</div>
+<div class="clearfix"></div></footer>
+  <script src="/js/scale.fix.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+  var duoshuoQuery = { short_name: 'xzper' };
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';
+    ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+  (function($){
+    $('.fancybox').fancybox();
+  })(jQuery);
+</script>
+
+</body>
+</html>

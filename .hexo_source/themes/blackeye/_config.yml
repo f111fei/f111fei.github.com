@@ -1,0 +1,39 @@
+menu:
+  主页: /
+  所有文章: /archives
+
+excerpt_link: 阅读全文
+archive_yearly: false
+
+widgets:
+  - category
+  - tag
+  - tagcloud
+  - recent_posts
+  - blogroll
+
+blogrolls:
+  - domlib: http://blog.domlib.com/
+
+search: false
+
+twitter:
+  username: 
+  show_replies: true
+  tweet_count: 3
+
+fancybox: true
+
+duoshuo_shortname: xzper
+
+# Flick Badges
+# Find your user id here: http://idgettr.com/ It should be something like "25711589@N00".
+flickr_nickname: 
+flickr_user: 
+flickr_count: 9
+
+douban_user: 
+
+
+google_analytics:
+rss:

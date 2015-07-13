@@ -1,0 +1,169 @@
+title: TP-MR12U路由器刷openwrt和不死boot
+categories: 未分类
+date: 2015-07-11 16:09:38
+tags:
+---
+前不久买了一个无线路由器TP-MR12U，买这个东西的初衷是想和家里另外一个主路由做桥接并自动上vpn，这样两个wifi信号一个和谐上网，一个科学上网。然而，买来后才发现这个路由器是v2版本的，并不能同时支持开启无线中继wds和vpn拨号功能，也就是然并卵。经过一番调查，发现或许可以通过刷入openwrt固件的方式实现这些功能。于是，就有了此教程。刷机有风险，入市需谨慎。
+
+<!--more-->
+
+openwrt是一个嵌入式的Linux系统，在各种路由器中应用广泛。OpenWrt的特点：
+
+- 可扩展性好，可以在线安装您所需要的功能，目前有1000多个功能包可选；
+- 是一台完整的Linux工作站，文件系统可读可写，便于开发者学习和实践；
+
+boot是路由器最核心的部分，通常路由器重置恢复出厂设置一般都是因为有boot的存在所以能够还原回去。不死boot就是指刷入这个boot之后，你的路由器就不会因为刷固件失败而变砖了，DIY党必备。
+
+首先你需要一下东西：
+
+* 硬件：TP-MR12U(v2)路由器一个，网线一根，PC一台，戳菊花工具一根。
+* 软件：
++ TPRouter:用于修改固件版本信息。
++ putty:以命令行方式登陆路由器。
++ WinSCP:上传文件到路由器。
+
+* 固件：
++ (1)对应的openwrt解锁U-Boot分区固件，文件名为openwr-ar71xx-generic-tl-mr13u-v1-squashfs-factory.bin。看清楚是13U的不是12U的，因为12U(v1)和12U(v2)硬件不同，12U(v2)需要使用13U(v1)的固件。这个也是我们第一次需要刷入的固件。
++ (2)openwrt适用于MR13U的官方固件，文件名为openwrt-ar71xx-generic-tl-mr13u-v1-squashfs-factory.bin。这个是最终我们使用的固件。
++ (3)不死boot固件，文件名为breed-ar9331-mr12u.bin。
+
+以上软件和固件我已经打包好下面是下载链接：
+
+[TPRouter.zip](http://xzper.qiniudn.com/2015/07/TPRouter.zip)
+
+TPRouter.zip
+----------
+
+1.打开TPRouter，点击浏览，选择解锁了U-Boot分区的固件1，看清楚文件名千万别选错了。如下图修改：
+
+![](http://xzper.qiniudn.com/2015/07/01.png)
+
+修改完成后，再次打开就会发现固件标示变为了00120201。上面压缩包中的文件已经修改好，可以跳过这一步，有不放心的可以打开看看。
+
+2.第一次戳菊花，开机状态下按住路由器reset按5秒，重置路由器。
+
+3.使用网线连接路由器和电脑，电脑也不要连接其他的无线网，电脑ip使用自动获取。浏览器打开192.168.1.1，进入路由器界面。选择系统工具→软件升级。点击浏览选择修改好的固件1，并升级。
+等待过程中可以打开cmd窗口，输入
+
+	ping 192.168.1.1 -t
+
+用来检查电脑和路由的连接状态，一旦ping通了说明路由器初始化好了。
+
+4.重启好了之后，再次打开192.168.1.1即可看到高大上openwrt的初始界面了。
+
+![](http://xzper.qiniudn.com/2015/07/02.png)
+
+也先别激动，这次刚刚开始。
+
+5.以上步骤刷入了一个u-boot分区可以写入的系统，接下来就是将不死boot写入到u-boot分区。打开putty，使用Telnet协议以命令行的模式登陆路由器。注意是**使用Telnet连接**，设置如下图：
+
+![](http://xzper.qiniudn.com/2015/07/03.png)
+
+6.openwrt的默认账号是root，密码没有。为了能使用WinSCP给路由器上传文件，需要设置路由器的密码，在putty中输入以下命令：
+
+	passwd root
+
+然后按照提示输入要设置的密码。输入密码不会显示到控制台但是已经输入了。控制台输出如下：
+
+![](http://xzper.qiniudn.com/2015/07/04.png)
+
+7.使用WinSCP将不死boot固件3上传到路由器的tmp文件夹。打开WinSCP，按照如下图配置：
+
+![](http://xzper.qiniudn.com/2015/07/05.png)
+
+注意协议类型选择SCP。
+
+点击Login后会弹出一个Warning窗口，不要管，点击add或者yes。进入管理界面。左边选中固件所在目录，右边选中/tmp目录。将breed-ar9331-mr12u.bin拖入左边上传到路由器tmp目录下。如下图：
+
+![](http://xzper.qiniudn.com/2015/07/06.png)
+
+8.上传好了之后就该刷入不死boot了。首先重启putty，使用ssh的方式连接路由器。设置如下图：
+
+![](http://xzper.qiniudn.com/2015/07/07.png)
+
+跟 WinSCP 一样，如果是第一次使用 PuTTY 登录路由，那么会有一些确定窗口，点击yes。进入到命令行窗口，然后输入用户名root和密码。如下图：
+
+![](http://xzper.qiniudn.com/2015/07/08.png)
+
+先使用cat命令查看一下当前的分区。输入命令
+
+	 cat /proc/mtd
+
+输出如下：
+
+![](http://xzper.qiniudn.com/2015/07/09.png)
+
+这次要刷入的就是u-boot分区
+
+再获取路由器的mac地址。输入命令
+
+	ifconfig eth0
+
+输出如下：
+
+![](http://xzper.qiniudn.com/2015/07/10.png)
+
+图中红框框起来打码的部分就是mac地址。先记录并备份一下待会会用到。
+
+最后输入命令刷入不死boot
+
+	cd /tmp
+	mtd write breed-ar9331-mr12u.bin u-boot
+
+成功的话，如下图：
+
+![](http://xzper.qiniudn.com/2015/07/11.png)
+
+最后输入`reboot`命令重启路由器或者直接将路由器关机。
+
+Tips：如果你一开始的openwrt固件是官方的，因为默认是锁了u-boot分区的。到了这一步就会报错
+
+	Could not open mtd device: u-boot
+	Can't open device for writing!
+
+提示无法写入到u-boot分区。解决办法参见最后的FAQ。
+
+9.进入u-boot控制台。路由器**和电脑连接**，在路由器**关机状态**下，使用暴菊工具**按住reset按钮**不放，打开路由器开关，过一会会看到蓝色灯亮一下，再过一会会看到蓝色灯闪4下，这时松开reset按钮。在浏览器中输入192.168.1.1，即可进入u-boot设置界面。
+
+10.修改mac地址。u-root会将mac地址重置，此时需要将mac地址还原回来，不然有些功能无法使用，比如无线功能。将之前备份好的mac地址输入到设置框中，如下图设置：
+
+![](http://xzper.qiniudn.com/2015/07/12.png)
+
+11.刷入官方的openwrt固件。在u-boot控制台选择固件更新→固件，选中固件2点击上传。如下图：
+
+![](http://xzper.qiniudn.com/2015/07/13.png)
+
+这时等待更新就行了。
+
+有了不死boot就可以随意刷了，变砖了重复步骤9-11。
+
+12.路由器重启后进入192.168.1.1即可看到官方的openwrt的luci界面了。至此不死boot和openwrt刷入成功，撒花庆祝。
+
+![](http://xzper.qiniudn.com/2015/07/14.png)
+
+
+至于如何配置openwrt实现开篇所说的功能，等下回再说吧。特此感谢@hackpascal大牛的固件。
+
+【FAQ】
+
+1.问：步骤8中使用mdt命令提示无法写入怎么办？
+
+答：这种情况就是因为当前openwrt锁了u-boot分区，需要刷一个未锁分区的openwrt固件，也就是教程中的固件1。刷入方法就是按照使用WinSCP将固件1上传到路由器/tmp目录。然后使用mdt写入固件到firmware分区。
+命令如下：
+
+	cd /tmp
+	mdt write openwr-ar71xx-generic-tl-mr13u-v1-squashfs-factory.bin firmware
+	reboot
+
+重启好了之后就可以从步骤4开始刷入不死boot了。
+
+
+参考链接：
+
+[【U-Boot】U-Boot 刷机方法大全](http://www.right.com.cn/forum/forum.php?mod=viewthread&tid=154561&page=1)
+
+[TP-LINK 全系列解锁 U-Boot 分区固件](http://www.right.com.cn/forum/thread-142763-1-1.html)
+
+[AR/QCA/MT7620 Breed，功能强大的多线程 Bootloader](http://www.right.com.cn/forum/thread-161906-1-1.html)
+
+欢迎转载，转载请注明出处 [http://xzper.com](http://xzper.com)

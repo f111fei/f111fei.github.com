@@ -1,0 +1,246 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  
+  <title>框架包结构的设计 | xzper</title>
+  <meta name="author" content="xzper">
+  
+  <meta name="description" content="xzper | f111fei | egret | html5">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+  <meta property="og:title" content="框架包结构的设计"/>
+  <meta property="og:site_name" content="xzper"/>
+
+  <link rel="alternate" href="/atom.xml" title="xzper" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  <script src="//libs.useso.com/js/jquery/1.8.0/jquery.min.js"></script>
+  
+</head>
+
+
+<body>
+  <div class="wrapper">
+    <header id="header"><div class="title">
+  <h1><a href="/">xzper</a></h1>
+  <p><a href="/">前行在被夕阳染红的街道</a></p>
+</div>
+<nav class="nav">
+  <ul>
+    
+      <li><a href="/">主页</a></li>
+    
+      <li><a href="/archives">所有文章</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div></header>
+    <div class="content"><article class="post">
+  <header>
+    
+      <div class="icon"></div>
+      <time datetime="2014-08-08T16:43:25.000Z"><a href="/2014/08/09/框架包结构的设计/">8月 9 2014</a></time>
+    
+    
+  
+    <h1 class="title">框架包结构的设计</h1>
+  
+
+  </header>
+  
+  <div class="entry">
+    
+      <p>这里的框架拿Flex或者FlexLite以及Egret做例子。框架的包结构划分应该是以调用关系为依据划分的，尽量把需要相互调用的类放在一个包下面。这样最终得到的结果就是各个包之间相互独立，理想情况下即使你删除一个包，其他的也不受影响。但是现实肯定不是理想的，包之间总是还有依赖。这些有依赖的东西，大部分就是框架里面核心的东西了。这时候就把这些公共依赖的部分抽出来，放到一个核心包下，比如叫core。 从另一种角度上来讲，所谓的框架”核心类”，实际上就是一些公共耦合的类。这样其他的包都和这个核心包有依赖关系，但是他们彼此之间没有依赖关系。</p>
+<a id="more"></a>
+
+<p>举一个例子：上面说到的三种框架都有一些枚举类，提供一下静态字符串，通常为其他类的某些属性提供值。再具体一点可以在Flex的spark.components包下面可以看到有一个PopUpPosition的一个枚举类，这里可能会奇怪，这个叫做components的包下面不应该都是放一些UI组件么，怎么多出了这么一个东西。别急，我们来看一下官方API描述：</p>
+<p><pre class="lang:as decode:true">PopUpAnchor.popUpPosition 属性的枚举类型。该类型描述了 PopUpAnchor 锚定的 popUp 控件的位置。该位置与 PopUpAnchor 位置相关。</pre><br>这里明确指出了这个枚举类是和这个PopUpAnchor组件配套使用的，也不会作为其他类的某些属性的枚举类型。那么这个枚举类和组件放在一起也就无可厚非了。 我们再来看一下FlexLite里面的PopUpPosition这个类，同样的这也是一个枚举类，甚至全部的代码都和Flex里面的这个一样，但是这个类却不是在components包下面，而是在core包下面。同样的看一下API描述：</p>
+<p><pre class="lang:as decode:true">定义弹出位置的常量值。 该常量决定目标对象相对于父级组件的弹出位置。</pre><br>看到这里结合上面所说的，那么这个类一定是和其他的某些类产生了依赖关系。在打开调用结构层次关系的时候会发现，不光是PopUpAnchor这个组件使用了这个常量，还有IToolTipManagerClient这个包含提示功能的组件接口也用到了这个，甚至DropDownList的默认皮肤以及ComboBox的默认皮肤也用到了这个弹出位置的常量，而这些在Flex里面是没有的。所有这两个类的包位置是不一致的。</p>
+<p>通常，还有一些公共的依赖包比如managers以及layouts这些全局的管理类。还有一个utils的工具包，这些公共的类都有一个特点，就是除了依赖core包以外不会再依赖于其他的包了。再比如skins这个包，这个包提供组件的默认皮肤，我们完全可以直接删除这个包，整个框架也不会报错，但是他还是存在于框架中，因为他提供了一个默认的实现方式，方便了开发者以及调试。所有最后的结论就是，框架中包的划分是<strong>根据类的依赖关系来放，而不是类的特征。</strong></p>
+
+    
+  </div>
+  <footer>
+    
+      
+  
+  <div class="categories">
+    <a href="/categories/框架/">框架</a>
+  </div>
+
+      
+  
+  <div class="tags">
+    <a href="/tags/架构/">架构</a>
+  </div>
+
+    
+    <div class="clearfix"></div>
+  </footer>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+  <div class="ds-thread" data-title="框架包结构的设计">
+  </div>
+</section>
+</div>
+  </div>
+  <div class="widget-wrapper">
+    <aside id="sidebar">
+  
+  
+    
+      
+      
+
+<div class="widget tag first">
+  <h3 class="title">分类</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/ActionScript3/">ActionScript3</a><small>4</small></li>
+  
+    <li><a href="/categories/Egret/">Egret</a><small>1</small></li>
+  
+    <li><a href="/categories/感悟/">感悟</a><small>1</small></li>
+  
+    <li><a href="/categories/未分类/">未分类</a><small>3</small></li>
+  
+    <li><a href="/categories/框架/">框架</a><small>2</small></li>
+  
+    <li><a href="/categories/解读/">解读</a><small>2</small></li>
+  
+  </ul>
+</div>
+
+    
+      
+      
+
+<div class="widget tag">
+  <h3 class="title">标签</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/ActionScript3/">ActionScript3</a><small>2</small></li>
+  
+    <li><a href="/tags/Egret/">Egret</a><small>1</small></li>
+  
+    <li><a href="/tags/FlexLite/">FlexLite</a><small>2</small></li>
+  
+    <li><a href="/tags/Hexo/">Hexo</a><small>1</small></li>
+  
+    <li><a href="/tags/puremvc/">puremvc</a><small>1</small></li>
+  
+    <li><a href="/tags/架构/">架构</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+    
+      
+      
+
+<div class="widget tagcloud">
+  <h3 class="title">标签云</h3>
+  <div class="entry">
+    <a href="/tags/ActionScript3/" style="font-size: 20.00px;">ActionScript3</a><a href="/tags/Egret/" style="font-size: 10.00px;">Egret</a><a href="/tags/FlexLite/" style="font-size: 20.00px;">FlexLite</a><a href="/tags/Hexo/" style="font-size: 10.00px;">Hexo</a><a href="/tags/puremvc/" style="font-size: 10.00px;">puremvc</a><a href="/tags/架构/" style="font-size: 10.00px;">架构</a>
+  </div>
+</div>
+
+    
+      
+      
+
+<div class="widget recent-posts first newline">
+  <h3 class="title">最近的文章</h3>
+  <ul class="entry">
+    
+      <li>
+        <a href="/2015/07/11/TP-MR12U刷openwrt-不死boot/">TP-MR12U路由器刷openwrt和不死boot</a>
+      </li>
+    
+      <li>
+        <a href="/2015/05/11/一次曲折的调试经历/">一次曲折的调试经历</a>
+      </li>
+    
+      <li>
+        <a href="/2015/01/24/突破AIR程序的权限限制/">突破AIR程序的权限限制</a>
+      </li>
+    
+      <li>
+        <a href="/2015/01/17/AIR中一些隐藏特性/">AIR中一些隐藏特性</a>
+      </li>
+    
+      <li>
+        <a href="/2014/10/25/Flex框架中样式的实现原理与AS3中的原型链继承/">Flex框架中样式的实现原理与AS3中的原型链继承</a>
+      </li>
+    
+  </ul>
+</div>
+
+    
+      
+      
+
+<div class="widget blogroll">
+  <h3 class="title">友情链接</h3>
+  <ul class="entry">
+  
+    
+    <li><a href="http://blog.domlib.com/" target="_blank">domlib</a></li>
+  
+  </ul>
+</div>
+
+    
+  
+</aside>
+<div class="clearfix"></div>
+  </div>
+  <footer id="footer"><div class="copyright">
+  
+  &copy; 2015 <a href="/">xzper</a>
+  
+</div>
+<div class="theme-copyright">
+  Theme by <a href="https://github.com/orderedlist" target="_blank">orderedlist</a>
+   | 
+  Redesign by <a href="http://heroicyang.com/" target="_blank">Heroic Yang</a>
+</div>
+<div class="clearfix"></div></footer>
+  <script src="/js/scale.fix.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+  var duoshuoQuery = { short_name: 'xzper' };
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';
+    ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+  (function($){
+    $('.fancybox').fancybox();
+  })(jQuery);
+</script>
+
+</body>
+</html>

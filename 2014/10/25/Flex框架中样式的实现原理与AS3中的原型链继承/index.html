@@ -1,0 +1,334 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  
+  <title>Flex框架中样式的实现原理与AS3中的原型链继承 | xzper</title>
+  <meta name="author" content="xzper">
+  
+  <meta name="description" content="xzper | f111fei | egret | html5">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+  <meta property="og:title" content="Flex框架中样式的实现原理与AS3中的原型链继承"/>
+  <meta property="og:site_name" content="xzper"/>
+
+  <link rel="alternate" href="/atom.xml" title="xzper" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  <script src="//libs.useso.com/js/jquery/1.8.0/jquery.min.js"></script>
+  
+</head>
+
+
+<body>
+  <div class="wrapper">
+    <header id="header"><div class="title">
+  <h1><a href="/">xzper</a></h1>
+  <p><a href="/">前行在被夕阳染红的街道</a></p>
+</div>
+<nav class="nav">
+  <ul>
+    
+      <li><a href="/">主页</a></li>
+    
+      <li><a href="/archives">所有文章</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div></header>
+    <div class="content"><article class="post">
+  <header>
+    
+      <div class="icon"></div>
+      <time datetime="2014-10-25T05:53:06.000Z"><a href="/2014/10/25/Flex框架中样式的实现原理与AS3中的原型链继承/">10月 25 2014</a></time>
+    
+    
+  
+    <h1 class="title">Flex框架中样式的实现原理与AS3中的原型链继承</h1>
+  
+
+  </header>
+  
+  <div class="entry">
+    
+      <p>在Flex中setStyle这个特性特别好用，当一个容器Group的样式时，那么这个容器的子项的样式也会跟着起作用。比如设置Application的<code>fontSize</code>这个样式为20，那么如果不显式设置子项的<code>fontSize</code>，子项的字体大小就都会是20，而不用每次子项再去重复设置了，这个特性对于开发者来讲是至关重要的，能减少很多重复的代码。而这个特性的实现，离不开原型链继承这个重要概念。</p>
+<a id="more"></a>
+
+<p>原型链继承这个词已经不是陌生词汇了，对于JS程序员来说更是再熟悉不过了。AS3作为一个面向对象的脚本语言，原型链继承早已淡出AS3程序员的视野。说到AS语言，其实AS1，AS2都很像JS，AS3则来了个180°转变，变成了面向对象了。早在AS1，AS2的时代，对象间的继承就是使用原型链继承的方式实现的，事实上这一特性也得到了保留，AS3也可以使用这种方式实现继承。</p>
+<hr>
+<p>下面我们来看一个神奇的DEMO来体会原型链继承。先上代码</p>
+<pre><code><span class="keyword">private</span> <span class="function"><span class="keyword">function</span> <span class="title">styleTest</span><span class="params">()</span><span class="type">:void</span>
+</span>{
+    <span class="keyword">var</span> parentStyle:Object = 
+        {
+            <span class="string">"fontSize"</span>:<span class="number">12</span> , 
+            <span class="string">"fontColor"</span>:<span class="number">0xffffff</span> , 
+            <span class="string">"fontFamily"</span>:<span class="string">"微软雅黑"</span>
+        };
+
+    <span class="keyword">var</span> childStyle:Object = addStyleToProtoChain(parentStyle);
+    childStyle[<span class="string">"fontSize"</span>] = <span class="number">20</span>;
+    childStyle[<span class="string">"fontWeight"</span>] = <span class="string">"bold"</span>;
+
+    parentStyle[<span class="string">"fontSize"</span>] = <span class="number">18</span>;
+    parentStyle[<span class="string">"fontFamily"</span>] = <span class="string">"宋体"</span>;
+
+    <span class="keyword">trace</span>(<span class="string">"-----以下为parent的样式信息-----"</span>);
+    traceObject(parentStyle);
+
+    <span class="keyword">trace</span>(<span class="string">"-----以下为child的样式信息-----"</span>);
+    traceObject(childStyle);
+}
+
+<span class="comment">/**
+ * 将样式信息添加到原型链
+ * @param originalStyle 原始样式 
+ * @return 原始样式的子样式
+ */</span>
+<span class="keyword">private</span> <span class="function"><span class="keyword">function</span> <span class="title">addStyleToProtoChain</span><span class="params">(originalStyle:Object)</span><span class="type">:Object</span>
+</span>{
+    <span class="keyword">var</span> inheritStyle:Object;
+    <span class="keyword">var</span> factory:Function = <span class="function"><span class="keyword">function</span><span class="params">()</span><span class="type">:void</span></span>{};
+    factory.prototype = originalStyle;
+    inheritStyle = <span class="keyword">new</span> factory();
+    factory.prototype = <span class="literal">null</span>;
+    <span class="keyword">return</span> inheritStyle;
+}
+
+<span class="comment">/**
+ * 打印排序后的对象的属性
+ */</span>
+<span class="keyword">private</span> <span class="function"><span class="keyword">function</span> <span class="title">traceObject</span><span class="params">(obj:Object)</span><span class="type">:void</span>
+</span>{
+    <span class="keyword">var</span> keys:Array = [];
+    <span class="keyword">var</span> valueMap:Object = {};
+
+    <span class="keyword">for</span>(<span class="keyword">var</span> key:String <span class="keyword">in</span> obj)
+    {
+        <span class="keyword">if</span>(keys.indexOf(key)&gt;=<span class="number">0</span>)
+            <span class="keyword">continue</span>;
+        keys.push(key);
+        valueMap[key] = obj[key];
+    }
+    keys.sort();
+    <span class="keyword">for</span> each (key <span class="keyword">in</span> keys)
+    {
+        <span class="keyword">trace</span>(key+<span class="string">":"</span>+valueMap[key]);
+    }
+}
+</code></pre><p>程序定义了两个对象<code>parentStyle</code>和<code>childStyle</code>来存储一些样式属性。通过<code>addStyleToProtoChain</code>将<code>parentStyle</code>加入到<code>childStyle</code>原型链中，然后不断改变这两个对象的属性，最后输出两个对象的结果。在答案揭晓之前我们先来分析一下每个属性的设置过程。</p>
+<h4 id="fontSize"><code>fontSize</code></h4>
+<p><code>fontSize</code>这个属性在<code>parentStyle</code>初始化时为12，后来在<code>childStyle</code>中设置为20，最后<code>parentStyle</code>中又重新设置为18。 那么最后childStyle的<code>fontSize</code>是多少呢?是12，还是20，还是18?</p>
+<h4 id="fontColor"><code>fontColor</code></h4>
+<p><code>fontColor</code>只有在<code>parentStyle</code>初始化时设置了一次为<code>0xffffff</code>,并没有在<code>childStyle</code>中设置，那么最终<code>childStyle</code>中会有这个属性吗?</p>
+<h4 id="fontFamily"><code>fontFamily</code></h4>
+<p><code>fontFamily</code>被设置两次，初始化时为<code>微软雅黑</code>，后来设置成了<code>宋体</code>，都在<code>parentStyle</code>的属性中设置的。同样那么最终<code>childStyle</code>会有这个属性吗，有的话值是多少呢?是<code>微软雅黑</code>还是<code>宋体</code>?</p>
+<h4 id="fontWeight"><code>fontWeight</code></h4>
+<p><code>fontWeight</code>这个属性只在<code>childStyle</code>进行了设置，那么最终<code>parentStyle</code>会有这个属性吗?</p>
+<hr>
+<p>那么答案揭晓，控制台输出如下：</p>
+<pre><code>-----以下为parent的样式信息-----
+<span class="label">fontColor:</span><span class="number">16777215</span>
+<span class="label">fontFamily:</span>宋体
+<span class="label">fontSize:</span><span class="number">18</span>
+-----以下为child的样式信息-----
+<span class="label">fontColor:</span><span class="number">16777215</span>
+<span class="label">fontFamily:</span>宋体
+<span class="label">fontSize:</span><span class="number">20</span>
+<span class="label">fontWeight:</span>bold
+</code></pre><p>结果是否出人意料?</p>
+<p>其实最终的结果可以可以归纳为child的改变不会影响parent的属性，而parent的属性改变<strong>可能</strong>会影响到child的属性。这个可能分两种情况，一种情况是child没有这个属性，parent改变了child就会跟着改变，再一种就是child有这个属性parent改变了不会影响child。</p>
+<p>为什么<code>fontColor</code>，<code>fontFamily</code>这类的在<code>parentStyle</code>中定义，会在<code>childStyle</code>中出现呢，因为<code>childStyle</code>的原型链是<code>parentStyle</code>，当在自身找不到这个属性时，就会从原型链里面找，直到找到为止。</p>
+<hr>
+<p>我们再来看一下是如何将<code>parentStyle</code>设置成<code>childStyle</code>的原型链的。将<code>addStyleToProtoChain</code>执行的操作翻译过来就是下面这样</p>
+<pre><code><span class="keyword">var</span> factory:Function = <span class="function"><span class="keyword">function</span><span class="params">()</span><span class="type">:void</span></span>{};
+factory.prototype = parentStyle;
+childStyle = <span class="keyword">new</span> factory();
+factory.prototype = <span class="literal">null</span>;
+</code></pre><hr>
+<p>这种原型链的描述方式完全符合Flex样式的设计思想。Flex的每个组件都持有两套样式表，可继承的样式和不可继承的样式。不可继承的样式不做传递，可继承的样式会添加到原型链中。当一个容器的子组件被添加的时候，子组件的样式表会被重新初始化，将父级的样式表添加到自己的原型链，然后添加自己的样式。最终自己的样式改变不会影响父级，父级的样式改变，如果自己没有显式定义就会跟随父级改变。关于Flex样式的原理详细的可以看下面的参考文章。</p>
+<p>本文代码下载: <a href="http://xzper.qiniudn.com/2014%2F10%2FStyleTest.zip" target="_blank" rel="external">Click Me</a></p>
+<p>参考文章：</p>
+<p>[1] <a href="http://blog.csdn.net/terryzero/article/details/4581459" target="_blank" rel="external">Flex样式工作原理</a></p>
+<p>[2] <a href="http://blog.csdn.net/holybozo/article/details/1345606" target="_blank" rel="external">AS3 面向对象 高级话题</a></p>
+
+    
+  </div>
+  <footer>
+    
+      
+  
+  <div class="categories">
+    <a href="/categories/ActionScript3/">ActionScript3</a>
+  </div>
+
+      
+    
+    <div class="clearfix"></div>
+  </footer>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+  <div class="ds-thread" data-title="Flex框架中样式的实现原理与AS3中的原型链继承">
+  </div>
+</section>
+</div>
+  </div>
+  <div class="widget-wrapper">
+    <aside id="sidebar">
+  
+  
+    
+      
+      
+
+<div class="widget tag first">
+  <h3 class="title">分类</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/ActionScript3/">ActionScript3</a><small>4</small></li>
+  
+    <li><a href="/categories/Egret/">Egret</a><small>1</small></li>
+  
+    <li><a href="/categories/感悟/">感悟</a><small>1</small></li>
+  
+    <li><a href="/categories/未分类/">未分类</a><small>3</small></li>
+  
+    <li><a href="/categories/框架/">框架</a><small>2</small></li>
+  
+    <li><a href="/categories/解读/">解读</a><small>2</small></li>
+  
+  </ul>
+</div>
+
+    
+      
+      
+
+<div class="widget tag">
+  <h3 class="title">标签</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/ActionScript3/">ActionScript3</a><small>2</small></li>
+  
+    <li><a href="/tags/Egret/">Egret</a><small>1</small></li>
+  
+    <li><a href="/tags/FlexLite/">FlexLite</a><small>2</small></li>
+  
+    <li><a href="/tags/Hexo/">Hexo</a><small>1</small></li>
+  
+    <li><a href="/tags/puremvc/">puremvc</a><small>1</small></li>
+  
+    <li><a href="/tags/架构/">架构</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+    
+      
+      
+
+<div class="widget tagcloud">
+  <h3 class="title">标签云</h3>
+  <div class="entry">
+    <a href="/tags/ActionScript3/" style="font-size: 20.00px;">ActionScript3</a><a href="/tags/Egret/" style="font-size: 10.00px;">Egret</a><a href="/tags/FlexLite/" style="font-size: 20.00px;">FlexLite</a><a href="/tags/Hexo/" style="font-size: 10.00px;">Hexo</a><a href="/tags/puremvc/" style="font-size: 10.00px;">puremvc</a><a href="/tags/架构/" style="font-size: 10.00px;">架构</a>
+  </div>
+</div>
+
+    
+      
+      
+
+<div class="widget recent-posts first newline">
+  <h3 class="title">最近的文章</h3>
+  <ul class="entry">
+    
+      <li>
+        <a href="/2015/07/11/TP-MR12U刷openwrt-不死boot/">TP-MR12U路由器刷openwrt和不死boot</a>
+      </li>
+    
+      <li>
+        <a href="/2015/05/11/一次曲折的调试经历/">一次曲折的调试经历</a>
+      </li>
+    
+      <li>
+        <a href="/2015/01/24/突破AIR程序的权限限制/">突破AIR程序的权限限制</a>
+      </li>
+    
+      <li>
+        <a href="/2015/01/17/AIR中一些隐藏特性/">AIR中一些隐藏特性</a>
+      </li>
+    
+      <li>
+        <a href="/2014/10/25/Flex框架中样式的实现原理与AS3中的原型链继承/">Flex框架中样式的实现原理与AS3中的原型链继承</a>
+      </li>
+    
+  </ul>
+</div>
+
+    
+      
+      
+
+<div class="widget blogroll">
+  <h3 class="title">友情链接</h3>
+  <ul class="entry">
+  
+    
+    <li><a href="http://blog.domlib.com/" target="_blank">domlib</a></li>
+  
+  </ul>
+</div>
+
+    
+  
+</aside>
+<div class="clearfix"></div>
+  </div>
+  <footer id="footer"><div class="copyright">
+  
+  &copy; 2015 <a href="/">xzper</a>
+  
+</div>
+<div class="theme-copyright">
+  Theme by <a href="https://github.com/orderedlist" target="_blank">orderedlist</a>
+   | 
+  Redesign by <a href="http://heroicyang.com/" target="_blank">Heroic Yang</a>
+</div>
+<div class="clearfix"></div></footer>
+  <script src="/js/scale.fix.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+  var duoshuoQuery = { short_name: 'xzper' };
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';
+    ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+  (function($){
+    $('.fancybox').fancybox();
+  })(jQuery);
+</script>
+
+</body>
+</html>

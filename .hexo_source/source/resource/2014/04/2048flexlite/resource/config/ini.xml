@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <group name="preload"/>
+  <group name="loading">
+    <item name="LoadingSprite" url="swf/LoadingSprite.swf" type="swf" language="all" size="39279"/>
+  </group>
+  <group name="uigroup">
+    <item name="TileUISkin__A50E5BCD" url="ui/TileUISkin__A50E5BCD.swf" type="swf" language="all" size="3779" subkeys="SWF__D295A736"/>
+  </group>
+</root>
