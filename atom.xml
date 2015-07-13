@@ -4,7 +4,7 @@
   <subtitle><![CDATA[前行在被夕阳染红的街道]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://xzper.com/"/>
-  <updated>2015-07-11T16:17:02.461Z</updated>
+  <updated>2015-07-13T07:20:19.576Z</updated>
   <id>http://xzper.com/</id>
   
   <author>
@@ -19,10 +19,9 @@
     <link href="http://xzper.com/2015/07/11/TP-MR12U%E5%88%B7openwrt-%E4%B8%8D%E6%AD%BBboot/"/>
     <id>http://xzper.com/2015/07/11/TP-MR12U刷openwrt-不死boot/</id>
     <published>2015-07-11T08:09:38.000Z</published>
-    <updated>2015-07-11T16:16:32.000Z</updated>
+    <updated>2015-07-13T01:57:34.000Z</updated>
     <content type="html"><![CDATA[<p>前不久买了一个无线路由器TP-MR12U，买这个东西的初衷是想和家里另外一个主路由做桥接并自动上vpn，这样两个wifi信号一个和谐上网，一个科学上网。然而，买来后才发现这个路由器是v2版本的，并不能同时支持开启无线中继wds和vpn拨号功能，也就是然并卵。经过一番调查，发现或许可以通过刷入openwrt固件的方式实现这些功能。于是，就有了此教程。刷机有风险，入市需谨慎。</p>
 <a id="more"></a>
-
 <p>openwrt是一个嵌入式的Linux系统，在各种路由器中应用广泛。OpenWrt的特点：</p>
 <ul>
 <li>可扩展性好，可以在线安装您所需要的功能，目前有1000多个功能包可选；</li>
@@ -118,8 +117,11 @@ reboot
 <p><a href="http://www.right.com.cn/forum/thread-161906-1-1.html" target="_blank" rel="external">AR/QCA/MT7620 Breed，功能强大的多线程 Bootloader</a></p>
 <p>欢迎转载，转载请注明出处 <a href="http://xzper.com" target="_blank" rel="external">http://xzper.com</a></p>
 ]]></content>
-    <summary type="html"><![CDATA[<p>前不久买了一个无线路由器TP-MR12U，买这个东西的初衷是想和家里另外一个主路由做桥接并自动上vpn，这样两个wifi信号一个和谐上网，一个科学上网。然而，买来后才发现这个路由器是v2版本的，并不能同时支持开启无线中继wds和vpn拨号功能，也就是然并卵。经过一番调查，发现或许可以通过刷入openwrt固件的方式实现这些功能。于是，就有了此教程。刷机有风险，入市需谨慎。</p>
-]]></summary>
+    <summary type="html">
+    <![CDATA[<p>前不久买了一个无线路由器TP-MR12U，买这个东西的初衷是想和家里另外一个主路由做桥接并自动上vpn，这样两个wifi信号一个和谐上网，一个科学上网。然而，买来后才发现这个路由器是v2版本的，并不能同时支持开启无线中继wds和vpn拨号功能，也就是然并卵。经过一番调查，发现或许可以通过刷入openwrt固件的方式实现这些功能。于是，就有了此教程。刷机有风险，入市需谨慎。</p>
+]]>
+    
+    </summary>
     
       <category term="未分类" scheme="http://xzper.com/categories/%E6%9C%AA%E5%88%86%E7%B1%BB/"/>
     
@@ -130,11 +132,10 @@ reboot
     <link href="http://xzper.com/2015/05/11/%E4%B8%80%E6%AC%A1%E6%9B%B2%E6%8A%98%E7%9A%84%E8%B0%83%E8%AF%95%E7%BB%8F%E5%8E%86/"/>
     <id>http://xzper.com/2015/05/11/一次曲折的调试经历/</id>
     <published>2015-05-11T13:31:26.000Z</published>
-    <updated>2015-05-11T16:05:27.000Z</updated>
+    <updated>2015-06-05T07:24:43.000Z</updated>
     <content type="html"><![CDATA[<p>前不久在FlexLite的开发者群里面遇到一个开发者的提问，说是在使用List的时候水平滚动条的大小有错误。截图大概是下面这样：</p>
 <p><img src="http://xzper.qiniudn.com/2015/05/01.png" alt=""></p>
 <a id="more"></a>
-
 <p>可以看到水平滚动条的宽度是不对的。经过简单的了解，发现代码没错。本着(好)助(奇)人(害)为(死)乐(猫)的精神，决定找出问题所在。我简化代码，写了个DEMO，也复现了这个问题。代码大致如下只有两个类：<br>主类：</p>
 <pre><code><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">FlexLiteTest</span><span class="params">()</span>
 </span>{
@@ -275,9 +276,12 @@ override <span class="keyword">protected</span> <span class="function"><span cla
 </code></pre><p>到这里问题才算是彻底解决了。遇到问题还是需要刨根问底，不然永远只能停留在表面上。<br>最后附上错误代码的DEMO项目，<s>留个纪念</s>：</p>
 <p><a href="http://xzper.qiniudn.com/2015/05/FlexLiteTest.zip" title="FlexLiteTest" target="_blank" rel="external">http://xzper.qiniudn.com/2015/05/FlexLiteTest.zip</a></p>
 ]]></content>
-    <summary type="html"><![CDATA[<p>前不久在FlexLite的开发者群里面遇到一个开发者的提问，说是在使用List的时候水平滚动条的大小有错误。截图大概是下面这样：</p>
+    <summary type="html">
+    <![CDATA[<p>前不久在FlexLite的开发者群里面遇到一个开发者的提问，说是在使用List的时候水平滚动条的大小有错误。截图大概是下面这样：</p>
 <p><img src="http://xzper.qiniudn.com/2015/05/01.png" alt=""></p>
-]]></summary>
+]]>
+    
+    </summary>
     
       <category term="FlexLite" scheme="http://xzper.com/tags/FlexLite/"/>
     
@@ -292,14 +296,13 @@ override <span class="keyword">protected</span> <span class="function"><span cla
     <link href="http://xzper.com/2015/01/24/%E7%AA%81%E7%A0%B4AIR%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%9D%83%E9%99%90%E9%99%90%E5%88%B6/"/>
     <id>http://xzper.com/2015/01/24/突破AIR程序的权限限制/</id>
     <published>2015-01-24T05:27:45.000Z</published>
-    <updated>2015-01-24T07:44:35.000Z</updated>
+    <updated>2015-06-05T07:24:43.000Z</updated>
     <content type="html"><![CDATA[<p>AIR中有些API在没有权限的情况下是不生效的，甚至不报错也没没有任何提示。例如文件系统中对敏感目录的文件操作，File.applicationDirectory这个API的文档是这样说的</p>
 <blockquote>
 <p>出于安全原因，不推荐修改应用程序目录中的内容，有些平台上的操作系统会阻止此操作。<br>如果要存储特定于应用程序的数据，请考虑使用应用程序存储目录 (File.applicationStorageDirectory)。</p>
 </blockquote>
 <p>可以看到File.applicationDirectory这个目录是无法保证有权限写入的。这篇文章讲解如何在Windows和Mac下突破这一限制，能获取系统中任何目录的操作权限。</p>
 <a id="more"></a>
-
 <p>解决这个问题基本思路是想办法让程序获得管理员所有权，一旦程序有了权限就可以肆无忌惮了。但是，一个没有权限的程序在运行时是无法提升权限的，只能在程序启动时，赋予权限。也就是说要想让程序有权限，必须通过另一个程序。假设我们的AIR程序叫A，这个可以提升其他AIR程序权限的程序叫elevate，调用elevate，传入A的路径，启动A就行了。这里有两种方案：</p>
 <p>1.使用一个壳，壳启动时调用elevate以管理员方式启动A，这样A就获得了权限。</p>
 <p>2.启动A，这时A是没有权限的，然后A调用elevate，启动程序B，由B来执行一切需要权限的敏感操作。</p>
@@ -348,12 +351,15 @@ override <span class="keyword">protected</span> <span class="function"><span cla
 <p>Windows：<a href="http://xzper.qiniudn.com/2015/01/elevate.exe" target="_blank" rel="external">elevate.exe</a></p>
 <p>Mac：<a href="http://xzper.qiniudn.com/2015/01/elevate.scpt" target="_blank" rel="external">elevate.scpt</a></p>
 ]]></content>
-    <summary type="html"><![CDATA[<p>AIR中有些API在没有权限的情况下是不生效的，甚至不报错也没没有任何提示。例如文件系统中对敏感目录的文件操作，File.applicationDirectory这个API的文档是这样说的</p>
+    <summary type="html">
+    <![CDATA[<p>AIR中有些API在没有权限的情况下是不生效的，甚至不报错也没没有任何提示。例如文件系统中对敏感目录的文件操作，File.applicationDirectory这个API的文档是这样说的</p>
 <blockquote>
 <p>出于安全原因，不推荐修改应用程序目录中的内容，有些平台上的操作系统会阻止此操作。<br>如果要存储特定于应用程序的数据，请考虑使用应用程序存储目录 (File.applicationStorageDirectory)。</p>
 </blockquote>
 <p>可以看到File.applicationDirectory这个目录是无法保证有权限写入的。这篇文章讲解如何在Windows和Mac下突破这一限制，能获取系统中任何目录的操作权限。</p>
-]]></summary>
+]]>
+    
+    </summary>
     
       <category term="ActionScript3" scheme="http://xzper.com/categories/ActionScript3/"/>
     
@@ -364,10 +370,9 @@ override <span class="keyword">protected</span> <span class="function"><span cla
     <link href="http://xzper.com/2015/01/17/AIR%E4%B8%AD%E4%B8%80%E4%BA%9B%E9%9A%90%E8%97%8F%E7%89%B9%E6%80%A7/"/>
     <id>http://xzper.com/2015/01/17/AIR中一些隐藏特性/</id>
     <published>2015-01-17T13:52:01.000Z</published>
-    <updated>2015-01-17T16:03:16.000Z</updated>
+    <updated>2015-01-19T03:05:24.000Z</updated>
     <content type="html"><![CDATA[<p>分享一下在使用AIR开发跨平台应用的几个坑。在此之前不得不说，stackoverflow这个网站帮了我很多。每次遇到一些棘手的技术问题寻找答案未果的情况下，stackoverflow总能找到令人满意的答案。这里分享两个我遇到的一些问题。</p>
 <a id="more"></a>
-
 <p><strong>1.打印异常堆栈信息</strong></p>
 <p>当产品发布时，没人能保证程序百分之百稳定运行。难免会有一些bug，而用户遇到了bug需要反馈的时候，报错的堆栈信息如果能够得到保留能省很多事。所幸AIR有这样的API能输出堆栈信息。看下面这段代码。</p>
 <pre><code>loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR,errorHandle);
@@ -409,8 +414,11 @@ var <span class="keyword">process</span>:NativeProcess = <span class="keyword">n
 NativeApplication.nativeApplication.<span class="keyword">exit</span>();
 </code></pre><p>没错，先打开程序，然后立马执行退出就是重启。不过这种方式之所以生效还是有一定道理的，NativeProcess是系统级的东西，系统执行的时候有一定延迟，而exit是立马就生效的。</p>
 ]]></content>
-    <summary type="html"><![CDATA[<p>分享一下在使用AIR开发跨平台应用的几个坑。在此之前不得不说，stackoverflow这个网站帮了我很多。每次遇到一些棘手的技术问题寻找答案未果的情况下，stackoverflow总能找到令人满意的答案。这里分享两个我遇到的一些问题。</p>
-]]></summary>
+    <summary type="html">
+    <![CDATA[<p>分享一下在使用AIR开发跨平台应用的几个坑。在此之前不得不说，stackoverflow这个网站帮了我很多。每次遇到一些棘手的技术问题寻找答案未果的情况下，stackoverflow总能找到令人满意的答案。这里分享两个我遇到的一些问题。</p>
+]]>
+    
+    </summary>
     
       <category term="ActionScript3" scheme="http://xzper.com/categories/ActionScript3/"/>
     
@@ -421,10 +429,9 @@ NativeApplication.nativeApplication.<span class="keyword">exit</span>();
     <link href="http://xzper.com/2014/10/25/Flex%E6%A1%86%E6%9E%B6%E4%B8%AD%E6%A0%B7%E5%BC%8F%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E4%B8%8EAS3%E4%B8%AD%E7%9A%84%E5%8E%9F%E5%9E%8B%E9%93%BE%E7%BB%A7%E6%89%BF/"/>
     <id>http://xzper.com/2014/10/25/Flex框架中样式的实现原理与AS3中的原型链继承/</id>
     <published>2014-10-25T05:53:06.000Z</published>
-    <updated>2014-10-25T09:46:12.000Z</updated>
+    <updated>2014-11-17T09:07:10.000Z</updated>
     <content type="html"><![CDATA[<p>在Flex中setStyle这个特性特别好用，当一个容器Group的样式时，那么这个容器的子项的样式也会跟着起作用。比如设置Application的<code>fontSize</code>这个样式为20，那么如果不显式设置子项的<code>fontSize</code>，子项的字体大小就都会是20，而不用每次子项再去重复设置了，这个特性对于开发者来讲是至关重要的，能减少很多重复的代码。而这个特性的实现，离不开原型链继承这个重要概念。</p>
 <a id="more"></a>
-
 <p>原型链继承这个词已经不是陌生词汇了，对于JS程序员来说更是再熟悉不过了。AS3作为一个面向对象的脚本语言，原型链继承早已淡出AS3程序员的视野。说到AS语言，其实AS1，AS2都很像JS，AS3则来了个180°转变，变成了面向对象了。早在AS1，AS2的时代，对象间的继承就是使用原型链继承的方式实现的，事实上这一特性也得到了保留，AS3也可以使用这种方式实现继承。</p>
 <hr>
 <p>下面我们来看一个神奇的DEMO来体会原型链继承。先上代码</p>
@@ -523,8 +530,11 @@ factory.prototype = <span class="literal">null</span>;
 <p>[1] <a href="http://blog.csdn.net/terryzero/article/details/4581459" target="_blank" rel="external">Flex样式工作原理</a></p>
 <p>[2] <a href="http://blog.csdn.net/holybozo/article/details/1345606" target="_blank" rel="external">AS3 面向对象 高级话题</a></p>
 ]]></content>
-    <summary type="html"><![CDATA[<p>在Flex中setStyle这个特性特别好用，当一个容器Group的样式时，那么这个容器的子项的样式也会跟着起作用。比如设置Application的<code>fontSize</code>这个样式为20，那么如果不显式设置子项的<code>fontSize</code>，子项的字体大小就都会是20，而不用每次子项再去重复设置了，这个特性对于开发者来讲是至关重要的，能减少很多重复的代码。而这个特性的实现，离不开原型链继承这个重要概念。</p>
-]]></summary>
+    <summary type="html">
+    <![CDATA[<p>在Flex中setStyle这个特性特别好用，当一个容器Group的样式时，那么这个容器的子项的样式也会跟着起作用。比如设置Application的<code>fontSize</code>这个样式为20，那么如果不显式设置子项的<code>fontSize</code>，子项的字体大小就都会是20，而不用每次子项再去重复设置了，这个特性对于开发者来讲是至关重要的，能减少很多重复的代码。而这个特性的实现，离不开原型链继承这个重要概念。</p>
+]]>
+    
+    </summary>
     
       <category term="ActionScript3" scheme="http://xzper.com/categories/ActionScript3/"/>
     
@@ -535,7 +545,7 @@ factory.prototype = <span class="literal">null</span>;
     <link href="http://xzper.com/2014/09/04/%E5%BF%AB%E6%8D%B7%E9%94%AE%E7%AE%A1%E7%90%86/"/>
     <id>http://xzper.com/2014/09/04/快捷键管理/</id>
     <published>2014-09-04T13:58:03.000Z</published>
-    <updated>2014-09-06T04:55:37.000Z</updated>
+    <updated>2014-10-23T05:22:47.000Z</updated>
     <content type="html"><![CDATA[<p>最近要完成软件中的快捷键模块。基本需求就是能做到让用户自由设置。基本之前的所有按键都是写死在代码中的，就像下面这样糟糕：</p>
 <pre><code><span class="keyword">this</span>.addEventListener(KeyboardEvent.KEY_DOWN,onKeyDown);
 
@@ -547,7 +557,6 @@ factory.prototype = <span class="literal">null</span>;
     }
 }
 </code></pre><a id="more"></a>
-
 <p>这样写是无法做到在后期维护中把快捷键分离出来让用户自由设置的。而且会造成代码冗余，比如这个面板需要Ctrl+S执行保存操作，那个面板也需要Ctrl+S执行那个面板的保存操作。这样Ctrl+S这种组合的快捷键每个面板都需要判断一下，这样相同的逻辑判断会多次出现。还有一种比较严格的情况，比如上面的那种判断严格意义上来讲是不能判断Ctrl+S的，因为用户可能同时也按下了Shift键或者Alt键，那这样这个判断要完全写对，代码量又要多不少。</p>
 <p>比较好的解决方式是使用一个快捷键管理类Shortcut，统一管理这些操作。在程序初始化的时候注入快捷键的映射，然后在各个面板注册需要响应的事件类型以及对应的函数。比如一个Ctrl+S的操作可以这样表示：</p>
 <p>程序初始化的时候，添加快捷键映射</p>
@@ -951,7 +960,8 @@ factory.prototype = <span class="literal">null</span>;
 <p>再一个就是快捷键冲突的问题，同一个快捷键可以派发不同的事件。这种设计也是允许冲突的，因为有可能事件的对象不同，比如面板1里面Ctrl+S是保存，面板2里面Ctrl+S是删除一行，也就不冲突了。</p>
 <p>差不多就这些啦。这个类可以拿来直接用，没有和其他的类耦合，也不需要定义接口啥的。另外，这些东西真的要到项目前期规划好，不然到了后面想改都蛋疼。</p>
 ]]></content>
-    <summary type="html"><![CDATA[<p>最近要完成软件中的快捷键模块。基本需求就是能做到让用户自由设置。基本之前的所有按键都是写死在代码中的，就像下面这样糟糕：</p>
+    <summary type="html">
+    <![CDATA[<p>最近要完成软件中的快捷键模块。基本需求就是能做到让用户自由设置。基本之前的所有按键都是写死在代码中的，就像下面这样糟糕：</p>
 <pre><code><span class="keyword">this</span>.addEventListener(KeyboardEvent.KEY_DOWN,onKeyDown);
 
 <span class="keyword">private</span> <span class="function"><span class="keyword">function</span> <span class="title">onKeyDown</span><span class="params">(event:KeyboardEvent)</span><span class="type">:void</span>
@@ -961,7 +971,9 @@ factory.prototype = <span class="literal">null</span>;
         ...dosomething
     }
 }
-</code></pre>]]></summary>
+</code></pre>]]>
+    
+    </summary>
     
       <category term="ActionScript3" scheme="http://xzper.com/categories/ActionScript3/"/>
     
@@ -972,10 +984,9 @@ factory.prototype = <span class="literal">null</span>;
     <link href="http://xzper.com/2014/08/17/%E6%B5%85%E6%9E%90Hexo%E7%9A%84Generate%E5%91%BD%E4%BB%A4/"/>
     <id>http://xzper.com/2014/08/17/浅析Hexo的Generate命令/</id>
     <published>2014-08-16T22:54:10.000Z</published>
-    <updated>2014-09-06T04:48:49.000Z</updated>
+    <updated>2014-10-23T05:22:47.000Z</updated>
     <content type="html"><![CDATA[<p><a href="https://github.com/hexojs/hexo" target="_blank" rel="external">Hexo</a>是一个轻量级的静态博客站点生成框架，使用NodeJS开发。经过我两个通宵的努力总算把这个东西研究了一个大概，这里拿来分享一下。</p>
 <a id="more"></a>
-
 <h2 id="Processor">Processor</h2>
 <p><a href="http://hexo.io/docs/plugins.html#Processor" target="_blank" rel="external">Processor</a>决定文件按照何种方式处理。在lib/plugins/processor文件夹下可以看到默认的处理方式。Processor在该模块的index.js中注册，默认的有下面几种</p>
 <ol>
@@ -1039,8 +1050,11 @@ node --debug-brk=<span class="number">5858</span> <span class="constant">E</span
 <h2 id="吐槽">吐槽</h2>
 <p>我本来就得了一看JS代码就不好的病。然后这次为了搞懂Hexo，先初步学习了一下NodeJS，教程在<a href="http://www.open-open.com/lib/view/1392611872538" target="_blank" rel="external">这里</a>，不得不说本来就很讨厌的JS，再加上NodeJS最大的卖点-异步编程，那各种逼格极高的回调函数，看的我心花怒放，累觉不爱了。</p>
 ]]></content>
-    <summary type="html"><![CDATA[<p><a href="https://github.com/hexojs/hexo" target="_blank" rel="external">Hexo</a>是一个轻量级的静态博客站点生成框架，使用NodeJS开发。经过我两个通宵的努力总算把这个东西研究了一个大概，这里拿来分享一下。</p>
-]]></summary>
+    <summary type="html">
+    <![CDATA[<p><a href="https://github.com/hexojs/hexo" target="_blank" rel="external">Hexo</a>是一个轻量级的静态博客站点生成框架，使用NodeJS开发。经过我两个通宵的努力总算把这个东西研究了一个大概，这里拿来分享一下。</p>
+]]>
+    
+    </summary>
     
       <category term="Hexo" scheme="http://xzper.com/tags/Hexo/"/>
     
@@ -1053,17 +1067,19 @@ node --debug-brk=<span class="number">5858</span> <span class="constant">E</span
     <link href="http://xzper.com/2014/08/09/%E6%A1%86%E6%9E%B6%E5%8C%85%E7%BB%93%E6%9E%84%E7%9A%84%E8%AE%BE%E8%AE%A1/"/>
     <id>http://xzper.com/2014/08/09/框架包结构的设计/</id>
     <published>2014-08-08T16:43:25.000Z</published>
-    <updated>2014-09-05T18:26:45.000Z</updated>
+    <updated>2014-10-23T05:22:47.000Z</updated>
     <content type="html"><![CDATA[<p>这里的框架拿Flex或者FlexLite以及Egret做例子。框架的包结构划分应该是以调用关系为依据划分的，尽量把需要相互调用的类放在一个包下面。这样最终得到的结果就是各个包之间相互独立，理想情况下即使你删除一个包，其他的也不受影响。但是现实肯定不是理想的，包之间总是还有依赖。这些有依赖的东西，大部分就是框架里面核心的东西了。这时候就把这些公共依赖的部分抽出来，放到一个核心包下，比如叫core。 从另一种角度上来讲，所谓的框架”核心类”，实际上就是一些公共耦合的类。这样其他的包都和这个核心包有依赖关系，但是他们彼此之间没有依赖关系。</p>
 <a id="more"></a>
-
 <p>举一个例子：上面说到的三种框架都有一些枚举类，提供一下静态字符串，通常为其他类的某些属性提供值。再具体一点可以在Flex的spark.components包下面可以看到有一个PopUpPosition的一个枚举类，这里可能会奇怪，这个叫做components的包下面不应该都是放一些UI组件么，怎么多出了这么一个东西。别急，我们来看一下官方API描述：</p>
 <p><pre class="lang:as decode:true">PopUpAnchor.popUpPosition 属性的枚举类型。该类型描述了 PopUpAnchor 锚定的 popUp 控件的位置。该位置与 PopUpAnchor 位置相关。</pre><br>这里明确指出了这个枚举类是和这个PopUpAnchor组件配套使用的，也不会作为其他类的某些属性的枚举类型。那么这个枚举类和组件放在一起也就无可厚非了。 我们再来看一下FlexLite里面的PopUpPosition这个类，同样的这也是一个枚举类，甚至全部的代码都和Flex里面的这个一样，但是这个类却不是在components包下面，而是在core包下面。同样的看一下API描述：</p>
 <p><pre class="lang:as decode:true">定义弹出位置的常量值。 该常量决定目标对象相对于父级组件的弹出位置。</pre><br>看到这里结合上面所说的，那么这个类一定是和其他的某些类产生了依赖关系。在打开调用结构层次关系的时候会发现，不光是PopUpAnchor这个组件使用了这个常量，还有IToolTipManagerClient这个包含提示功能的组件接口也用到了这个，甚至DropDownList的默认皮肤以及ComboBox的默认皮肤也用到了这个弹出位置的常量，而这些在Flex里面是没有的。所有这两个类的包位置是不一致的。</p>
 <p>通常，还有一些公共的依赖包比如managers以及layouts这些全局的管理类。还有一个utils的工具包，这些公共的类都有一个特点，就是除了依赖core包以外不会再依赖于其他的包了。再比如skins这个包，这个包提供组件的默认皮肤，我们完全可以直接删除这个包，整个框架也不会报错，但是他还是存在于框架中，因为他提供了一个默认的实现方式，方便了开发者以及调试。所有最后的结论就是，框架中包的划分是<strong>根据类的依赖关系来放，而不是类的特征。</strong></p>
 ]]></content>
-    <summary type="html"><![CDATA[<p>这里的框架拿Flex或者FlexLite以及Egret做例子。框架的包结构划分应该是以调用关系为依据划分的，尽量把需要相互调用的类放在一个包下面。这样最终得到的结果就是各个包之间相互独立，理想情况下即使你删除一个包，其他的也不受影响。但是现实肯定不是理想的，包之间总是还有依赖。这些有依赖的东西，大部分就是框架里面核心的东西了。这时候就把这些公共依赖的部分抽出来，放到一个核心包下，比如叫core。 从另一种角度上来讲，所谓的框架”核心类”，实际上就是一些公共耦合的类。这样其他的包都和这个核心包有依赖关系，但是他们彼此之间没有依赖关系。</p>
-]]></summary>
+    <summary type="html">
+    <![CDATA[<p>这里的框架拿Flex或者FlexLite以及Egret做例子。框架的包结构划分应该是以调用关系为依据划分的，尽量把需要相互调用的类放在一个包下面。这样最终得到的结果就是各个包之间相互独立，理想情况下即使你删除一个包，其他的也不受影响。但是现实肯定不是理想的，包之间总是还有依赖。这些有依赖的东西，大部分就是框架里面核心的东西了。这时候就把这些公共依赖的部分抽出来，放到一个核心包下，比如叫core。 从另一种角度上来讲，所谓的框架”核心类”，实际上就是一些公共耦合的类。这样其他的包都和这个核心包有依赖关系，但是他们彼此之间没有依赖关系。</p>
+]]>
+    
+    </summary>
     
       <category term="架构" scheme="http://xzper.com/tags/%E6%9E%B6%E6%9E%84/"/>
     
@@ -1076,10 +1092,9 @@ node --debug-brk=<span class="number">5858</span> <span class="constant">E</span
     <link href="http://xzper.com/2014/07/02/%E8%A7%A3%E8%AF%BBDXML%E7%BC%96%E8%AF%91%E5%99%A8/"/>
     <id>http://xzper.com/2014/07/02/解读DXML编译器/</id>
     <published>2014-07-02T08:22:49.000Z</published>
-    <updated>2014-09-06T04:48:09.000Z</updated>
+    <updated>2014-10-23T05:22:47.000Z</updated>
     <content type="html"><![CDATA[<p>DXML就是FlexLite中由FlexLiteStdio生成的皮肤文件，类似于Flex中的MXML。实际上区别没多少，可能最大的区别就是MXML支持Script脚本。DXML架构设计对编写各类UI编辑器，各类代码生成工具都有很好的参考价值。这里主要分析DXML编译器是如何将DXML文件转换为as代码。</p>
 <a id="more"></a>
-
 <p><strong>1.如何使用DXML编译器</strong></p>
 <p>DXML编译器在源代码在FlexLiteExtends中的org.flexlite.domCompile包下。导入相应的类后，先导入配置文件manifest.xml(这个文件可以在FlexLiteStdio的安装目录的bin文件夹下可以找到，也可以通过ManifestUtil这个类生成)。这是一个全局静态属性，导入代码如下:</p>
 <pre><code><span class="attribute">DXMLCompiler.configData </span>=<span class="string"> manifestXml;</span>
@@ -1212,8 +1227,11 @@ node --debug-brk=<span class="number">5858</span> <span class="constant">E</span
 <p><strong>createStates</strong></p>
 <p>这个是在创建构造函数时被调用的，主要用来解析视图状态代码。本身是一个递归函数。遍历所有的子节点，找到那些在特定状态下出现节点。分解成每一个CpState填充进stateCode。</p>
 ]]></content>
-    <summary type="html"><![CDATA[<p>DXML就是FlexLite中由FlexLiteStdio生成的皮肤文件，类似于Flex中的MXML。实际上区别没多少，可能最大的区别就是MXML支持Script脚本。DXML架构设计对编写各类UI编辑器，各类代码生成工具都有很好的参考价值。这里主要分析DXML编译器是如何将DXML文件转换为as代码。</p>
-]]></summary>
+    <summary type="html">
+    <![CDATA[<p>DXML就是FlexLite中由FlexLiteStdio生成的皮肤文件，类似于Flex中的MXML。实际上区别没多少，可能最大的区别就是MXML支持Script脚本。DXML架构设计对编写各类UI编辑器，各类代码生成工具都有很好的参考价值。这里主要分析DXML编译器是如何将DXML文件转换为as代码。</p>
+]]>
+    
+    </summary>
     
       <category term="FlexLite" scheme="http://xzper.com/tags/FlexLite/"/>
     
@@ -1228,11 +1246,10 @@ node --debug-brk=<span class="number">5858</span> <span class="constant">E</span
     <link href="http://xzper.com/2014/06/22/%E4%BD%BF%E7%94%A8egret%E5%BC%80%E5%8F%912048/"/>
     <id>http://xzper.com/2014/06/22/使用egret开发2048/</id>
     <published>2014-06-22T12:41:00.000Z</published>
-    <updated>2014-09-05T18:25:07.000Z</updated>
+    <updated>2014-10-23T05:22:47.000Z</updated>
     <content type="html"><![CDATA[<p>2048是最近很火的一个小游戏，<a href="http://gabrielecirulli.github.io/2048/" target="_blank" rel="external">原版</a> 就是用JavaScript写的。恰巧最近Egret PublicBeta，观望和学习了一阵后，发现egret正好适合开发这类游戏。Egret使用TypeScript作为开发语言，最终编译为JavaScript，正好和原始版本PK一下。</p>
 <p>游戏预览：<a href="http://xzper.com/project/2048egret/" target="_blank" rel="external">点我体验</a></p>
 <a id="more"></a>
-
 <p><strong>1.准备开始</strong></p>
 <p>在开始之前，我们需要学习一下TypeScript和阅读官方的教程从Egret开发环境的部署到创建，编译，发布项目，以及Egret相关工具。在安装好开发环境后，在工作空间目录下使用命令行，创建2048egret新项目</p>
 <pre><code>egret <span class="operator"><span class="keyword">create</span> <span class="number">2048</span>egret</span>
@@ -1742,9 +1759,12 @@ context.stage.<span class="variable">scaleMode =</span> scaleMode;
 <p>egret的工作流还是很高效的，工具也不少，架构设计集各家所长。最后发布游戏在PC上运行是满帧运行，比原版甚至更快。在手机上运行也不错，体验超过了某些原生语言开发的2048。</p>
 <p>最后交出源代码：<a href="https://github.com/f111fei/2048egret" target="_blank" rel="external">点我传送</a></p>
 ]]></content>
-    <summary type="html"><![CDATA[<p>2048是最近很火的一个小游戏，<a href="http://gabrielecirulli.github.io/2048/" target="_blank" rel="external">原版</a> 就是用JavaScript写的。恰巧最近Egret PublicBeta，观望和学习了一阵后，发现egret正好适合开发这类游戏。Egret使用TypeScript作为开发语言，最终编译为JavaScript，正好和原始版本PK一下。</p>
+    <summary type="html">
+    <![CDATA[<p>2048是最近很火的一个小游戏，<a href="http://gabrielecirulli.github.io/2048/" target="_blank" rel="external">原版</a> 就是用JavaScript写的。恰巧最近Egret PublicBeta，观望和学习了一阵后，发现egret正好适合开发这类游戏。Egret使用TypeScript作为开发语言，最终编译为JavaScript，正好和原始版本PK一下。</p>
 <p>游戏预览：<a href="http://xzper.com/project/2048egret/" target="_blank" rel="external">点我体验</a></p>
-]]></summary>
+]]>
+    
+    </summary>
     
       <category term="Egret" scheme="http://xzper.com/tags/Egret/"/>
     
@@ -1757,11 +1777,10 @@ context.stage.<span class="variable">scaleMode =</span> scaleMode;
     <link href="http://xzper.com/2014/06/15/%E6%96%B0%E6%89%8B%E5%BC%95%E5%AF%BC%E2%80%94%E8%84%9A%E6%9C%AC%E8%AE%BE%E8%AE%A1/"/>
     <id>http://xzper.com/2014/06/15/新手引导—脚本设计/</id>
     <published>2014-06-14T19:49:56.000Z</published>
-    <updated>2014-09-05T16:46:59.000Z</updated>
+    <updated>2014-10-23T05:22:47.000Z</updated>
     <content type="html"><![CDATA[<p>最近在做游戏的新手引导模块。由于是关卡式的引导，所以很适合用读取引导脚本的方式来开发。</p>
 <p><strong>脚本和命令配置</strong></p>
 <a id="more"></a>
-
 <p>程序中通过GuideLib这个类来解析命令配置和脚本。脚本以行为单位运行，每一行就是一条指令。每一条指令有指令的名称和指令的参数。就像下面这样。</p>
 <pre><code><span class="tag">goto</span> <span class="tag">step</span><span class="pseudo">:+1</span>
 <span class="tag">showArrow</span> <span class="tag">direction</span><span class="pseudo">:down</span> <span class="tag">position</span>:<span class="attr_selector">[200,300]</span> <span class="tag">clickRect</span>:<span class="attr_selector">[100,30]</span>
@@ -1842,9 +1861,12 @@ public function convert(<span class="keyword">type</span>:String , value:String)
 <p>新手引导示例：<a href="http://xzper.qiniudn.com/2014/06/Guide.rar" target="_blank" rel="external">Guide</a></p>
 <p>脚本编辑器：<a href="http://xzper.qiniudn.com/2014/06/ScriptEditor.rar" target="_blank" rel="external">ScriptEditor</a></p>
 ]]></content>
-    <summary type="html"><![CDATA[<p>最近在做游戏的新手引导模块。由于是关卡式的引导，所以很适合用读取引导脚本的方式来开发。</p>
+    <summary type="html">
+    <![CDATA[<p>最近在做游戏的新手引导模块。由于是关卡式的引导，所以很适合用读取引导脚本的方式来开发。</p>
 <p><strong>脚本和命令配置</strong></p>
-]]></summary>
+]]>
+    
+    </summary>
     
       <category term="未分类" scheme="http://xzper.com/categories/%E6%9C%AA%E5%88%86%E7%B1%BB/"/>
     
@@ -1855,10 +1877,9 @@ public function convert(<span class="keyword">type</span>:String , value:String)
     <link href="http://xzper.com/2014/04/27/%E4%BB%8E2048%E6%B8%B8%E6%88%8F%E8%B0%88PureMVC/"/>
     <id>http://xzper.com/2014/04/27/从2048游戏谈PureMVC/</id>
     <published>2014-04-26T18:03:56.000Z</published>
-    <updated>2014-09-06T04:49:57.000Z</updated>
+    <updated>2014-10-23T05:22:47.000Z</updated>
     <content type="html"><![CDATA[<p>最近2048比较火，然后我又正好在学习pureMVC，之前对于pureMVC的了解只停留在理论上，正好拿这个游戏来练练手。废话不多说，游戏预览：<a href="http://xzper.qiniudn.com/2014/04/2048flexlite/Main.html" target="_blank" rel="external">2048</a></p>
 <a id="more"></a>
-
 <p><strong>1.MVC的基本运行原理</strong></p>
 <p><img src="http://xzper.qiniudn.com/2014/04/mvc结构图.png" alt="mvc结构图"></p>
 <p><span style="font-family: 微软雅黑;"><span>图：</span></span><span><span style="font-family: Calibri;">MVC</span><span style="font-family: 微软雅黑;">结构图（实线——&gt;表示依赖；虚线</span><span style="font-family: Calibri;">——&gt;</span><span style="font-family: 微软雅黑;">表示事件</span><span style="font-family: Calibri;">/</span></span><span style="font-family: 微软雅黑;"><span>通知等</span><span>）</span></span></p>
@@ -1893,8 +1914,11 @@ public function convert(<span class="keyword">type</span>:String , value:String)
 <p>参考文章：</p>
 <p>[1] <a href="http://www.cnblogs.com/skynet/archive/2012/12/29/2838303.html" target="_blank" rel="external">http://www.cnblogs.com/skynet/archive/2012/12/29/2838303.html</a></p>
 ]]></content>
-    <summary type="html"><![CDATA[<p>最近2048比较火，然后我又正好在学习pureMVC，之前对于pureMVC的了解只停留在理论上，正好拿这个游戏来练练手。废话不多说，游戏预览：<a href="http://xzper.qiniudn.com/2014/04/2048flexlite/Main.html" target="_blank" rel="external">2048</a></p>
-]]></summary>
+    <summary type="html">
+    <![CDATA[<p>最近2048比较火，然后我又正好在学习pureMVC，之前对于pureMVC的了解只停留在理论上，正好拿这个游戏来练练手。废话不多说，游戏预览：<a href="http://xzper.qiniudn.com/2014/04/2048flexlite/Main.html" target="_blank" rel="external">2048</a></p>
+]]>
+    
+    </summary>
     
       <category term="puremvc" scheme="http://xzper.com/tags/puremvc/"/>
     
@@ -1907,11 +1931,10 @@ public function convert(<span class="keyword">type</span>:String , value:String)
     <link href="http://xzper.com/2014/04/21/%E5%9C%A8%E8%B7%AF%E4%B8%8A/"/>
     <id>http://xzper.com/2014/04/21/在路上/</id>
     <published>2014-04-21T15:51:00.000Z</published>
-    <updated>2014-09-06T04:49:14.000Z</updated>
+    <updated>2014-10-23T05:22:47.000Z</updated>
     <content type="html"><![CDATA[<p>博客建站以来也快有一个月了，每次想写点什么都不得而终。究其原因还是自己太懒了。所以现在趁自己不懒的时候，记录自己在前端开发路上的点滴。 希望此文能做一个好的开始，以此共勉。</p>
 <p>Flash开发到了如今，也到了日落西山，穷途末路的时候吧。从官方上来看，Adobe已经对Flash力不从心了，停止了移动端的FP的更新 ，把Flex捐给了Apache 。从开发者来看，大量新技术如Html5，Cocos2d，Unity3D的出现让开发者有了更多的选择，好多Flash老程序员都转行了，这似乎成了一个趋势  。 从市场上来看，如今的页游市场，已经不复当年的辉煌了，前篇一律的感觉玩家会卖账么？而且各种坑爹的运营导致Flash游戏的名声越来越臭。总之，对于即将毕业的我选择Flash开发这条路显然不是一个明智的选择。</p>
 <a id="more"></a>
-
 <p>但是对于一个能把一件衣服从新买到一直穿到破的人来说，东西用惯了想换下来，不是那么容易的。至少目前这件衣服对于我来说还是新的就足够了，穿破了再说。我喜欢AS3，喜欢Flex，喜欢Flash这就够了。再说程序员都认为自己使用的语言是最NB的，讨论哪种语言的好坏根本没有意义。</p>
 <p>从2012年5月到现在，接触Flash编程也快有2年了。然而看了看Flash的<a href="http://www.xmind.net/m/bCk4/" target="_blank" rel="external">技能树</a>当真自愧不如。最近没事的时候我喜欢反编译一些看起来不错的游戏和软件，看着别人的代码，体会别人的开发思路。收获不少，同时也在感叹自己会的东西太少了。我发现，看博客，看开源项目或者成熟的商业作品的源码对自己的提升很有用。之前1年的学习可能仅仅只是让我上路了，知道怎么写代码，如何实现。但这些显然是不够的，要真真的独当一面要会的东西还有太多。</p>
 <p>对于前端开发，一些人认为就是显示下界面，放放特效之类的，其实哪有那么简单。这里按照技能书大致列举下我做前端的过程自己会与不会的知识。认为写前端很轻松的可以体会下。</p>
@@ -1929,9 +1952,12 @@ public function convert(<span class="keyword">type</span>:String , value:String)
 <p><strong>12.开源库</strong>。一个纯OOP开发语言当然离不开各类开源库以及引擎。上面说的几个是做动画用的比较多的开源库。像 UI框架之类的有,官方的<code>Flex</code>(Flex的架构设计简直赞，第3次了喂，可惜体积太大了), <code>Aswing</code>(没用过不说了) , <code>FlexLite</code> (DOM大大开发的UI框架，包含了Flex4的精髓) ，<code>Features</code>(和<code>Starling</code>配合)。物理引擎有 <code>Box2D</code> ， <code>Nape</code>，这部分我暂时没接触。3D引擎有官方的3d底层Stage3D , 以及<code>Away3D</code> ，<code>PV3D</code> , <code>Flar3D</code> ，这些我都鲜有接触。MVC框架有 官方的<code>Cairngorm</code>(据说太大，所以应用的不是很广) ， <code>pureMVC</code>(最近看的比较多的，蛮不错)，<code>Robotlegs</code>(貌似比前者好，最近准备学)。游戏引擎类的有 <code>Starling</code>(移动平台应用比较多，没时间学) ， <code>D5Power</code>(国人开发的rpg引擎，比较感兴趣，很有可能是我以后学rpg开发的敲门砖)。还有各种开源的小组件，开源的工具库这些的，都是每个Aser或多或少需要了解的东西，如果能深入理解源码那就更好了。</p>
 <p>还有很多知识都是没有涉及到的比如各类游戏算法啊，工具啊之类的。<strong>希望此文能为我自己立一面旗帜(俗称立Flag)，在今后的学习路上，像这面旗帜看齐，总之，那句话怎么说来着，我不在乎路的尽头有什么，我只在乎路边的风景，路还很长，且行且珍惜</strong>。</p>
 ]]></content>
-    <summary type="html"><![CDATA[<p>博客建站以来也快有一个月了，每次想写点什么都不得而终。究其原因还是自己太懒了。所以现在趁自己不懒的时候，记录自己在前端开发路上的点滴。 希望此文能做一个好的开始，以此共勉。</p>
+    <summary type="html">
+    <![CDATA[<p>博客建站以来也快有一个月了，每次想写点什么都不得而终。究其原因还是自己太懒了。所以现在趁自己不懒的时候，记录自己在前端开发路上的点滴。 希望此文能做一个好的开始，以此共勉。</p>
 <p>Flash开发到了如今，也到了日落西山，穷途末路的时候吧。从官方上来看，Adobe已经对Flash力不从心了，停止了移动端的FP的更新 ，把Flex捐给了Apache 。从开发者来看，大量新技术如Html5，Cocos2d，Unity3D的出现让开发者有了更多的选择，好多Flash老程序员都转行了，这似乎成了一个趋势  。 从市场上来看，如今的页游市场，已经不复当年的辉煌了，前篇一律的感觉玩家会卖账么？而且各种坑爹的运营导致Flash游戏的名声越来越臭。总之，对于即将毕业的我选择Flash开发这条路显然不是一个明智的选择。</p>
-]]></summary>
+]]>
+    
+    </summary>
     
       <category term="感悟" scheme="http://xzper.com/categories/%E6%84%9F%E6%82%9F/"/>
     

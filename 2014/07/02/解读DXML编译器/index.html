@@ -58,7 +58,6 @@
     
       <p>DXML就是FlexLite中由FlexLiteStdio生成的皮肤文件，类似于Flex中的MXML。实际上区别没多少，可能最大的区别就是MXML支持Script脚本。DXML架构设计对编写各类UI编辑器，各类代码生成工具都有很好的参考价值。这里主要分析DXML编译器是如何将DXML文件转换为as代码。</p>
 <a id="more"></a>
-
 <p><strong>1.如何使用DXML编译器</strong></p>
 <p>DXML编译器在源代码在FlexLiteExtends中的org.flexlite.domCompile包下。导入相应的类后，先导入配置文件manifest.xml(这个文件可以在FlexLiteStdio的安装目录的bin文件夹下可以找到，也可以通过ManifestUtil这个类生成)。这是一个全局静态属性，导入代码如下:</p>
 <pre><code><span class="attribute">DXMLCompiler.configData </span>=<span class="string"> manifestXml;</span>

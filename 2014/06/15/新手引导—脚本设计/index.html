@@ -59,7 +59,6 @@
       <p>最近在做游戏的新手引导模块。由于是关卡式的引导，所以很适合用读取引导脚本的方式来开发。</p>
 <p><strong>脚本和命令配置</strong></p>
 <a id="more"></a>
-
 <p>程序中通过GuideLib这个类来解析命令配置和脚本。脚本以行为单位运行，每一行就是一条指令。每一条指令有指令的名称和指令的参数。就像下面这样。</p>
 <pre><code><span class="tag">goto</span> <span class="tag">step</span><span class="pseudo">:+1</span>
 <span class="tag">showArrow</span> <span class="tag">direction</span><span class="pseudo">:down</span> <span class="tag">position</span>:<span class="attr_selector">[200,300]</span> <span class="tag">clickRect</span>:<span class="attr_selector">[100,30]</span>

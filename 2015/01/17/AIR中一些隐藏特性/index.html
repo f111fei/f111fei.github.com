@@ -58,7 +58,6 @@
     
       <p>分享一下在使用AIR开发跨平台应用的几个坑。在此之前不得不说，stackoverflow这个网站帮了我很多。每次遇到一些棘手的技术问题寻找答案未果的情况下，stackoverflow总能找到令人满意的答案。这里分享两个我遇到的一些问题。</p>
 <a id="more"></a>
-
 <p><strong>1.打印异常堆栈信息</strong></p>
 <p>当产品发布时，没人能保证程序百分之百稳定运行。难免会有一些bug，而用户遇到了bug需要反馈的时候，报错的堆栈信息如果能够得到保留能省很多事。所幸AIR有这样的API能输出堆栈信息。看下面这段代码。</p>
 <pre><code>loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR,errorHandle);
