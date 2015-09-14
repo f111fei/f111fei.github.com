@@ -29,7 +29,7 @@ boot是路由器最核心的部分，通常路由器重置恢复出厂设置一�
 
 以上软件和固件我已经打包好下面是下载链接：
 
-[TPRouter.zip](http://xzper.qiniudn.com/2015/07/TPRouter.zip)
+[TPRouter.zip](http://xzper.com/.hexo_source/source/resource/2015/07/TPRouter.zip)
 
 TPRouter.zip
 ----------

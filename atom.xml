@@ -4,7 +4,7 @@
   <subtitle><![CDATA[前行在被夕阳染红的街道]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://xzper.com/"/>
-  <updated>2015-07-13T12:31:45.070Z</updated>
+  <updated>2015-09-14T02:12:02.565Z</updated>
   <id>http://xzper.com/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://xzper.com/2015/07/11/TP-MR12U%E5%88%B7openwrt-%E4%B8%8D%E6%AD%BBboot/"/>
     <id>http://xzper.com/2015/07/11/TP-MR12U刷openwrt-不死boot/</id>
     <published>2015-07-11T08:09:38.000Z</published>
-    <updated>2015-07-13T01:57:34.000Z</updated>
+    <updated>2015-09-14T02:11:34.000Z</updated>
     <content type="html"><![CDATA[<p>前不久买了一个无线路由器TP-MR12U，买这个东西的初衷是想和家里另外一个主路由做桥接并自动上vpn，这样两个wifi信号一个和谐上网，一个科学上网。然而，买来后才发现这个路由器是v2版本的，并不能同时支持开启无线中继wds和vpn拨号功能，也就是然并卵。经过一番调查，发现或许可以通过刷入openwrt固件的方式实现这些功能。于是，就有了此教程。刷机有风险，入市需谨慎。</p>
 <a id="more"></a>
 <p>openwrt是一个嵌入式的Linux系统，在各种路由器中应用广泛。OpenWrt的特点：</p>
@@ -47,7 +47,7 @@
 <li>(3)不死boot固件，文件名为breed-ar9331-mr12u.bin。</li>
 </ul>
 <p>以上软件和固件我已经打包好下面是下载链接：</p>
-<p><a href="http://xzper.qiniudn.com/2015/07/TPRouter.zip" target="_blank" rel="external">TPRouter.zip</a></p>
+<p><a href="http://xzper.com/.hexo_source/source/resource/2015/07/TPRouter.zip" target="_blank" rel="external">TPRouter.zip</a></p>
 <h2 id="TPRouter-zip">TPRouter.zip</h2>
 <p>1.打开TPRouter，点击浏览，选择解锁了U-Boot分区的固件1，看清楚文件名千万别选错了。如下图修改：</p>
 <p><img src="http://xzper.qiniudn.com/2015/07/01.png" alt=""></p>
