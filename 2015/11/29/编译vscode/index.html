@@ -1,0 +1,312 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  
+  <title>编译vscode | xzper</title>
+  <meta name="author" content="xzper">
+  
+  <meta name="description" content="xzper | f111fei | egret | html5">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+  <meta property="og:title" content="编译vscode"/>
+  <meta property="og:site_name" content="xzper"/>
+
+  <link rel="alternate" href="/atom.xml" title="xzper" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <!--<script src="//libs.useso.com/js/jquery/1.8.0/jquery.min.js"></script>-->
+  <script src="/js/jquery.min.js"></script>
+  
+</head>
+
+
+<body>
+  <div class="wrapper">
+    <header id="header"><div class="title">
+  <h1><a href="/">xzper</a></h1>
+  <p><a href="/">前行在被夕阳染红的街道</a></p>
+</div>
+<nav class="nav">
+  <ul>
+    
+      <li><a href="/">主页</a></li>
+    
+      <li><a href="/archives">所有文章</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div></header>
+    <div class="content"><article class="post">
+  <header>
+    
+      <div class="icon"></div>
+      <time datetime="2015-11-28T19:03:12.000Z"><a href="/2015/11/29/编译vscode/">11月 29 2015</a></time>
+    
+    
+  
+    <h1 class="title">编译vscode</h1>
+  
+
+  </header>
+  
+  <div class="entry">
+    
+      <p>由于工作需要，最近开始研究vscode的源代码，这样就需要编译和调试vscode。</p>
+<p>先从GitHub(<a href="https://github.com/Microsoft/vscode" target="_blank" rel="external">https://github.com/Microsoft/vscode</a>)上clone一下vscode的源代码，顺便去点个star吧。</p>
+<a id="more"></a>
+<p><img src="http://xzper.qiniudn.com/2015/11/4.png" alt=""></p>
+<p>看一下目录结构</p>
+<ul>
+<li><p><strong>.build</strong> 是electron可执行文件的路径，clone出来的项目是不带这个文件夹的，需要build出来。后面会讲到。</p>
+</li>
+<li><p><strong>.vscode</strong> 官方人员应该是使用vscode作为的开发环境来调试和开发vscode的，所以提交了这个文件夹，里面包含了启动vscode单元测试，调试插件进程的一些配置。后面会讲解如何根据自身环境适当调整这些配置。</p>
+</li>
+<li><p><strong>build</strong> 编译vscode的一些自动化脚本。vscode是使用gulp来自动构建的</p>
+</li>
+<li><p><strong>.out</strong> 编译好的js脚本</p>
+</li>
+<li><p><strong>scripts</strong> 生成electron环境和npm install的脚本文件</p>
+</li>
+<li><p><strong>src</strong> ts源码路径</p>
+</li>
+</ul>
+<h4 id="1-安装依赖库">1.安装依赖库</h4>
+<p>官网上面说需要安装Python v2.7 和 Visual Studio(Windows下)，其实不用也行，看下面讲解。</p>
+<p>首先切换到vscode的项目根目录执行</p>
+<pre><code>npm <span class="operator"><span class="keyword">install</span> -g mocha gulp
+scripts\npm <span class="keyword">install</span></span>
+</code></pre><p>以上步骤分别为安装gulp构建器 和 安装vscode的依赖库。安装完成后会在项目的根目录下生成node_modules文件夹。</p>
+<p>执行此过程可能会遇到以下问题：</p>
+<ol>
+<li>npm有可能由于网络原因被那啥了, 建议使用<a href="https://npm.taobao.org/" title="淘宝的NPM镜像服务" target="_blank" rel="external">淘宝的npm镜像服务</a>，使用方法在首页。</li>
+</ol>
+<ol>
+<li>node-gyp安装失败</li>
+</ol>
+<p><img src="http://xzper.qiniudn.com/2015/11/5.png" alt=""></p>
+<p>这个似乎是需要机器上有Visual Studio，这个东西的功能应该就是构建一些本机文件用的，安装失败没关系，我们可以从其他地方得到这些本机文件。</p>
+<p>ps: 最近node-inspector老是安装不上也是因为这个的原因，有没有大神能告之解决办法。</p>
+<h4 id="2-拷贝一些重要文件">2.拷贝一些重要文件</h4>
+<p>在进行这个步骤之前你需要去官网下载一个发行版的vscode。这个以后大有用处。</p>
+<p>之前安装依赖库的时候，node-gyp安装失败就是因为一个叫vscode-textmate模块依赖了node-gyp。如果在node_modules没有找到该模块，需要从发行版的vscode中拷贝到node_modules文件夹下。路径为</p>
+<pre><code>C:<span class="command">\Program</span> Files (x86)<span class="command">\Microsoft</span> VS Code<span class="command">\resources</span><span class="command">\app</span><span class="command">\node</span>_modules<span class="command">\vscode</span>-textmate
+</code></pre><p>请安装vscode的实际安装位置自行替换。</p>
+<p>同理， 从安装的发行版vscode中找到node-debug， mono-debug两个插件，并拷贝到extensions目录下覆盖。</p>
+<pre><code>C:<span class="command">\Program</span> Files (x86)<span class="command">\Microsoft</span> VS Code<span class="command">\resources</span><span class="command">\app</span><span class="command">\extensions</span><span class="command">\mono</span>-debug
+C:<span class="command">\Program</span> Files (x86)<span class="command">\Microsoft</span> VS Code<span class="command">\resources</span><span class="command">\app</span><span class="command">\extensions</span><span class="command">\node</span>-debug
+</code></pre><p>这个步骤特别重要。git上的extensions目录里面这两个插件被标记成了placeholder，里面没有实际内容，插件实现是在另外的项目中。所以需要把实际的插件实现复制过来，<strong>没有这个插件将无法使用vscode进行nodejs项目的调试</strong>。附上这两个插件的项目地址：</p>
+<pre><code>//node-<span class="keyword">debug</span>和mono-<span class="keyword">debug</span>插件的项目地址
+http<span class="variable">s:</span>//github.<span class="keyword">com</span>/Microsoft/vscode-node-<span class="keyword">debug</span>
+http<span class="variable">s:</span>//github.<span class="keyword">com</span>/Microsoft/vscode-mono-<span class="keyword">debug</span>
+</code></pre><h4 id="3-编译源代码">3.编译源代码</h4>
+<p>这一步反倒很简单，vscode使用了gulp进行自动构建，只需要找vscode项目目录下，使用一行命令就行了。</p>
+<pre><code><span class="title">gulp</span> watch
+</code></pre><p>几分钟后编译完成，可能会有一个错误。</p>
+<p><img src="http://xzper.qiniudn.com/2015/11/6.png" alt=""></p>
+<p>要解决这个问题直接使用</p>
+<pre><code>npm <span class="operator"><span class="keyword">install</span> run-<span class="keyword">in</span>-terminal</span>
+</code></pre><p>安装一下这个模块就行了。</p>
+<h4 id="4-生成electron环境">4.生成electron环境</h4>
+<p>在项目根目录下执行</p>
+<pre><code>scripts<span class="command">\code</span>.bat
+</code></pre><p>就可以生成程序的入口可执行文件并启动了。以后如果要使用调试版本的vscode，双击code.bat或者执行这个命令即可。这样启动的vscode，左上角的标题会带有<br>Code [OSS Build]</p>
+<p>这个过程会下载electron的安装包，有可能会失败。不过不要紧, 下面讲解如何不使用electron 和 code.bat启动调试版本的vscode的办法。</p>
+<p>找到vscode发行版的安装目录下的resources文件夹</p>
+<pre><code>cd C:<span class="command">\Program</span> Files (x86)<span class="command">\Microsoft</span> VS Code<span class="command">\resources</span>
+</code></pre><p>将这个目录下的app文件夹重命名备份一下。然后创建一个链接到vscode项目目录的符号链接</p>
+<pre><code>ren app app_backup
+mklink /D app D:<span class="command">\workSpace</span><span class="command">\vscode</span><span class="command">\vscode</span>
+</code></pre><p><code>D:\workSpace\vscode\vscode</code> 这个目录是git clone下来的项目根目录，请自行替换。</p>
+<p>这样运行发行版的vscode, 实际上就是运行从git上clone下来的项目里面的代码了。正常打开vscode就是调试版本的了。 我就是使用的这种符号链接的形式来偷天换日的。</p>
+
+    
+  </div>
+  <footer>
+    
+      
+  
+  <div class="categories">
+    <a href="/categories/nodejs/">nodejs</a>
+  </div>
+
+      
+  
+  <div class="tags">
+    <a href="/tags/vscode/">vscode</a>, <a href="/tags/nodejs/">nodejs</a>
+  </div>
+
+    
+    <div class="clearfix"></div>
+  </footer>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+  <div class="ds-thread" data-title="编译vscode">
+  </div>
+</section>
+</div>
+  </div>
+  <div class="widget-wrapper">
+    <aside id="sidebar">
+  
+  
+    
+      
+      
+
+<div class="widget tag first">
+  <h3 class="title">分类</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/ActionScript3/">ActionScript3</a><small>4</small></li>
+  
+    <li><a href="/categories/Egret/">Egret</a><small>1</small></li>
+  
+    <li><a href="/categories/nodejs/">nodejs</a><small>2</small></li>
+  
+    <li><a href="/categories/感悟/">感悟</a><small>1</small></li>
+  
+    <li><a href="/categories/未分类/">未分类</a><small>3</small></li>
+  
+    <li><a href="/categories/框架/">框架</a><small>2</small></li>
+  
+    <li><a href="/categories/解读/">解读</a><small>2</small></li>
+  
+  </ul>
+</div>
+
+    
+      
+      
+
+<div class="widget tag">
+  <h3 class="title">标签</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/ActionScript3/">ActionScript3</a><small>2</small></li>
+  
+    <li><a href="/tags/Egret/">Egret</a><small>1</small></li>
+  
+    <li><a href="/tags/FlexLite/">FlexLite</a><small>2</small></li>
+  
+    <li><a href="/tags/Hexo/">Hexo</a><small>1</small></li>
+  
+    <li><a href="/tags/nodejs/">nodejs</a><small>2</small></li>
+  
+    <li><a href="/tags/puremvc/">puremvc</a><small>1</small></li>
+  
+    <li><a href="/tags/vscode/">vscode</a><small>2</small></li>
+  
+    <li><a href="/tags/架构/">架构</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+    
+      
+      
+
+<div class="widget tagcloud">
+  <h3 class="title">标签云</h3>
+  <div class="entry">
+    <a href="/tags/ActionScript3/" style="font-size: 20.00px;">ActionScript3</a><a href="/tags/Egret/" style="font-size: 10.00px;">Egret</a><a href="/tags/FlexLite/" style="font-size: 20.00px;">FlexLite</a><a href="/tags/Hexo/" style="font-size: 10.00px;">Hexo</a><a href="/tags/nodejs/" style="font-size: 20.00px;">nodejs</a><a href="/tags/puremvc/" style="font-size: 10.00px;">puremvc</a><a href="/tags/vscode/" style="font-size: 20.00px;">vscode</a><a href="/tags/架构/" style="font-size: 10.00px;">架构</a>
+  </div>
+</div>
+
+    
+      
+      
+
+<div class="widget recent-posts first newline">
+  <h3 class="title">最近的文章</h3>
+  <ul class="entry">
+    
+      <li>
+        <a href="/2015/11/29/编译vscode/">编译vscode</a>
+      </li>
+    
+      <li>
+        <a href="/2015/11/29/搭建vscode调试环境/">vscode编译和调试nodejs/typescript项目</a>
+      </li>
+    
+      <li>
+        <a href="/2015/07/11/TP-MR12U刷openwrt-不死boot/">TP-MR12U路由器刷openwrt和不死boot</a>
+      </li>
+    
+      <li>
+        <a href="/2015/05/11/一次曲折的调试经历/">一次曲折的调试经历</a>
+      </li>
+    
+      <li>
+        <a href="/2015/01/24/突破AIR程序的权限限制/">突破AIR程序的权限限制</a>
+      </li>
+    
+  </ul>
+</div>
+
+    
+      
+      
+
+<div class="widget blogroll">
+  <h3 class="title">友情链接</h3>
+  <ul class="entry">
+  
+    
+    <li><a href="http://blog.domlib.com/" target="_blank">domlib</a></li>
+  
+  </ul>
+</div>
+
+    
+  
+</aside>
+<div class="clearfix"></div>
+  </div>
+  <footer id="footer"><div class="copyright">
+  
+  &copy; 2015 <a href="/">xzper</a>
+  
+</div>
+<div class="theme-copyright">
+  Theme by <a href="https://github.com/orderedlist" target="_blank">orderedlist</a>
+   | 
+  Redesign by <a href="http://heroicyang.com/" target="_blank">Heroic Yang</a>
+</div>
+<div class="clearfix"></div></footer>
+  <script src="/js/scale.fix.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+  var duoshuoQuery = { short_name: 'xzper' };
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';
+    ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+  (function($){
+    $('.fancybox').fancybox();
+  })(jQuery);
+</script>
+
+</body>
+</html>

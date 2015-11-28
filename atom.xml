@@ -4,7 +4,7 @@
   <subtitle><![CDATA[前行在被夕阳染红的街道]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://xzper.com/"/>
-  <updated>2015-09-14T02:12:02.565Z</updated>
+  <updated>2015-11-28T20:39:03.220Z</updated>
   <id>http://xzper.com/</id>
   
   <author>
@@ -15,11 +15,221 @@
   <generator uri="http://zespia.tw/hexo/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[编译vscode]]></title>
+    <link href="http://xzper.com/2015/11/29/%E7%BC%96%E8%AF%91vscode/"/>
+    <id>http://xzper.com/2015/11/29/编译vscode/</id>
+    <published>2015-11-28T19:03:12.000Z</published>
+    <updated>2015-11-28T20:37:22.536Z</updated>
+    <content type="html"><![CDATA[<p>由于工作需要，最近开始研究vscode的源代码，这样就需要编译和调试vscode。</p>
+<p>先从GitHub(<a href="https://github.com/Microsoft/vscode" target="_blank" rel="external">https://github.com/Microsoft/vscode</a>)上clone一下vscode的源代码，顺便去点个star吧。</p>
+<a id="more"></a>
+<p><img src="http://xzper.qiniudn.com/2015/11/4.png" alt=""></p>
+<p>看一下目录结构</p>
+<ul>
+<li><p><strong>.build</strong> 是electron可执行文件的路径，clone出来的项目是不带这个文件夹的，需要build出来。后面会讲到。</p>
+</li>
+<li><p><strong>.vscode</strong> 官方人员应该是使用vscode作为的开发环境来调试和开发vscode的，所以提交了这个文件夹，里面包含了启动vscode单元测试，调试插件进程的一些配置。后面会讲解如何根据自身环境适当调整这些配置。</p>
+</li>
+<li><p><strong>build</strong> 编译vscode的一些自动化脚本。vscode是使用gulp来自动构建的</p>
+</li>
+<li><p><strong>.out</strong> 编译好的js脚本</p>
+</li>
+<li><p><strong>scripts</strong> 生成electron环境和npm install的脚本文件</p>
+</li>
+<li><p><strong>src</strong> ts源码路径</p>
+</li>
+</ul>
+<h4 id="1-安装依赖库">1.安装依赖库</h4>
+<p>官网上面说需要安装Python v2.7 和 Visual Studio(Windows下)，其实不用也行，看下面讲解。</p>
+<p>首先切换到vscode的项目根目录执行</p>
+<pre><code>npm <span class="operator"><span class="keyword">install</span> -g mocha gulp
+scripts\npm <span class="keyword">install</span></span>
+</code></pre><p>以上步骤分别为安装gulp构建器 和 安装vscode的依赖库。安装完成后会在项目的根目录下生成node_modules文件夹。</p>
+<p>执行此过程可能会遇到以下问题：</p>
+<ol>
+<li>npm有可能由于网络原因被那啥了, 建议使用<a href="https://npm.taobao.org/" title="淘宝的NPM镜像服务" target="_blank" rel="external">淘宝的npm镜像服务</a>，使用方法在首页。</li>
+</ol>
+<ol>
+<li>node-gyp安装失败</li>
+</ol>
+<p><img src="http://xzper.qiniudn.com/2015/11/5.png" alt=""></p>
+<p>这个似乎是需要机器上有Visual Studio，这个东西的功能应该就是构建一些本机文件用的，安装失败没关系，我们可以从其他地方得到这些本机文件。</p>
+<p>ps: 最近node-inspector老是安装不上也是因为这个的原因，有没有大神能告之解决办法。</p>
+<h4 id="2-拷贝一些重要文件">2.拷贝一些重要文件</h4>
+<p>在进行这个步骤之前你需要去官网下载一个发行版的vscode。这个以后大有用处。</p>
+<p>之前安装依赖库的时候，node-gyp安装失败就是因为一个叫vscode-textmate模块依赖了node-gyp。如果在node_modules没有找到该模块，需要从发行版的vscode中拷贝到node_modules文件夹下。路径为</p>
+<pre><code>C:<span class="command">\Program</span> Files (x86)<span class="command">\Microsoft</span> VS Code<span class="command">\resources</span><span class="command">\app</span><span class="command">\node</span>_modules<span class="command">\vscode</span>-textmate
+</code></pre><p>请安装vscode的实际安装位置自行替换。</p>
+<p>同理， 从安装的发行版vscode中找到node-debug， mono-debug两个插件，并拷贝到extensions目录下覆盖。</p>
+<pre><code>C:<span class="command">\Program</span> Files (x86)<span class="command">\Microsoft</span> VS Code<span class="command">\resources</span><span class="command">\app</span><span class="command">\extensions</span><span class="command">\mono</span>-debug
+C:<span class="command">\Program</span> Files (x86)<span class="command">\Microsoft</span> VS Code<span class="command">\resources</span><span class="command">\app</span><span class="command">\extensions</span><span class="command">\node</span>-debug
+</code></pre><p>这个步骤特别重要。git上的extensions目录里面这两个插件被标记成了placeholder，里面没有实际内容，插件实现是在另外的项目中。所以需要把实际的插件实现复制过来，<strong>没有这个插件将无法使用vscode进行nodejs项目的调试</strong>。附上这两个插件的项目地址：</p>
+<pre><code>//node-<span class="keyword">debug</span>和mono-<span class="keyword">debug</span>插件的项目地址
+http<span class="variable">s:</span>//github.<span class="keyword">com</span>/Microsoft/vscode-node-<span class="keyword">debug</span>
+http<span class="variable">s:</span>//github.<span class="keyword">com</span>/Microsoft/vscode-mono-<span class="keyword">debug</span>
+</code></pre><h4 id="3-编译源代码">3.编译源代码</h4>
+<p>这一步反倒很简单，vscode使用了gulp进行自动构建，只需要找vscode项目目录下，使用一行命令就行了。</p>
+<pre><code><span class="title">gulp</span> watch
+</code></pre><p>几分钟后编译完成，可能会有一个错误。</p>
+<p><img src="http://xzper.qiniudn.com/2015/11/6.png" alt=""></p>
+<p>要解决这个问题直接使用</p>
+<pre><code>npm <span class="operator"><span class="keyword">install</span> run-<span class="keyword">in</span>-terminal</span>
+</code></pre><p>安装一下这个模块就行了。</p>
+<h4 id="4-生成electron环境">4.生成electron环境</h4>
+<p>在项目根目录下执行</p>
+<pre><code>scripts<span class="command">\code</span>.bat
+</code></pre><p>就可以生成程序的入口可执行文件并启动了。以后如果要使用调试版本的vscode，双击code.bat或者执行这个命令即可。这样启动的vscode，左上角的标题会带有<br>Code [OSS Build]</p>
+<p>这个过程会下载electron的安装包，有可能会失败。不过不要紧, 下面讲解如何不使用electron 和 code.bat启动调试版本的vscode的办法。</p>
+<p>找到vscode发行版的安装目录下的resources文件夹</p>
+<pre><code>cd C:<span class="command">\Program</span> Files (x86)<span class="command">\Microsoft</span> VS Code<span class="command">\resources</span>
+</code></pre><p>将这个目录下的app文件夹重命名备份一下。然后创建一个链接到vscode项目目录的符号链接</p>
+<pre><code>ren app app_backup
+mklink /D app D:<span class="command">\workSpace</span><span class="command">\vscode</span><span class="command">\vscode</span>
+</code></pre><p><code>D:\workSpace\vscode\vscode</code> 这个目录是git clone下来的项目根目录，请自行替换。</p>
+<p>这样运行发行版的vscode, 实际上就是运行从git上clone下来的项目里面的代码了。正常打开vscode就是调试版本的了。 我就是使用的这种符号链接的形式来偷天换日的。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>由于工作需要，最近开始研究vscode的源代码，这样就需要编译和调试vscode。</p>
+<p>先从GitHub(<a href="https://github.com/Microsoft/vscode" target="_blank" rel="external">https://github.com/Microsoft/vscode</a>)上clone一下vscode的源代码，顺便去点个star吧。</p>
+]]>
+    
+    </summary>
+    
+      <category term="vscode" scheme="http://xzper.com/tags/vscode/"/>
+    
+      <category term="nodejs" scheme="http://xzper.com/tags/nodejs/"/>
+    
+      <category term="nodejs" scheme="http://xzper.com/categories/nodejs/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[vscode编译和调试nodejs/typescript项目]]></title>
+    <link href="http://xzper.com/2015/11/29/%E6%90%AD%E5%BB%BAvscode%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/"/>
+    <id>http://xzper.com/2015/11/29/搭建vscode调试环境/</id>
+    <published>2015-11-28T16:46:30.000Z</published>
+    <updated>2015-11-28T19:11:58.986Z</updated>
+    <content type="html"><![CDATA[<p>vscode是微软最新推出的使用<a href="https://github.com/atom/atom" title="atom" target="_blank" rel="external">atom</a>的<a href="https://github.com/atom/electron" title="electron" target="_blank" rel="external">electron</a>技术开发的新一代文本编辑器。</p>
+<p>同时最近也在GitHub(<a href="https://github.com/Microsoft/vscode" target="_blank" rel="external">https://github.com/Microsoft/vscode</a>)上开源了。</p>
+<p>本文简单的教大家如何使用vscode的构建和调试功能。</p>
+<a id="more"></a>
+<h3 id="构建项目">构建项目</h3>
+<p>vscode使用<strong>task.json</strong>来配置项目的构建过程。</p>
+<p>打开命令面板(Ctrl+Shift+P)选择Run Build Task(Ctrl+Shift+B)</p>
+<p><img src="http://xzper.qiniudn.com/2015/11/1.png" alt=""></p>
+<p>如果当前工作空间没有<strong>task.json</strong>配置文件此时会出现提示</p>
+<p><img src="http://xzper.qiniudn.com/2015/11/2.png" alt=""></p>
+<p>选择 Configure Task Runner 自动创建<strong>task.json</strong>。该配置文件在工作空间的.vscode目录下，这个目录也是存放vscode配置的文件夹。</p>
+<p>vscode默认的task配置文件中给出了执行tsc 和 gulp模板配置。简单介绍一下<strong>task.json</strong>的写法</p>
+<pre><code>{
+    <span class="string">"version"</span>: <span class="string">"0.1.0"</span>,
+
+    <span class="comment">// 要使用的命令或者可执行文件的路径</span>
+    <span class="string">"command"</span>: <span class="string">"tsc"</span>,
+
+    <span class="comment">// 对应command参数，是否是一个命令，否则为执行文件路径</span>
+    <span class="string">"isShellCommand"</span>: <span class="literal">true</span>,
+
+    <span class="comment">// 是否在执行task任务时显示控制台窗口</span>
+    <span class="string">"showOutput"</span>: <span class="string">"always"</span>,
+
+    <span class="comment">// 对应command参数指定程序的参数</span>
+    <span class="string">"args"</span>: [<span class="string">"-p"</span>, <span class="string">"src"</span>, <span class="string">"--allowJs"</span>, <span class="string">"-w"</span>],
+
+    <span class="comment">// 不太明白这个，基本用不到</span>
+    <span class="string">"problemMatcher"</span>: <span class="string">"$tsc"</span>,
+}
+</code></pre><p>另外还有更多参数和用法可以参照下面的官方文档</p>
+<p><a href="https://code.visualstudio.com/docs/editor/tasks" target="_blank" rel="external">https://code.visualstudio.com/docs/editor/tasks</a></p>
+<p>配置好了之后使用默认的快捷键Ctrl+Shift+B即可执行编译。</p>
+<h3 id="运行和调试项目">运行和调试项目</h3>
+<p>vscode默认支持nodejs，ts，js等项目的调试。使用<strong>launch.json</strong>p配置调试参数。</p>
+<p>调试启动调试的默认快捷键是F5， 如果没有<strong>launch.json</strong>则会弹窗提示选择调试环境，并自动创建<strong>launch.json</strong>。</p>
+<p><img src="http://xzper.qiniudn.com/2015/11/3.png" alt=""></p>
+<p>以调试node项目为例，简单说明下<strong>launch.json</strong>的写法</p>
+<pre><code>{
+    <span class="string">"version"</span>: <span class="string">"0.2.0"</span>,
+    <span class="string">"configurations"</span>: [
+        {
+            <span class="comment">// 启动配置的名称。每个程序可能有多个启动配置</span>
+            <span class="comment">// 此名称将显示在调试面板的下拉框中</span>
+            <span class="string">"name"</span>: <span class="string">"Launch"</span>,
+            <span class="comment">// 配置的类型，默认有三种类型(node,momo,extensionHost)</span>
+            <span class="comment">// 可以通过插件来自定义更多的类型</span>
+            <span class="string">"type"</span>: <span class="string">"node"</span>,
+            <span class="comment">// 请求类型, launch表示启动程序调试，attach表示监听某一端口进行调试</span>
+            <span class="string">"request"</span>: <span class="string">"launch"</span>,
+            <span class="comment">// node程序的入口脚本路径(相对于工作空间)</span>
+            <span class="string">"program"</span>: <span class="string">"./out/bootstrap.js"</span>,
+            <span class="string">"stopOnEntry"</span>: <span class="literal">false</span>,
+            <span class="comment">// 接在program指定js后面的参数</span>
+            <span class="string">"args"</span>: [],
+            <span class="comment">// 程序的启动位置</span>
+            <span class="string">"cwd"</span>: <span class="string">"."</span>,
+            <span class="comment">// 启动程序的路径, 如果为null则使用默认的node</span>
+            <span class="string">"runtimeExecutable"</span>: <span class="literal">null</span>,
+            <span class="comment">// 传递给node的参数</span>
+            <span class="string">"runtimeArgs"</span>: [
+                <span class="string">"--nolazy"</span>,
+                <span class="string">"--es_staging"</span>,
+                <span class="string">"--harmony-proxies"</span>
+            ],
+            <span class="comment">// 程序启动时设置的环境变量</span>
+            <span class="string">"env"</span>: {
+                <span class="string">"NODE_ENV"</span>: <span class="string">"development"</span>
+            },
+            <span class="string">"externalConsole"</span>: <span class="literal">false</span>,
+            <span class="comment">// 是否使用sourceMaps</span>
+            <span class="string">"sourceMaps"</span>: <span class="literal">true</span>,
+            <span class="comment">// 如果使用sourceMaps，js脚本所在的路径</span>
+            <span class="string">"outDir"</span>: <span class="string">"./out"</span>
+        },
+        {
+            <span class="string">"name"</span>: <span class="string">"Attach"</span>,
+            <span class="string">"type"</span>: <span class="string">"node"</span>,
+            <span class="comment">// attach表示监听某一端口进行调试</span>
+            <span class="string">"request"</span>: <span class="string">"attach"</span>,
+            <span class="comment">// 要监听的端口</span>
+            <span class="string">"port"</span>: <span class="number">5858</span>,
+            <span class="comment">// 是否使用sourceMaps</span>
+            <span class="string">"sourceMaps"</span>: <span class="literal">true</span>,
+            <span class="comment">// 如果使用sourceMaps，js脚本所在的路径</span>
+            <span class="string">"outDir"</span>: <span class="string">"./out"</span>
+        }
+    ]
+}
+</code></pre><p>这里面对应了launch和attach两个配置任务。说下两者的区别。</p>
+<p>launch实际上是启动一个node执行指定代码，同时可以在vscode里面打断点调试。以上述配置为例，实际执行的命令为</p>
+<pre><code><span class="comment">node</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">debug</span><span class="literal">-</span><span class="comment">brk=30001</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">nolazy</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">es_staging</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">harmony</span><span class="literal">-</span><span class="comment">proxies</span> <span class="comment">out\bootstrap</span><span class="string">.</span><span class="comment">js</span> 
+</code></pre><p>端口号是随机的，vscode能打断点调试是因为他内部监听了这个端口，并与node通讯实现调试。</p>
+<p>attach就是监听的任务。例如<strong>其他程序</strong>启动了一个node应用并使用了—debug-brk参数开启了5858端口使程序暂停在了第一行。此时启动attach任务，就可以监听到这个端口，并在<strong>vscode里面</strong>调试这个node应用了。</p>
+<p>附上一张vscode调试面板的截图</p>
+<p><img src="http://xzper.qiniudn.com/2015/11/debugging_hero.png" alt=""></p>
+<p>有关如何调试的教程</p>
+<p><a href="https://code.visualstudio.com/docs/editor/debugging" target="_blank" rel="external">https://code.visualstudio.com/docs/editor/debugging</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>vscode是微软最新推出的使用<a href="https://github.com/atom/atom" title="atom" target="_blank" rel="external">atom</a>的<a href="https://github.com/atom/electron" title="electron" target="_blank" rel="external">electron</a>技术开发的新一代文本编辑器。</p>
+<p>同时最近也在GitHub(<a href="https://github.com/Microsoft/vscode" target="_blank" rel="external">https://github.com/Microsoft/vscode</a>)上开源了。</p>
+<p>本文简单的教大家如何使用vscode的构建和调试功能。</p>
+]]>
+    
+    </summary>
+    
+      <category term="vscode" scheme="http://xzper.com/tags/vscode/"/>
+    
+      <category term="nodejs" scheme="http://xzper.com/tags/nodejs/"/>
+    
+      <category term="nodejs" scheme="http://xzper.com/categories/nodejs/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[TP-MR12U路由器刷openwrt和不死boot]]></title>
     <link href="http://xzper.com/2015/07/11/TP-MR12U%E5%88%B7openwrt-%E4%B8%8D%E6%AD%BBboot/"/>
     <id>http://xzper.com/2015/07/11/TP-MR12U刷openwrt-不死boot/</id>
     <published>2015-07-11T08:09:38.000Z</published>
-    <updated>2015-09-14T02:11:34.000Z</updated>
+    <updated>2015-11-28T07:16:51.954Z</updated>
     <content type="html"><![CDATA[<p>前不久买了一个无线路由器TP-MR12U，买这个东西的初衷是想和家里另外一个主路由做桥接并自动上vpn，这样两个wifi信号一个和谐上网，一个科学上网。然而，买来后才发现这个路由器是v2版本的，并不能同时支持开启无线中继wds和vpn拨号功能，也就是然并卵。经过一番调查，发现或许可以通过刷入openwrt固件的方式实现这些功能。于是，就有了此教程。刷机有风险，入市需谨慎。</p>
 <a id="more"></a>
 <p>openwrt是一个嵌入式的Linux系统，在各种路由器中应用广泛。OpenWrt的特点：</p>
@@ -132,7 +342,7 @@ reboot
     <link href="http://xzper.com/2015/05/11/%E4%B8%80%E6%AC%A1%E6%9B%B2%E6%8A%98%E7%9A%84%E8%B0%83%E8%AF%95%E7%BB%8F%E5%8E%86/"/>
     <id>http://xzper.com/2015/05/11/一次曲折的调试经历/</id>
     <published>2015-05-11T13:31:26.000Z</published>
-    <updated>2015-06-05T07:24:43.000Z</updated>
+    <updated>2015-11-28T07:15:14.119Z</updated>
     <content type="html"><![CDATA[<p>前不久在FlexLite的开发者群里面遇到一个开发者的提问，说是在使用List的时候水平滚动条的大小有错误。截图大概是下面这样：</p>
 <p><img src="http://xzper.qiniudn.com/2015/05/01.png" alt=""></p>
 <a id="more"></a>
@@ -296,7 +506,7 @@ override <span class="keyword">protected</span> <span class="function"><span cla
     <link href="http://xzper.com/2015/01/24/%E7%AA%81%E7%A0%B4AIR%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%9D%83%E9%99%90%E9%99%90%E5%88%B6/"/>
     <id>http://xzper.com/2015/01/24/突破AIR程序的权限限制/</id>
     <published>2015-01-24T05:27:45.000Z</published>
-    <updated>2015-06-05T07:24:43.000Z</updated>
+    <updated>2015-11-28T07:15:14.368Z</updated>
     <content type="html"><![CDATA[<p>AIR中有些API在没有权限的情况下是不生效的，甚至不报错也没没有任何提示。例如文件系统中对敏感目录的文件操作，File.applicationDirectory这个API的文档是这样说的</p>
 <blockquote>
 <p>出于安全原因，不推荐修改应用程序目录中的内容，有些平台上的操作系统会阻止此操作。<br>如果要存储特定于应用程序的数据，请考虑使用应用程序存储目录 (File.applicationStorageDirectory)。</p>
@@ -370,7 +580,7 @@ override <span class="keyword">protected</span> <span class="function"><span cla
     <link href="http://xzper.com/2015/01/17/AIR%E4%B8%AD%E4%B8%80%E4%BA%9B%E9%9A%90%E8%97%8F%E7%89%B9%E6%80%A7/"/>
     <id>http://xzper.com/2015/01/17/AIR中一些隐藏特性/</id>
     <published>2015-01-17T13:52:01.000Z</published>
-    <updated>2015-01-19T03:05:24.000Z</updated>
+    <updated>2015-11-28T07:15:14.056Z</updated>
     <content type="html"><![CDATA[<p>分享一下在使用AIR开发跨平台应用的几个坑。在此之前不得不说，stackoverflow这个网站帮了我很多。每次遇到一些棘手的技术问题寻找答案未果的情况下，stackoverflow总能找到令人满意的答案。这里分享两个我遇到的一些问题。</p>
 <a id="more"></a>
 <p><strong>1.打印异常堆栈信息</strong></p>
@@ -429,7 +639,7 @@ NativeApplication.nativeApplication.<span class="keyword">exit</span>();
     <link href="http://xzper.com/2014/10/25/Flex%E6%A1%86%E6%9E%B6%E4%B8%AD%E6%A0%B7%E5%BC%8F%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E4%B8%8EAS3%E4%B8%AD%E7%9A%84%E5%8E%9F%E5%9E%8B%E9%93%BE%E7%BB%A7%E6%89%BF/"/>
     <id>http://xzper.com/2014/10/25/Flex框架中样式的实现原理与AS3中的原型链继承/</id>
     <published>2014-10-25T05:53:06.000Z</published>
-    <updated>2014-11-17T09:07:10.000Z</updated>
+    <updated>2015-11-28T07:15:14.072Z</updated>
     <content type="html"><![CDATA[<p>在Flex中setStyle这个特性特别好用，当一个容器Group的样式时，那么这个容器的子项的样式也会跟着起作用。比如设置Application的<code>fontSize</code>这个样式为20，那么如果不显式设置子项的<code>fontSize</code>，子项的字体大小就都会是20，而不用每次子项再去重复设置了，这个特性对于开发者来讲是至关重要的，能减少很多重复的代码。而这个特性的实现，离不开原型链继承这个重要概念。</p>
 <a id="more"></a>
 <p>原型链继承这个词已经不是陌生词汇了，对于JS程序员来说更是再熟悉不过了。AS3作为一个面向对象的脚本语言，原型链继承早已淡出AS3程序员的视野。说到AS语言，其实AS1，AS2都很像JS，AS3则来了个180°转变，变成了面向对象了。早在AS1，AS2的时代，对象间的继承就是使用原型链继承的方式实现的，事实上这一特性也得到了保留，AS3也可以使用这种方式实现继承。</p>
@@ -545,7 +755,7 @@ factory.prototype = <span class="literal">null</span>;
     <link href="http://xzper.com/2014/09/04/%E5%BF%AB%E6%8D%B7%E9%94%AE%E7%AE%A1%E7%90%86/"/>
     <id>http://xzper.com/2014/09/04/快捷键管理/</id>
     <published>2014-09-04T13:58:03.000Z</published>
-    <updated>2014-10-23T05:22:47.000Z</updated>
+    <updated>2015-11-28T07:15:14.259Z</updated>
     <content type="html"><![CDATA[<p>最近要完成软件中的快捷键模块。基本需求就是能做到让用户自由设置。基本之前的所有按键都是写死在代码中的，就像下面这样糟糕：</p>
 <pre><code><span class="keyword">this</span>.addEventListener(KeyboardEvent.KEY_DOWN,onKeyDown);
 
@@ -984,7 +1194,7 @@ factory.prototype = <span class="literal">null</span>;
     <link href="http://xzper.com/2014/08/17/%E6%B5%85%E6%9E%90Hexo%E7%9A%84Generate%E5%91%BD%E4%BB%A4/"/>
     <id>http://xzper.com/2014/08/17/浅析Hexo的Generate命令/</id>
     <published>2014-08-16T22:54:10.000Z</published>
-    <updated>2014-10-23T05:22:47.000Z</updated>
+    <updated>2015-11-28T07:15:14.337Z</updated>
     <content type="html"><![CDATA[<p><a href="https://github.com/hexojs/hexo" target="_blank" rel="external">Hexo</a>是一个轻量级的静态博客站点生成框架，使用NodeJS开发。经过我两个通宵的努力总算把这个东西研究了一个大概，这里拿来分享一下。</p>
 <a id="more"></a>
 <h2 id="Processor">Processor</h2>
@@ -1067,7 +1277,7 @@ node --debug-brk=<span class="number">5858</span> <span class="constant">E</span
     <link href="http://xzper.com/2014/08/09/%E6%A1%86%E6%9E%B6%E5%8C%85%E7%BB%93%E6%9E%84%E7%9A%84%E8%AE%BE%E8%AE%A1/"/>
     <id>http://xzper.com/2014/08/09/框架包结构的设计/</id>
     <published>2014-08-08T16:43:25.000Z</published>
-    <updated>2014-10-23T05:22:47.000Z</updated>
+    <updated>2015-11-28T07:15:14.321Z</updated>
     <content type="html"><![CDATA[<p>这里的框架拿Flex或者FlexLite以及Egret做例子。框架的包结构划分应该是以调用关系为依据划分的，尽量把需要相互调用的类放在一个包下面。这样最终得到的结果就是各个包之间相互独立，理想情况下即使你删除一个包，其他的也不受影响。但是现实肯定不是理想的，包之间总是还有依赖。这些有依赖的东西，大部分就是框架里面核心的东西了。这时候就把这些公共依赖的部分抽出来，放到一个核心包下，比如叫core。 从另一种角度上来讲，所谓的框架”核心类”，实际上就是一些公共耦合的类。这样其他的包都和这个核心包有依赖关系，但是他们彼此之间没有依赖关系。</p>
 <a id="more"></a>
 <p>举一个例子：上面说到的三种框架都有一些枚举类，提供一下静态字符串，通常为其他类的某些属性提供值。再具体一点可以在Flex的spark.components包下面可以看到有一个PopUpPosition的一个枚举类，这里可能会奇怪，这个叫做components的包下面不应该都是放一些UI组件么，怎么多出了这么一个东西。别急，我们来看一下官方API描述：</p>
@@ -1092,7 +1302,7 @@ node --debug-brk=<span class="number">5858</span> <span class="constant">E</span
     <link href="http://xzper.com/2014/07/02/%E8%A7%A3%E8%AF%BBDXML%E7%BC%96%E8%AF%91%E5%99%A8/"/>
     <id>http://xzper.com/2014/07/02/解读DXML编译器/</id>
     <published>2014-07-02T08:22:49.000Z</published>
-    <updated>2014-10-23T05:22:47.000Z</updated>
+    <updated>2015-11-28T07:15:14.384Z</updated>
     <content type="html"><![CDATA[<p>DXML就是FlexLite中由FlexLiteStdio生成的皮肤文件，类似于Flex中的MXML。实际上区别没多少，可能最大的区别就是MXML支持Script脚本。DXML架构设计对编写各类UI编辑器，各类代码生成工具都有很好的参考价值。这里主要分析DXML编译器是如何将DXML文件转换为as代码。</p>
 <a id="more"></a>
 <p><strong>1.如何使用DXML编译器</strong></p>
@@ -1246,7 +1456,7 @@ node --debug-brk=<span class="number">5858</span> <span class="constant">E</span
     <link href="http://xzper.com/2014/06/22/%E4%BD%BF%E7%94%A8egret%E5%BC%80%E5%8F%912048/"/>
     <id>http://xzper.com/2014/06/22/使用egret开发2048/</id>
     <published>2014-06-22T12:41:00.000Z</published>
-    <updated>2014-10-23T05:22:47.000Z</updated>
+    <updated>2015-11-28T07:15:14.150Z</updated>
     <content type="html"><![CDATA[<p>2048是最近很火的一个小游戏，<a href="http://gabrielecirulli.github.io/2048/" target="_blank" rel="external">原版</a> 就是用JavaScript写的。恰巧最近Egret PublicBeta，观望和学习了一阵后，发现egret正好适合开发这类游戏。Egret使用TypeScript作为开发语言，最终编译为JavaScript，正好和原始版本PK一下。</p>
 <p>游戏预览：<a href="http://xzper.com/project/2048egret/" target="_blank" rel="external">点我体验</a></p>
 <a id="more"></a>
@@ -1777,7 +1987,7 @@ context.stage.<span class="variable">scaleMode =</span> scaleMode;
     <link href="http://xzper.com/2014/06/15/%E6%96%B0%E6%89%8B%E5%BC%95%E5%AF%BC%E2%80%94%E8%84%9A%E6%9C%AC%E8%AE%BE%E8%AE%A1/"/>
     <id>http://xzper.com/2014/06/15/新手引导—脚本设计/</id>
     <published>2014-06-14T19:49:56.000Z</published>
-    <updated>2014-10-23T05:22:47.000Z</updated>
+    <updated>2015-11-28T07:15:14.306Z</updated>
     <content type="html"><![CDATA[<p>最近在做游戏的新手引导模块。由于是关卡式的引导，所以很适合用读取引导脚本的方式来开发。</p>
 <p><strong>脚本和命令配置</strong></p>
 <a id="more"></a>
@@ -1877,7 +2087,7 @@ public function convert(<span class="keyword">type</span>:String , value:String)
     <link href="http://xzper.com/2014/04/27/%E4%BB%8E2048%E6%B8%B8%E6%88%8F%E8%B0%88PureMVC/"/>
     <id>http://xzper.com/2014/04/27/从2048游戏谈PureMVC/</id>
     <published>2014-04-26T18:03:56.000Z</published>
-    <updated>2014-10-23T05:22:47.000Z</updated>
+    <updated>2015-11-28T07:15:14.134Z</updated>
     <content type="html"><![CDATA[<p>最近2048比较火，然后我又正好在学习pureMVC，之前对于pureMVC的了解只停留在理论上，正好拿这个游戏来练练手。废话不多说，游戏预览：<a href="http://xzper.qiniudn.com/2014/04/2048flexlite/Main.html" target="_blank" rel="external">2048</a></p>
 <a id="more"></a>
 <p><strong>1.MVC的基本运行原理</strong></p>
@@ -1931,7 +2141,7 @@ public function convert(<span class="keyword">type</span>:String , value:String)
     <link href="http://xzper.com/2014/04/21/%E5%9C%A8%E8%B7%AF%E4%B8%8A/"/>
     <id>http://xzper.com/2014/04/21/在路上/</id>
     <published>2014-04-21T15:51:00.000Z</published>
-    <updated>2014-10-23T05:22:47.000Z</updated>
+    <updated>2015-11-28T07:15:14.165Z</updated>
     <content type="html"><![CDATA[<p>博客建站以来也快有一个月了，每次想写点什么都不得而终。究其原因还是自己太懒了。所以现在趁自己不懒的时候，记录自己在前端开发路上的点滴。 希望此文能做一个好的开始，以此共勉。</p>
 <p>Flash开发到了如今，也到了日落西山，穷途末路的时候吧。从官方上来看，Adobe已经对Flash力不从心了，停止了移动端的FP的更新 ，把Flex捐给了Apache 。从开发者来看，大量新技术如Html5，Cocos2d，Unity3D的出现让开发者有了更多的选择，好多Flash老程序员都转行了，这似乎成了一个趋势  。 从市场上来看，如今的页游市场，已经不复当年的辉煌了，前篇一律的感觉玩家会卖账么？而且各种坑爹的运营导致Flash游戏的名声越来越臭。总之，对于即将毕业的我选择Flash开发这条路显然不是一个明智的选择。</p>
 <a id="more"></a>

@@ -1,0 +1,343 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  
+  <title>vscode编译和调试nodejs/typescript项目 | xzper</title>
+  <meta name="author" content="xzper">
+  
+  <meta name="description" content="xzper | f111fei | egret | html5">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+  <meta property="og:title" content="vscode编译和调试nodejs/typescript项目"/>
+  <meta property="og:site_name" content="xzper"/>
+
+  <link rel="alternate" href="/atom.xml" title="xzper" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <!--<script src="//libs.useso.com/js/jquery/1.8.0/jquery.min.js"></script>-->
+  <script src="/js/jquery.min.js"></script>
+  
+</head>
+
+
+<body>
+  <div class="wrapper">
+    <header id="header"><div class="title">
+  <h1><a href="/">xzper</a></h1>
+  <p><a href="/">前行在被夕阳染红的街道</a></p>
+</div>
+<nav class="nav">
+  <ul>
+    
+      <li><a href="/">主页</a></li>
+    
+      <li><a href="/archives">所有文章</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div></header>
+    <div class="content"><article class="post">
+  <header>
+    
+      <div class="icon"></div>
+      <time datetime="2015-11-28T16:46:30.000Z"><a href="/2015/11/29/搭建vscode调试环境/">11月 29 2015</a></time>
+    
+    
+  
+    <h1 class="title">vscode编译和调试nodejs/typescript项目</h1>
+  
+
+  </header>
+  
+  <div class="entry">
+    
+      <p>vscode是微软最新推出的使用<a href="https://github.com/atom/atom" title="atom" target="_blank" rel="external">atom</a>的<a href="https://github.com/atom/electron" title="electron" target="_blank" rel="external">electron</a>技术开发的新一代文本编辑器。</p>
+<p>同时最近也在GitHub(<a href="https://github.com/Microsoft/vscode" target="_blank" rel="external">https://github.com/Microsoft/vscode</a>)上开源了。</p>
+<p>本文简单的教大家如何使用vscode的构建和调试功能。</p>
+<a id="more"></a>
+<h3 id="构建项目">构建项目</h3>
+<p>vscode使用<strong>task.json</strong>来配置项目的构建过程。</p>
+<p>打开命令面板(Ctrl+Shift+P)选择Run Build Task(Ctrl+Shift+B)</p>
+<p><img src="http://xzper.qiniudn.com/2015/11/1.png" alt=""></p>
+<p>如果当前工作空间没有<strong>task.json</strong>配置文件此时会出现提示</p>
+<p><img src="http://xzper.qiniudn.com/2015/11/2.png" alt=""></p>
+<p>选择 Configure Task Runner 自动创建<strong>task.json</strong>。该配置文件在工作空间的.vscode目录下，这个目录也是存放vscode配置的文件夹。</p>
+<p>vscode默认的task配置文件中给出了执行tsc 和 gulp模板配置。简单介绍一下<strong>task.json</strong>的写法</p>
+<pre><code>{
+    <span class="string">"version"</span>: <span class="string">"0.1.0"</span>,
+
+    <span class="comment">// 要使用的命令或者可执行文件的路径</span>
+    <span class="string">"command"</span>: <span class="string">"tsc"</span>,
+
+    <span class="comment">// 对应command参数，是否是一个命令，否则为执行文件路径</span>
+    <span class="string">"isShellCommand"</span>: <span class="literal">true</span>,
+
+    <span class="comment">// 是否在执行task任务时显示控制台窗口</span>
+    <span class="string">"showOutput"</span>: <span class="string">"always"</span>,
+
+    <span class="comment">// 对应command参数指定程序的参数</span>
+    <span class="string">"args"</span>: [<span class="string">"-p"</span>, <span class="string">"src"</span>, <span class="string">"--allowJs"</span>, <span class="string">"-w"</span>],
+
+    <span class="comment">// 不太明白这个，基本用不到</span>
+    <span class="string">"problemMatcher"</span>: <span class="string">"$tsc"</span>,
+}
+</code></pre><p>另外还有更多参数和用法可以参照下面的官方文档</p>
+<p><a href="https://code.visualstudio.com/docs/editor/tasks" target="_blank" rel="external">https://code.visualstudio.com/docs/editor/tasks</a></p>
+<p>配置好了之后使用默认的快捷键Ctrl+Shift+B即可执行编译。</p>
+<h3 id="运行和调试项目">运行和调试项目</h3>
+<p>vscode默认支持nodejs，ts，js等项目的调试。使用<strong>launch.json</strong>p配置调试参数。</p>
+<p>调试启动调试的默认快捷键是F5， 如果没有<strong>launch.json</strong>则会弹窗提示选择调试环境，并自动创建<strong>launch.json</strong>。</p>
+<p><img src="http://xzper.qiniudn.com/2015/11/3.png" alt=""></p>
+<p>以调试node项目为例，简单说明下<strong>launch.json</strong>的写法</p>
+<pre><code>{
+    <span class="string">"version"</span>: <span class="string">"0.2.0"</span>,
+    <span class="string">"configurations"</span>: [
+        {
+            <span class="comment">// 启动配置的名称。每个程序可能有多个启动配置</span>
+            <span class="comment">// 此名称将显示在调试面板的下拉框中</span>
+            <span class="string">"name"</span>: <span class="string">"Launch"</span>,
+            <span class="comment">// 配置的类型，默认有三种类型(node,momo,extensionHost)</span>
+            <span class="comment">// 可以通过插件来自定义更多的类型</span>
+            <span class="string">"type"</span>: <span class="string">"node"</span>,
+            <span class="comment">// 请求类型, launch表示启动程序调试，attach表示监听某一端口进行调试</span>
+            <span class="string">"request"</span>: <span class="string">"launch"</span>,
+            <span class="comment">// node程序的入口脚本路径(相对于工作空间)</span>
+            <span class="string">"program"</span>: <span class="string">"./out/bootstrap.js"</span>,
+            <span class="string">"stopOnEntry"</span>: <span class="literal">false</span>,
+            <span class="comment">// 接在program指定js后面的参数</span>
+            <span class="string">"args"</span>: [],
+            <span class="comment">// 程序的启动位置</span>
+            <span class="string">"cwd"</span>: <span class="string">"."</span>,
+            <span class="comment">// 启动程序的路径, 如果为null则使用默认的node</span>
+            <span class="string">"runtimeExecutable"</span>: <span class="literal">null</span>,
+            <span class="comment">// 传递给node的参数</span>
+            <span class="string">"runtimeArgs"</span>: [
+                <span class="string">"--nolazy"</span>,
+                <span class="string">"--es_staging"</span>,
+                <span class="string">"--harmony-proxies"</span>
+            ],
+            <span class="comment">// 程序启动时设置的环境变量</span>
+            <span class="string">"env"</span>: {
+                <span class="string">"NODE_ENV"</span>: <span class="string">"development"</span>
+            },
+            <span class="string">"externalConsole"</span>: <span class="literal">false</span>,
+            <span class="comment">// 是否使用sourceMaps</span>
+            <span class="string">"sourceMaps"</span>: <span class="literal">true</span>,
+            <span class="comment">// 如果使用sourceMaps，js脚本所在的路径</span>
+            <span class="string">"outDir"</span>: <span class="string">"./out"</span>
+        },
+        {
+            <span class="string">"name"</span>: <span class="string">"Attach"</span>,
+            <span class="string">"type"</span>: <span class="string">"node"</span>,
+            <span class="comment">// attach表示监听某一端口进行调试</span>
+            <span class="string">"request"</span>: <span class="string">"attach"</span>,
+            <span class="comment">// 要监听的端口</span>
+            <span class="string">"port"</span>: <span class="number">5858</span>,
+            <span class="comment">// 是否使用sourceMaps</span>
+            <span class="string">"sourceMaps"</span>: <span class="literal">true</span>,
+            <span class="comment">// 如果使用sourceMaps，js脚本所在的路径</span>
+            <span class="string">"outDir"</span>: <span class="string">"./out"</span>
+        }
+    ]
+}
+</code></pre><p>这里面对应了launch和attach两个配置任务。说下两者的区别。</p>
+<p>launch实际上是启动一个node执行指定代码，同时可以在vscode里面打断点调试。以上述配置为例，实际执行的命令为</p>
+<pre><code><span class="comment">node</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">debug</span><span class="literal">-</span><span class="comment">brk=30001</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">nolazy</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">es_staging</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">harmony</span><span class="literal">-</span><span class="comment">proxies</span> <span class="comment">out\bootstrap</span><span class="string">.</span><span class="comment">js</span> 
+</code></pre><p>端口号是随机的，vscode能打断点调试是因为他内部监听了这个端口，并与node通讯实现调试。</p>
+<p>attach就是监听的任务。例如<strong>其他程序</strong>启动了一个node应用并使用了—debug-brk参数开启了5858端口使程序暂停在了第一行。此时启动attach任务，就可以监听到这个端口，并在<strong>vscode里面</strong>调试这个node应用了。</p>
+<p>附上一张vscode调试面板的截图</p>
+<p><img src="http://xzper.qiniudn.com/2015/11/debugging_hero.png" alt=""></p>
+<p>有关如何调试的教程</p>
+<p><a href="https://code.visualstudio.com/docs/editor/debugging" target="_blank" rel="external">https://code.visualstudio.com/docs/editor/debugging</a></p>
+
+    
+  </div>
+  <footer>
+    
+      
+  
+  <div class="categories">
+    <a href="/categories/nodejs/">nodejs</a>
+  </div>
+
+      
+  
+  <div class="tags">
+    <a href="/tags/vscode/">vscode</a>, <a href="/tags/nodejs/">nodejs</a>
+  </div>
+
+    
+    <div class="clearfix"></div>
+  </footer>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+  <div class="ds-thread" data-title="vscode编译和调试nodejs/typescript项目">
+  </div>
+</section>
+</div>
+  </div>
+  <div class="widget-wrapper">
+    <aside id="sidebar">
+  
+  
+    
+      
+      
+
+<div class="widget tag first">
+  <h3 class="title">分类</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/ActionScript3/">ActionScript3</a><small>4</small></li>
+  
+    <li><a href="/categories/Egret/">Egret</a><small>1</small></li>
+  
+    <li><a href="/categories/nodejs/">nodejs</a><small>2</small></li>
+  
+    <li><a href="/categories/感悟/">感悟</a><small>1</small></li>
+  
+    <li><a href="/categories/未分类/">未分类</a><small>3</small></li>
+  
+    <li><a href="/categories/框架/">框架</a><small>2</small></li>
+  
+    <li><a href="/categories/解读/">解读</a><small>2</small></li>
+  
+  </ul>
+</div>
+
+    
+      
+      
+
+<div class="widget tag">
+  <h3 class="title">标签</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/ActionScript3/">ActionScript3</a><small>2</small></li>
+  
+    <li><a href="/tags/Egret/">Egret</a><small>1</small></li>
+  
+    <li><a href="/tags/FlexLite/">FlexLite</a><small>2</small></li>
+  
+    <li><a href="/tags/Hexo/">Hexo</a><small>1</small></li>
+  
+    <li><a href="/tags/nodejs/">nodejs</a><small>2</small></li>
+  
+    <li><a href="/tags/puremvc/">puremvc</a><small>1</small></li>
+  
+    <li><a href="/tags/vscode/">vscode</a><small>2</small></li>
+  
+    <li><a href="/tags/架构/">架构</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+    
+      
+      
+
+<div class="widget tagcloud">
+  <h3 class="title">标签云</h3>
+  <div class="entry">
+    <a href="/tags/ActionScript3/" style="font-size: 20.00px;">ActionScript3</a><a href="/tags/Egret/" style="font-size: 10.00px;">Egret</a><a href="/tags/FlexLite/" style="font-size: 20.00px;">FlexLite</a><a href="/tags/Hexo/" style="font-size: 10.00px;">Hexo</a><a href="/tags/nodejs/" style="font-size: 20.00px;">nodejs</a><a href="/tags/puremvc/" style="font-size: 10.00px;">puremvc</a><a href="/tags/vscode/" style="font-size: 20.00px;">vscode</a><a href="/tags/架构/" style="font-size: 10.00px;">架构</a>
+  </div>
+</div>
+
+    
+      
+      
+
+<div class="widget recent-posts first newline">
+  <h3 class="title">最近的文章</h3>
+  <ul class="entry">
+    
+      <li>
+        <a href="/2015/11/29/编译vscode/">编译vscode</a>
+      </li>
+    
+      <li>
+        <a href="/2015/11/29/搭建vscode调试环境/">vscode编译和调试nodejs/typescript项目</a>
+      </li>
+    
+      <li>
+        <a href="/2015/07/11/TP-MR12U刷openwrt-不死boot/">TP-MR12U路由器刷openwrt和不死boot</a>
+      </li>
+    
+      <li>
+        <a href="/2015/05/11/一次曲折的调试经历/">一次曲折的调试经历</a>
+      </li>
+    
+      <li>
+        <a href="/2015/01/24/突破AIR程序的权限限制/">突破AIR程序的权限限制</a>
+      </li>
+    
+  </ul>
+</div>
+
+    
+      
+      
+
+<div class="widget blogroll">
+  <h3 class="title">友情链接</h3>
+  <ul class="entry">
+  
+    
+    <li><a href="http://blog.domlib.com/" target="_blank">domlib</a></li>
+  
+  </ul>
+</div>
+
+    
+  
+</aside>
+<div class="clearfix"></div>
+  </div>
+  <footer id="footer"><div class="copyright">
+  
+  &copy; 2015 <a href="/">xzper</a>
+  
+</div>
+<div class="theme-copyright">
+  Theme by <a href="https://github.com/orderedlist" target="_blank">orderedlist</a>
+   | 
+  Redesign by <a href="http://heroicyang.com/" target="_blank">Heroic Yang</a>
+</div>
+<div class="clearfix"></div></footer>
+  <script src="/js/scale.fix.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+  var duoshuoQuery = { short_name: 'xzper' };
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';
+    ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+  (function($){
+    $('.fancybox').fancybox();
+  })(jQuery);
+</script>
+
+</body>
+</html>
