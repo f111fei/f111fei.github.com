@@ -55,6 +55,40 @@
   <header>
     
       <div class="icon"></div>
+      <time datetime="2014-08-08T16:43:25.000Z"><a href="/2014/08/09/框架包结构的设计/">8月 9 2014</a></time>
+    
+    
+  
+    <h1 class="title"><a href="/2014/08/09/框架包结构的设计/">框架包结构的设计</a></h1>
+  
+
+  </header>
+  
+  <div class="entry">
+    
+      <p>这里的框架拿Flex或者FlexLite以及Egret做例子。框架的包结构划分应该是以调用关系为依据划分的，尽量把需要相互调用的类放在一个包下面。这样最终得到的结果就是各个包之间相互独立，理想情况下即使你删除一个包，其他的也不受影响。但是现实肯定不是理想的，包之间总是还有依赖。这些有依赖的东西，大部分就是框架里面核心的东西了。这时候就把这些公共依赖的部分抽出来，放到一个核心包下，比如叫core。 从另一种角度上来讲，所谓的框架”核心类”，实际上就是一些公共耦合的类。这样其他的包都和这个核心包有依赖关系，但是他们彼此之间没有依赖关系。</p>
+
+    
+  </div>
+  <footer class="end-sep">
+    
+      
+        <div class="alignleft">
+          <a href="/2014/08/09/框架包结构的设计/#more" class="more-link">阅读全文</a>
+        </div>
+      
+      
+    
+    <div class="clearfix"></div>
+  </footer>
+</article>
+
+
+
+  <article class="post">
+  <header>
+    
+      <div class="icon"></div>
       <time datetime="2014-07-02T08:22:49.000Z"><a href="/2014/07/02/解读DXML编译器/">7月 2 2014</a></time>
     
     
@@ -249,7 +283,7 @@
   
     <li><a href="/categories/Egret/">Egret</a><small>1</small></li>
   
-    <li><a href="/categories/nodejs/">nodejs</a><small>2</small></li>
+    <li><a href="/categories/nodejs/">nodejs</a><small>3</small></li>
   
     <li><a href="/categories/感悟/">感悟</a><small>1</small></li>
   
@@ -278,11 +312,11 @@
   
     <li><a href="/tags/Hexo/">Hexo</a><small>1</small></li>
   
-    <li><a href="/tags/nodejs/">nodejs</a><small>2</small></li>
+    <li><a href="/tags/nodejs/">nodejs</a><small>3</small></li>
   
     <li><a href="/tags/puremvc/">puremvc</a><small>1</small></li>
   
-    <li><a href="/tags/vscode/">vscode</a><small>2</small></li>
+    <li><a href="/tags/vscode/">vscode</a><small>3</small></li>
   
     <li><a href="/tags/架构/">架构</a><small>1</small></li>
   
@@ -296,7 +330,7 @@
 <div class="widget tagcloud">
   <h3 class="title">标签云</h3>
   <div class="entry">
-    <a href="/tags/ActionScript3/" style="font-size: 20.00px;">ActionScript3</a><a href="/tags/Egret/" style="font-size: 10.00px;">Egret</a><a href="/tags/FlexLite/" style="font-size: 20.00px;">FlexLite</a><a href="/tags/Hexo/" style="font-size: 10.00px;">Hexo</a><a href="/tags/nodejs/" style="font-size: 20.00px;">nodejs</a><a href="/tags/puremvc/" style="font-size: 10.00px;">puremvc</a><a href="/tags/vscode/" style="font-size: 20.00px;">vscode</a><a href="/tags/架构/" style="font-size: 10.00px;">架构</a>
+    <a href="/tags/ActionScript3/" style="font-size: 15.00px;">ActionScript3</a><a href="/tags/Egret/" style="font-size: 10.00px;">Egret</a><a href="/tags/FlexLite/" style="font-size: 15.00px;">FlexLite</a><a href="/tags/Hexo/" style="font-size: 10.00px;">Hexo</a><a href="/tags/nodejs/" style="font-size: 20.00px;">nodejs</a><a href="/tags/puremvc/" style="font-size: 10.00px;">puremvc</a><a href="/tags/vscode/" style="font-size: 20.00px;">vscode</a><a href="/tags/架构/" style="font-size: 10.00px;">架构</a>
   </div>
 </div>
 
@@ -307,6 +341,10 @@
 <div class="widget recent-posts first newline">
   <h3 class="title">最近的文章</h3>
   <ul class="entry">
+    
+      <li>
+        <a href="/2015/11/29/调试vscode/">调试vscode</a>
+      </li>
     
       <li>
         <a href="/2015/11/29/编译vscode/">编译vscode</a>
@@ -322,10 +360,6 @@
     
       <li>
         <a href="/2015/05/11/一次曲折的调试经历/">一次曲折的调试经历</a>
-      </li>
-    
-      <li>
-        <a href="/2015/01/24/突破AIR程序的权限限制/">突破AIR程序的权限限制</a>
       </li>
     
   </ul>

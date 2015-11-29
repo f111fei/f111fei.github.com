@@ -95,6 +95,8 @@ ps: 最近node-inspector老是安装不上也是因为这个的原因，有没�
 就可以生成程序的入口可执行文件并启动了。以后如果要使用调试版本的vscode，双击code.bat或者执行这个命令即可。这样启动的vscode，左上角的标题会带有
 Code [OSS Build]
 
+<a name="mklink"></a>
+
 这个过程会下载electron的安装包，有可能会失败。不过不要紧, 下面讲解如何不使用electron 和 code.bat启动调试版本的vscode的办法。
 
 找到vscode发行版的安装目录下的resources文件夹

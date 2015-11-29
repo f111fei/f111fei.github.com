@@ -124,6 +124,7 @@ http<span class="variable">s:</span>//github.<span class="keyword">com</span>/Mi
 <p>在项目根目录下执行</p>
 <pre><code>scripts<span class="command">\code</span>.bat
 </code></pre><p>就可以生成程序的入口可执行文件并启动了。以后如果要使用调试版本的vscode，双击code.bat或者执行这个命令即可。这样启动的vscode，左上角的标题会带有<br>Code [OSS Build]</p>
+<p><a name="mklink"></a></p>
 <p>这个过程会下载electron的安装包，有可能会失败。不过不要紧, 下面讲解如何不使用electron 和 code.bat启动调试版本的vscode的办法。</p>
 <p>找到vscode发行版的安装目录下的resources文件夹</p>
 <pre><code>cd C:<span class="command">\Program</span> Files (x86)<span class="command">\Microsoft</span> VS Code<span class="command">\resources</span>
@@ -178,7 +179,7 @@ mklink /D app D:<span class="command">\workSpace</span><span class="command">\vs
   
     <li><a href="/categories/Egret/">Egret</a><small>1</small></li>
   
-    <li><a href="/categories/nodejs/">nodejs</a><small>2</small></li>
+    <li><a href="/categories/nodejs/">nodejs</a><small>3</small></li>
   
     <li><a href="/categories/感悟/">感悟</a><small>1</small></li>
   
@@ -207,11 +208,11 @@ mklink /D app D:<span class="command">\workSpace</span><span class="command">\vs
   
     <li><a href="/tags/Hexo/">Hexo</a><small>1</small></li>
   
-    <li><a href="/tags/nodejs/">nodejs</a><small>2</small></li>
+    <li><a href="/tags/nodejs/">nodejs</a><small>3</small></li>
   
     <li><a href="/tags/puremvc/">puremvc</a><small>1</small></li>
   
-    <li><a href="/tags/vscode/">vscode</a><small>2</small></li>
+    <li><a href="/tags/vscode/">vscode</a><small>3</small></li>
   
     <li><a href="/tags/架构/">架构</a><small>1</small></li>
   
@@ -225,7 +226,7 @@ mklink /D app D:<span class="command">\workSpace</span><span class="command">\vs
 <div class="widget tagcloud">
   <h3 class="title">标签云</h3>
   <div class="entry">
-    <a href="/tags/ActionScript3/" style="font-size: 20.00px;">ActionScript3</a><a href="/tags/Egret/" style="font-size: 10.00px;">Egret</a><a href="/tags/FlexLite/" style="font-size: 20.00px;">FlexLite</a><a href="/tags/Hexo/" style="font-size: 10.00px;">Hexo</a><a href="/tags/nodejs/" style="font-size: 20.00px;">nodejs</a><a href="/tags/puremvc/" style="font-size: 10.00px;">puremvc</a><a href="/tags/vscode/" style="font-size: 20.00px;">vscode</a><a href="/tags/架构/" style="font-size: 10.00px;">架构</a>
+    <a href="/tags/ActionScript3/" style="font-size: 15.00px;">ActionScript3</a><a href="/tags/Egret/" style="font-size: 10.00px;">Egret</a><a href="/tags/FlexLite/" style="font-size: 15.00px;">FlexLite</a><a href="/tags/Hexo/" style="font-size: 10.00px;">Hexo</a><a href="/tags/nodejs/" style="font-size: 20.00px;">nodejs</a><a href="/tags/puremvc/" style="font-size: 10.00px;">puremvc</a><a href="/tags/vscode/" style="font-size: 20.00px;">vscode</a><a href="/tags/架构/" style="font-size: 10.00px;">架构</a>
   </div>
 </div>
 
@@ -236,6 +237,10 @@ mklink /D app D:<span class="command">\workSpace</span><span class="command">\vs
 <div class="widget recent-posts first newline">
   <h3 class="title">最近的文章</h3>
   <ul class="entry">
+    
+      <li>
+        <a href="/2015/11/29/调试vscode/">调试vscode</a>
+      </li>
     
       <li>
         <a href="/2015/11/29/编译vscode/">编译vscode</a>
@@ -251,10 +256,6 @@ mklink /D app D:<span class="command">\workSpace</span><span class="command">\vs
     
       <li>
         <a href="/2015/05/11/一次曲折的调试经历/">一次曲折的调试经历</a>
-      </li>
-    
-      <li>
-        <a href="/2015/01/24/突破AIR程序的权限限制/">突破AIR程序的权限限制</a>
       </li>
     
   </ul>
