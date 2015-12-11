@@ -156,6 +156,17 @@ node里面`--debug-brk`参数表示在程序的第一行设置断点。那么想
 如果想要显示vscode的源码，可以使用上一篇提到的[创建符号链接的办法](http://xzper.com/2015/11/29/%E7%BC%96%E8%AF%91vscode/#mklink)，让vscode始终使用源代码运行。不知道有没有直接通过修改`launch.json`文件来指定源代码目录的方法。
 
 
+附：
+这里加一些比较有用的启动参数
+
+
+-  --debugBrkPluginHost 调试插件进程并在插件进程的第一行位置断点，该参数指定一个端口号，默认值为5870。
+-  -logPluginHostCommunication 在控制台输出主进程和插件进程的通讯消息
+-  --extensionDevelopmentPath 指定开发版的插件路径 
+
+
+
+
 ----------
 
 

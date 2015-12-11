@@ -4,7 +4,7 @@
   <subtitle><![CDATA[前行在被夕阳染红的街道]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://xzper.com/"/>
-  <updated>2015-11-29T09:40:06.398Z</updated>
+  <updated>2015-12-11T15:34:41.446Z</updated>
   <id>http://xzper.com/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://xzper.com/2015/11/29/%E8%B0%83%E8%AF%95vscode/"/>
     <id>http://xzper.com/2015/11/29/调试vscode/</id>
     <published>2015-11-29T05:27:11.000Z</published>
-    <updated>2015-11-29T09:39:43.655Z</updated>
+    <updated>2015-12-11T15:34:30.291Z</updated>
     <content type="html"><![CDATA[<p>在调试vscode之前，有必要先了解一下vscode的运行过程。</p>
 <h4 id="vscode的启动过程">vscode的启动过程</h4>
 <p>electron是vscode的内核，vscode的启动类在package.json中定义</p>
@@ -114,6 +114,12 @@ this.pluginHostProcessHandle = <span class="keyword">cp</span>.fork(uri.parse(re
 <p>但是由于是发行版的vscode，vscode本身的源代码被混淆压缩了，只能调试用户的插件代码，没法调试vscode自身的代码。就像下面这样，如果会提示Source is not available。</p>
 <p><img src="http://xzper.qiniudn.com/2015/11/11.png" alt=""></p>
 <p>如果想要显示vscode的源码，可以使用上一篇提到的<a href="http://xzper.com/2015/11/29/%E7%BC%96%E8%AF%91vscode/#mklink" target="_blank" rel="external">创建符号链接的办法</a>，让vscode始终使用源代码运行。不知道有没有直接通过修改<code>launch.json</code>文件来指定源代码目录的方法。</p>
+<p>附：<br>这里加一些比较有用的启动参数</p>
+<ul>
+<li>—debugBrkPluginHost 调试插件进程并在插件进程的第一行位置断点，该参数指定一个端口号，默认值为5870。</li>
+<li>-logPluginHostCommunication 在控制台输出主进程和插件进程的通讯消息</li>
+<li>—extensionDevelopmentPath 指定开发版的插件路径 </li>
+</ul>
 <hr>
 <p>参考链接：</p>
 <p><a href="https://github.com/Microsoft/vscode/wiki/How-to-Contribute" target="_blank" rel="external">How-to-Contribute</a></p>
