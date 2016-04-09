@@ -129,6 +129,7 @@ article
 
         &:hover
           color color-link
+          text-decoration none
 
   .entry
     text-align justify
@@ -284,6 +285,9 @@ article
       &.comment-link
         &:before
           content '\f075'
+          
+      &:focus, &:hover
+        text-decoration: none;
 
     .categories, .tags
       position relative
