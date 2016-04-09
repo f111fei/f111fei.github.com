@@ -4,7 +4,7 @@
   <subtitle><![CDATA[前行在被夕阳染红的街道]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://xzper.com/"/>
-  <updated>2015-12-11T15:34:41.446Z</updated>
+  <updated>2016-04-09T21:11:56.827Z</updated>
   <id>http://xzper.com/</id>
   
   <author>
@@ -13,6 +13,374 @@
   </author>
   
   <generator uri="http://zespia.tw/hexo/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[gulp流式操作]]></title>
+    <link href="http://xzper.com/2016/04/09/gulp%E6%B5%81%E5%BC%8F%E6%93%8D%E4%BD%9C/"/>
+    <id>http://xzper.com/2016/04/09/gulp流式操作/</id>
+    <published>2016-04-09T09:26:41.000Z</published>
+    <updated>2016-04-09T21:11:23.887Z</updated>
+    <content type="html"><![CDATA[<p>对于很多刚刚接触<a href="https://github.com/gulpjs/gulp" target="_blank" rel="external">gulp</a>的人来说，常常觉得gulp中的stream操作不可理解。本篇将介绍stream在gulp中的应用，探究gulp中的流式操作。</p>
+<p>一般来说gulp插件开发或者自定义任务都需要借助一些stream的包装模块。比较常用的有<a href="https://github.com/dominictarr/event-stream" target="_blank" rel="external">event-stream</a> 和 <a href="https://github.com/rvagg/through2" target="_blank" rel="external">through2</a>。</p>
+<a id="more"></a>
+<p>下面通过一个简单的task来熟悉这两个模块的用法。先得到如下目录结构：</p>
+<pre><code>├── node_modules
+│   ├── gulp
+│   ├── through2
+│   └── event-stream
+├── media
+│   ├── <span class="constant">one</span>
+│   │    └── <span class="number">1.</span>txt
+│   └── <span class="constant">two</span>
+│        ├── <span class="number">2.</span>txt
+│        └── <span class="number">3.</span>txt
+├── gulpfile.js
+└── package.json
+</code></pre><p>我们的目标是将所有的txt文件合并成一个文件out.txt，并输出到目录dist。</p>
+<p>首先创建gulp任务：</p>
+<pre><code><span class="keyword">var</span> es = <span class="built_in">require</span>(<span class="string">'event-stream'</span>);
+<span class="keyword">var</span> through = <span class="built_in">require</span>(<span class="string">'through2'</span>);
+<span class="keyword">var</span> rimraf = <span class="built_in">require</span>(<span class="string">'rimraf'</span>);
+<span class="keyword">var</span> gulp = <span class="built_in">require</span>(<span class="string">'gulp'</span>);
+
+<span class="function"><span class="keyword">function</span> <span class="title">use_es_through</span><span class="params">()</span> </span>{
+    <span class="comment">//TODO</span>
+}
+
+<span class="function"><span class="keyword">function</span> <span class="title">use_es_map</span><span class="params">()</span> </span>{
+    <span class="comment">//TODO</span>
+}
+
+<span class="function"><span class="keyword">function</span> <span class="title">use_through2_obj</span><span class="params">()</span> </span>{
+    <span class="comment">//TODO    </span>
+}
+
+<span class="function"><span class="keyword">function</span> <span class="title">concat</span><span class="params">(fn)</span> </span>{
+    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{
+        <span class="keyword">return</span> gulp.src([<span class="string">'media/**/*.txt'</span>])
+            .pipe(fn())
+            .pipe(gulp.dest(<span class="string">'dist'</span>));
+    };
+}
+
+gulp.task(<span class="string">'clean'</span>, <span class="function"><span class="keyword">function</span> <span class="params">(cb)</span> </span>{
+    rimraf(<span class="string">'dist'</span>, cb);
+});
+
+gulp.task(<span class="string">'concat1'</span>, [<span class="string">'clean'</span>], concat(use_es_through));
+gulp.task(<span class="string">'concat2'</span>, [<span class="string">'clean'</span>], concat(use_es_map));
+gulp.task(<span class="string">'concat3'</span>, [<span class="string">'clean'</span>], concat(use_through2_obj));
+</code></pre><p>这里用到了<code>gulp.task</code>定义了4个任务。用法为：</p>
+<pre><code>gulp.task(name[, deps], <span class="function"><span class="keyword">fn</span>)</span>
+</code></pre><p><code>name</code> 任务的名字，之后可以通过 <code>gulp %taskname%</code> 的方式来执行该任务。</p>
+<p><code>deps</code> 一个包含任务列表的数组，这些任务会在你当前任务运行之前完成。</p>
+<p><code>fn</code> 该函数定义任务所要执行的一些操作。如果该函数接受一个callback参数，当任务结束时需要调用callback，如上<code>clean</code>任务的用法。该函数也可以返回一个<code>stream</code>或者<code>Promise</code>对象，<code>concat</code>这个函数便是返回的<code>stream</code>对象。</p>
+<p><code>concat</code>接受一个function参数，执行实际的合并操作。这个function返回一个<code>WritableStream</code>作为<code>pipe</code>的参数。这里定义了<code>use_es_through</code>， <code>use_es_map</code>， <code>use_through2_obj</code>三个函数演示stream的操作。</p>
+<h3 id="vinyl文件系统">vinyl文件系统</h3>
+<p>虽然gulp使用的是stream，但却不是普通的Node Stream，实际上，gulp(以及gulp插件)用的应该叫做<a href="https://github.com/gulpjs/vinyl" target="_blank" rel="external">Vinyl File Object Stream</a>。这里的Vinyl，是一种虚拟文件格式。Vinyl主要用两个属性来描述文件，它们分别是路径(<code>path</code>)及内容(<code>contents</code>)。具体来说，Vinyl并不神秘，它仍然是js对象。Vinyl官方给了这样的示例：</p>
+<pre><code><span class="keyword">var</span> File = require(<span class="string">'vinyl'</span>);
+
+<span class="keyword">var</span> coffeeFile = <span class="keyword">new</span> File({
+  cwd: <span class="string">"/"</span>,
+  <span class="keyword">base</span>: <span class="string">"/test/"</span>,
+  path: <span class="string">"/test/file.coffee"</span>,
+  contents: <span class="keyword">new</span> Buffer(<span class="string">"test = 123"</span>)
+});
+</code></pre><p>从这段代码可以看出，Vinyl是Object，<code>path</code>和<code>contents</code>也正是这个Object的属性。</p>
+<p>File的<code>contents</code>可以是Stream或者Buffer。一般来说在gulp中，都是一个Buffer对象。在gulp的插件规范中，对于<code>contents</code>是Stream的情况也是要做判断的，表示该插件是否支持Stream的File对象。如：</p>
+<pre><code><span class="comment">// we don't do streams (yet)</span>
+<span class="keyword">if</span> (<span class="keyword">file</span>.isStream()) {
+  <span class="keyword">this</span>.emit(<span class="string">'error'</span>, <span class="keyword">new</span> PluginError(<span class="string">'gulp-concat'</span>,  <span class="string">'Streaming not supported'</span>));
+  cb();
+  <span class="keyword">return</span>;
+}
+</code></pre><p>通过<code>path</code>和<code>base</code>可以得到一个新的属性<code>relative</code>，表示相对与基本目录的相对路径。</p>
+<p>关于File的更多属性及方法请参考<a href="https://github.com/gulpjs/vinyl#constructoroptions" target="_blank" rel="external">官方文档</a>。</p>
+<p>gulp管道中传输的数据单位就是File对象。通过修改File属性的path或者contents来实现最终效果。</p>
+<h3 id="event-stream">event-stream</h3>
+<h4 id="through_(write?,_end?)">through (write?, end?)</h4>
+<p>一般用法如下：</p>
+<pre><code>es.through(<span class="function"><span class="keyword">function</span> <span class="title">write</span><span class="params">(data)</span> </span>{
+    <span class="keyword">this</span>.emit(<span class="string">'data'</span>, data);
+  },
+  <span class="function"><span class="keyword">function</span> <span class="title">end</span> <span class="params">()</span> </span>{ <span class="comment">//optional</span>
+    <span class="keyword">this</span>.emit(<span class="string">'end'</span>);
+  })
+</code></pre><p><code>write</code> 管道中每有一个data数据都会调用此方法。接受一个data参数，在方法体里面可以对data进行操作，最后通过 <code>this.emit(&#39;data&#39;, data)</code> 将数据提交，否则数据无法进入下一个<code>pipe</code>操作。在gulp中，这里的data即是上文所说的File对象。注意到write方法并没有callback参数，所以该方法是<strong>同步</strong>的，最好<strong>不要在该方法里面包含异步操作</strong>。例如像下面这样就是错误的：</p>
+<pre><code>es.through(<span class="function"><span class="keyword">function</span> <span class="title">write</span><span class="params">(data)</span> </span>{
+      <span class="keyword">var</span> self = <span class="keyword">this</span>;
+      <span class="comment">// 执行异步的操作</span>
+      setTimeout(<span class="function"><span class="keyword">function</span><span class="params">()</span> </span>{
+        self.emit(<span class="string">'data'</span>, data);
+      }, <span class="number">10</span>);
+  },
+  <span class="function"><span class="keyword">function</span> <span class="title">end</span> <span class="params">()</span> </span>{ <span class="comment">//optional</span>
+    <span class="keyword">this</span>.emit(<span class="string">'end'</span>);
+  })
+</code></pre><p><code>end</code> 在所有数据完成了pipe之后调用，只会调用一次。最后应当加上 <code>this.emit(&#39;end&#39;);</code> 表示调用已结束，但是这里就可以在调用了一个异步方法之后派发end事件。</p>
+<pre><code>gulp.task(<span class="string">'default'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{
+    <span class="keyword">return</span> gulp.src([<span class="string">'media/**/*.txt'</span>])
+        .pipe(es.through(<span class="function"><span class="keyword">function</span> <span class="params">(file)</span> </span>{
+            gutil.log(<span class="string">'write: '</span> + file.relative);
+            <span class="keyword">this</span>.emit(<span class="string">'data'</span>, file);
+        }, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{
+            <span class="keyword">var</span> self = <span class="keyword">this</span>;
+            setTimeout(<span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{
+                gutil.log(<span class="string">'It is end'</span>);
+                self.emit(<span class="string">'end'</span>);
+            }, <span class="number">1000</span>);
+        }))
+        .pipe(gulp.dest(<span class="string">'dist'</span>));
+});
+</code></pre><p>以上代码将media将所有txt文件复制到dist目录下，这里插入了一个<code>es.through</code>方法来输出gulp的执行顺序。执行<code>gulp</code>，输出如下：</p>
+<pre><code>[<span class="number">00</span>:<span class="number">34</span>:<span class="number">13</span>] Starting <span class="string">'default'</span><span class="keyword">...</span>
+[<span class="number">00</span>:<span class="number">34</span>:<span class="number">13</span>] write: one\<span class="number">1.</span>txt
+[<span class="number">00</span>:<span class="number">34</span>:<span class="number">13</span>] write: two\<span class="number">2.</span>txt
+[<span class="number">00</span>:<span class="number">34</span>:<span class="number">13</span>] write: two\<span class="number">3.</span>txt
+[<span class="number">00</span>:<span class="number">34</span>:<span class="number">14</span>] It is end
+[<span class="number">00</span>:<span class="number">34</span>:<span class="number">14</span>] Finished <span class="string">'default'</span> after <span class="number">1.03</span> s
+</code></pre><p>可以看到<code>es.through</code>的write方法被执行了3次，最后才会执行end方法，并且直到派发了end事件才会结束。</p>
+<p><code>es.through</code>的这两个参数都是可选参数。</p>
+<pre><code><span class="literal">es</span>.through()<span class="comment">;</span>
+</code></pre><p>等价于</p>
+<pre><code>es.through(<span class="function"><span class="keyword">function</span><span class="params">(data)</span> </span>{
+    <span class="keyword">this</span>.emit(<span class="string">'data'</span>, data);
+}, <span class="function"><span class="keyword">function</span><span class="params">()</span> </span>{
+    <span class="keyword">this</span>.emit(<span class="string">'end'</span>);
+});
+</code></pre><p>我们再来看一下如何使用<code>es.through</code>将这三个文件合并成一个，代码如下：</p>
+<pre><code><span class="function"><span class="keyword">function</span> <span class="title">use_es_through</span><span class="params">()</span> </span>{
+    <span class="keyword">var</span> contents = [];
+
+    <span class="keyword">return</span> es.through(<span class="function"><span class="keyword">function</span> <span class="params">(file)</span> </span>{
+        gutil.log(<span class="string">'I am: '</span> + file.relative);
+        contents.push(file.contents);
+        contents.push(<span class="keyword">new</span> Buffer(<span class="string">'\n'</span>));
+    }, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{
+        <span class="keyword">var</span> joinedContents = Buffer.concat(contents);
+        <span class="keyword">var</span> output = <span class="keyword">new</span> File();
+        output.contents = joinedContents;
+        output.path = <span class="string">'out.txt'</span>;
+        <span class="keyword">this</span>.emit(<span class="string">'data'</span>, output);
+
+        gutil.log(<span class="string">'It is concated'</span>);
+        <span class="keyword">this</span>.emit(<span class="string">'end'</span>);
+    });
+}
+</code></pre><p>在write方法中并没有使用<code>this.emit(&#39;data&#39;, file);</code>提交当前的文件，只是将文件的<code>contents</code>保存到一个数组中。在最后的end方法中，将所有的contents使用<code>Buffer.concat</code>合并，并构造一个File对象，设置<code>contents</code>为合并后的内容，然后设置<code>path</code>，最后调用<code>this.emit(&#39;data&#39;, output);</code>(也可以换成<code>this.push(output);</code>)。</p>
+<p>执行<code>gulp concat</code>，输出如下：</p>
+<pre><code>[<span class="number">00</span>:<span class="number">36</span>:<span class="number">47</span>] Starting <span class="string">'clean'</span><span class="keyword">...</span>
+[<span class="number">00</span>:<span class="number">36</span>:<span class="number">47</span>] Finished <span class="string">'clean'</span> after <span class="number">4.67</span> ms
+[<span class="number">00</span>:<span class="number">36</span>:<span class="number">47</span>] Starting <span class="string">'concat1'</span><span class="keyword">...</span>
+[<span class="number">00</span>:<span class="number">36</span>:<span class="number">47</span>] I am: one\<span class="number">1.</span>txt
+[<span class="number">00</span>:<span class="number">36</span>:<span class="number">47</span>] I am: two\<span class="number">2.</span>txt
+[<span class="number">00</span>:<span class="number">36</span>:<span class="number">47</span>] I am: two\<span class="number">3.</span>txt
+[<span class="number">00</span>:<span class="number">36</span>:<span class="number">47</span>] It is concated
+[<span class="number">00</span>:<span class="number">36</span>:<span class="number">47</span>] Finished <span class="string">'concat1'</span> after <span class="number">25</span> ms
+</code></pre><h4 id="map_(asyncFunction)">map (asyncFunction)</h4>
+<p>这个方法解决了<code>es.through</code>中的write不能异步的问题。</p>
+<pre><code>var es = <span class="keyword">require</span>(<span class="string">'event-stream'</span>)
+es.map(<span class="keyword">function</span> (data, callback) {
+  //transform data
+  // <span class="keyword">...</span>
+  callback(null, data)
+})
+</code></pre><p>当异步/同步操作完成时，一定要调用callback。callback的第一个参数为一个error或者null。第二个参数为返回的数据。</p>
+<p>使用<code>es.map</code>实现文件合并</p>
+<pre><code><span class="function"><span class="keyword">function</span> <span class="title">use_es_map</span><span class="params">()</span> </span>{
+    <span class="keyword">var</span> contents = [];
+    <span class="keyword">return</span> es.map(<span class="function"><span class="keyword">function</span> <span class="params">(file, cb)</span> </span>{
+        gutil.log(<span class="string">'I am: '</span> + file.relative);
+        contents.push(file.contents);
+        contents.push(<span class="keyword">new</span> Buffer(<span class="string">'\n'</span>));
+        cb();
+    }).pipe(es.through(<span class="literal">null</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{
+        <span class="keyword">var</span> joinedContents = Buffer.concat(contents);
+        <span class="keyword">var</span> output = <span class="keyword">new</span> File();
+        output.contents = joinedContents;
+        output.path = <span class="string">'out.txt'</span>;
+        <span class="keyword">this</span>.emit(<span class="string">'data'</span>, output);
+
+        gutil.log(<span class="string">'It is concated'</span>);
+        <span class="keyword">this</span>.emit(<span class="string">'end'</span>);
+    }));
+}
+</code></pre><p>运行<code>gulp connat2</code>。输出结果如下：</p>
+<pre><code>[<span class="number">00</span>:<span class="number">38</span>:<span class="number">52</span>] Starting <span class="string">'clean'</span><span class="keyword">...</span>
+[<span class="number">00</span>:<span class="number">38</span>:<span class="number">52</span>] Finished <span class="string">'clean'</span> after <span class="number">6.25</span> ms
+[<span class="number">00</span>:<span class="number">38</span>:<span class="number">52</span>] Starting <span class="string">'concat2'</span><span class="keyword">...</span>
+[<span class="number">00</span>:<span class="number">38</span>:<span class="number">52</span>] It is concated
+[<span class="number">00</span>:<span class="number">38</span>:<span class="number">52</span>] Finished <span class="string">'concat2'</span> after <span class="number">29</span> ms
+</code></pre><p>仔细看下输出结果会发现没有<code>es.map</code>中的输出信息，也就是<code>es.map</code>的回调并没有执行。再看一下输出目录dist，居然出现了3个txt文件，而且out.txt内容是空的。Oh My Bug。</p>
+<p>查看一下node关于pipe的定义：</p>
+<pre><code>export <span class="class"><span class="keyword">class</span> <span class="title">Readable</span> <span class="inheritance"><span class="keyword">extends</span></span> <span class="title">events</span>.<span class="title">EventEmitter</span> <span class="inheritance"><span class="keyword">implements</span></span> <span class="title">NodeJS</span>.<span class="title">ReadableStream</span> </span>{
+    pipe&lt;T extends NodeJS.WritableStream&gt;(destination: T, options?: { end?: <span class="keyword">boolean</span>; }): T;
+}
+</code></pre><p><code>Readable</code>的<code>pipe</code>方法接受一个<code>WritableStream</code>的对象参数，最后返回的就是这个参数<code>WritableStream</code>。<code>es.through</code>和<code>es.map</code>返回的都是一个<code>ReadWriteStream</code>对象，所以既可以作为<code>pipe</code>的参数，也能使用<code>pipe</code>方法，实现链式调用。</p>
+<p>上面的那段错误代码，返回的实际上就是<code>es.through</code>的结果，等价于：</p>
+<pre><code><span class="function"><span class="keyword">function</span> <span class="title">use_es_map</span><span class="params">()</span> </span>{
+    <span class="keyword">var</span> contents = [];
+    <span class="keyword">return</span> es.through(<span class="literal">null</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{
+        <span class="keyword">var</span> joinedContents = Buffer.concat(contents);
+        <span class="keyword">var</span> output = <span class="keyword">new</span> File();
+        output.contents = joinedContents;
+        output.path = <span class="string">'out.txt'</span>;
+
+        <span class="keyword">this</span>.emit(<span class="string">'data'</span>, output);
+        <span class="keyword">this</span>.emit(<span class="string">'end'</span>);
+    });
+}
+</code></pre><p>那怎么样才能使用<code>es.map</code>实现这个合并呢？</p>
+<pre><code><span class="function"><span class="keyword">function</span> <span class="title">use_es_map</span><span class="params">()</span> </span>{
+    <span class="keyword">var</span> contents = [];
+
+    <span class="keyword">var</span> input = es.through();
+    <span class="keyword">var</span> output = input
+        .pipe(es.map(<span class="function"><span class="keyword">function</span> <span class="params">(file, cb)</span> </span>{
+            gutil.log(<span class="string">'I am: '</span> + file.relative);
+            contents.push(file.contents);
+            contents.push(<span class="keyword">new</span> Buffer(<span class="string">'\n'</span>));
+            cb();
+        }))
+        .pipe(es.through(<span class="literal">null</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{
+            <span class="keyword">var</span> joinedContents = Buffer.concat(contents);
+            <span class="keyword">var</span> output = <span class="keyword">new</span> File();
+            output.contents = joinedContents;
+            output.path = <span class="string">'out.txt'</span>;
+            <span class="keyword">this</span>.emit(<span class="string">'data'</span>, output);
+
+            gutil.log(<span class="string">'It is concated'</span>);
+            <span class="keyword">this</span>.emit(<span class="string">'end'</span>);
+        }));
+    <span class="keyword">return</span> es.duplex(input, output);
+}
+</code></pre><p>简化成伪代码：</p>
+<pre><code>var <span class="built_in">input</span> = es.through();
+var output = <span class="built_in">input</span>
+    .pipe(ReadWriteStream1)
+    .pipe(ReadWriteStream2);
+<span class="keyword">return</span> es.duplex(<span class="built_in">input</span>, output);
+</code></pre><p>同样这段代码也等价于：</p>
+<pre><code>var <span class="built_in">input</span> = es.through();
+var output = ReadWriteStream2；
+<span class="built_in">input</span>
+    .pipe(ReadWriteStream1)
+    .pipe(output);
+<span class="keyword">return</span> es.duplex(<span class="built_in">input</span>, output);
+</code></pre><p>这里有一个<code>es.duplex</code>方法。</p>
+<h4 id="duplex_(writeStream,_readStream)">duplex (writeStream, readStream)</h4>
+<p>这个函数返回一个新的<code>ReadWriteStream</code>对象，由第一个参数作为writeStream，第二个参数作为readStream。</p>
+<p>当接收到来自<code>gulp.src</code>的数据(3个txt的File对象)时，流入到input中，通过两个pipe加工处理，输出为output(out.txt)。同时output又作为可读取的输入流，pipe到<code>gulp.dest</code>中。</p>
+<blockquote>
+<p>PS: 这段可能比较难以理解，请自行脑补管道中数据的流动过程。</p>
+</blockquote>
+<p>用好<code>event-stream</code>中的这三个方法，妈妈再也不用担心我不会gulp了。更多<code>event-stream</code>的用法请参阅<a href="https://github.com/dominictarr/event-stream" target="_blank" rel="external">官网文档</a></p>
+<h3 id="gulp中流的执行顺序">gulp中流的执行顺序</h3>
+<p>下面再通过一个例子来说明下gulp中的执行顺序：</p>
+<pre><code>gulp.task(<span class="string">'default'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{
+    <span class="keyword">var</span> first;
+
+    <span class="keyword">return</span> gulp.src([<span class="string">'media/**/*.txt'</span>])
+        .pipe(es.through(<span class="function"><span class="keyword">function</span> <span class="params">(file)</span> </span>{
+            gutil.log(<span class="string">'1: '</span> + file.relative);
+            <span class="keyword">if</span> (!first) {
+                first = file;
+            } <span class="keyword">else</span> {
+                <span class="keyword">this</span>.emit(<span class="string">'data'</span>, file);
+            }
+        }, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{
+            <span class="keyword">var</span> self = <span class="keyword">this</span>;
+            gutil.log(<span class="string">'It is first end'</span>);
+            setTimeout(<span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{
+                self.emit(<span class="string">'data'</span>, first);
+                self.emit(<span class="string">'end'</span>);
+            }, <span class="number">1000</span>);
+        }))
+        .pipe(es.map(<span class="function"><span class="keyword">function</span> <span class="params">(file, cb)</span> </span>{
+            gutil.log(<span class="string">'2: '</span> + file.relative);
+            setTimeout(<span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{
+                cb(<span class="literal">null</span>, file);
+            }, <span class="number">2000</span>);
+        }))
+        .pipe(es.through(<span class="function"><span class="keyword">function</span> <span class="params">(file)</span> </span>{
+            gutil.log(<span class="string">'3: '</span> + file.relative);
+            <span class="keyword">this</span>.emit(<span class="string">'data'</span>, file);
+        }, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{
+            gutil.log(<span class="string">'It is last end'</span>);
+            <span class="keyword">this</span>.emit(<span class="string">'end'</span>);
+        }))
+        .pipe(gulp.dest(<span class="string">'dist'</span>));
+});
+</code></pre><p>这里使用了3个pipe，结果如下：</p>
+<pre><code>[<span class="number">00</span>:<span class="number">36</span>:<span class="number">51</span>] Starting <span class="string">'default'</span><span class="keyword">...</span>
+[<span class="number">00</span>:<span class="number">36</span>:<span class="number">51</span>] pipe1: one\<span class="number">1.</span>txt
+[<span class="number">00</span>:<span class="number">36</span>:<span class="number">51</span>] pipe1: two\<span class="number">2.</span>txt
+[<span class="number">00</span>:<span class="number">36</span>:<span class="number">51</span>] pipe2: two\<span class="number">2.</span>txt
+[<span class="number">00</span>:<span class="number">36</span>:<span class="number">51</span>] pipe1: two\<span class="number">3.</span>txt
+[<span class="number">00</span>:<span class="number">36</span>:<span class="number">51</span>] pipe2: two\<span class="number">3.</span>txt
+[<span class="number">00</span>:<span class="number">36</span>:<span class="number">51</span>] It is first end
+[<span class="number">00</span>:<span class="number">36</span>:<span class="number">52</span>] pipe2: one\<span class="number">1.</span>txt
+[<span class="number">00</span>:<span class="number">36</span>:<span class="number">53</span>] pipe3: two\<span class="number">2.</span>txt
+[<span class="number">00</span>:<span class="number">36</span>:<span class="number">53</span>] pipe3: two\<span class="number">3.</span>txt
+[<span class="number">00</span>:<span class="number">36</span>:<span class="number">54</span>] pipe3: one\<span class="number">1.</span>txt
+[<span class="number">00</span>:<span class="number">36</span>:<span class="number">54</span>] It is last end
+[<span class="number">00</span>:<span class="number">36</span>:<span class="number">54</span>] Finished <span class="string">'default'</span> after <span class="number">3.04</span> s
+</code></pre><p>可以得出以下结论：</p>
+<ul>
+<li>如果在write方法中不提交数据，那么数据不会出现在下一个pipe的write中。</li>
+<li>数据在管道中的流动速度是不确定的，特别是遇到了异步方法，先处理的数据在某个步骤之后可能会落后于某个后处理的数据。 </li>
+<li>每一个数据在管道中是按照pipe的顺序流动的。即<code>pipe1 -&gt; pipe2 -&gt; pipe3</code></li>
+<li>当遇到了异步方法(如<code>es.map</code>)，会触发end。即<code>pipe1 -&gt; pipe2(异步) -&gt; pipe1(end)</code></li>
+<li>在end方法中也可以派发data事件，提交数据。并且提交的数据会进入下一个pipe。即<code>pipe1(end)(this.push(data)) -&gt; pipe2</code></li>
+</ul>
+<h3 id="through2">through2</h3>
+<p><code>through2</code>的用法与<code>event-stream</code>类似</p>
+<pre><code><span class="function"><span class="keyword">function</span> <span class="title">use_through2_obj</span><span class="params">()</span> </span>{
+    <span class="keyword">var</span> contents = [];
+
+    <span class="keyword">return</span> through.obj(<span class="function"><span class="keyword">function</span> <span class="params">(file, enc, cb)</span> </span>{
+        gutil.log(<span class="string">'I am: '</span> + file.relative);
+        contents.push(file.contents);
+        contents.push(<span class="keyword">new</span> Buffer(<span class="string">'\n'</span>));
+        cb();
+    }, <span class="function"><span class="keyword">function</span> <span class="params">(cb)</span> </span>{
+        <span class="keyword">var</span> joinedContents = Buffer.concat(contents);
+        <span class="keyword">var</span> output = <span class="keyword">new</span> File();
+        output.contents = joinedContents;
+        output.path = <span class="string">'out.txt'</span>;
+        <span class="keyword">this</span>.push(output);
+
+        gutil.log(<span class="string">'It is concated'</span>);
+        cb();
+    });
+}
+</code></pre><p>主要区别有：</p>
+<ul>
+<li><code>through</code>使用<code>push</code>方法或者<code>callback</code>的第二个参数提交数据。<code>event-stream</code>除了使用以上方法还可以使用<code>emit</code>来提交数据。</li>
+<li><code>through</code>天生就是异步的，所有参数都需要一个callback回调表示是否完成。而<code>event-stream</code>的某些api的使用方法也支持同步。</li>
+</ul>
+<p>其实本篇实现的合并功能已经有现成的插件支持，可以看看<a href="https://github.com/contra/gulp-concat" target="_blank" rel="external">gulp-concat</a>这个插件的源码学习一下。</p>
+<p><strong>示例项目</strong>：</p>
+<p><a href="https://coding.net/u/xzper/p/xzper/git/raw/master/.hexo_source/source/resource/2016/05/gulp-stream-test.zip" target="_blank" rel="external">下载地址</a></p>
+<p><strong>参考文章</strong>：</p>
+<p><a href="http://www.gulpjs.com.cn/" target="_blank" rel="external">Gulp 中文网</a></p>
+<p><a href="http://www.codesec.net/view/193349.html" target="_blank" rel="external">探究Gulp的Stream</a></p>
+<p><a href="http://ju.outofmemory.cn/entry/69523" target="_blank" rel="external">Gulp.js深入讲解</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>对于很多刚刚接触<a href="https://github.com/gulpjs/gulp" target="_blank" rel="external">gulp</a>的人来说，常常觉得gulp中的stream操作不可理解。本篇将介绍stream在gulp中的应用，探究gulp中的流式操作。</p>
+<p>一般来说gulp插件开发或者自定义任务都需要借助一些stream的包装模块。比较常用的有<a href="https://github.com/dominictarr/event-stream" target="_blank" rel="external">event-stream</a> 和 <a href="https://github.com/rvagg/through2" target="_blank" rel="external">through2</a>。</p>
+]]>
+    
+    </summary>
+    
+      <category term="nodejs" scheme="http://xzper.com/tags/nodejs/"/>
+    
+      <category term="gulp" scheme="http://xzper.com/tags/gulp/"/>
+    
+      <category term="nodejs" scheme="http://xzper.com/categories/nodejs/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[调试vscode]]></title>
@@ -362,7 +730,7 @@ mklink /D app D:<span class="command">\workSpace</span><span class="command">\vs
     <link href="http://xzper.com/2015/07/11/TP-MR12U%E5%88%B7openwrt-%E4%B8%8D%E6%AD%BBboot/"/>
     <id>http://xzper.com/2015/07/11/TP-MR12U刷openwrt-不死boot/</id>
     <published>2015-07-11T08:09:38.000Z</published>
-    <updated>2015-11-28T07:16:51.954Z</updated>
+    <updated>2016-04-09T21:03:49.200Z</updated>
     <content type="html"><![CDATA[<p>前不久买了一个无线路由器TP-MR12U，买这个东西的初衷是想和家里另外一个主路由做桥接并自动上vpn，这样两个wifi信号一个和谐上网，一个科学上网。然而，买来后才发现这个路由器是v2版本的，并不能同时支持开启无线中继wds和vpn拨号功能，也就是然并卵。经过一番调查，发现或许可以通过刷入openwrt固件的方式实现这些功能。于是，就有了此教程。刷机有风险，入市需谨慎。</p>
 <a id="more"></a>
 <p>openwrt是一个嵌入式的Linux系统，在各种路由器中应用广泛。OpenWrt的特点：</p>
@@ -390,7 +758,7 @@ mklink /D app D:<span class="command">\workSpace</span><span class="command">\vs
 <li>(3)不死boot固件，文件名为breed-ar9331-mr12u.bin。</li>
 </ul>
 <p>以上软件和固件我已经打包好下面是下载链接：</p>
-<p><a href="http://xzper.com/.hexo_source/source/resource/2015/07/TPRouter.zip" target="_blank" rel="external">TPRouter.zip</a></p>
+<p><a href="https://coding.net/u/xzper/p/xzper/git/raw/master/.hexo_source/source/resource/2015/07/TPRouter.zip" target="_blank" rel="external">TPRouter.zip</a></p>
 <h2 id="TPRouter-zip">TPRouter.zip</h2>
 <p>1.打开TPRouter，点击浏览，选择解锁了U-Boot分区的固件1，看清楚文件名千万别选错了。如下图修改：</p>
 <p><img src="http://xzper.qiniudn.com/2015/07/01.png" alt=""></p>
