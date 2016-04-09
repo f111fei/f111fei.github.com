@@ -39,7 +39,7 @@ a {
   text-decoration: none;
 }
 p {
-  margin: 0 0 20px;
+  margin: 0 0 16px;
   padding: 0;
 }
 strong {
@@ -47,11 +47,7 @@ strong {
   font-weight: 700;
 }
 .content {
-  background: -webkit-linear-gradient(#fafafa, #dedede 700px);
-  background: -moz-linear-gradient(#fafafa, #dedede 700px);
-  background: -o-linear-gradient(#fafafa, #dedede 700px);
-  background: -ms-linear-gradient(#fafafa, #dedede 700px);
-  background: linear-gradient(#fafafa, #dedede 700px);
+  background: #fff;
   -webkit-border-radius: 0 0 8px 8px;
   border-radius: 0 0 8px 8px;
   border-top: 1px solid #fff;
@@ -283,7 +279,7 @@ article header .title a:hover {
 }
 article .entry {
   text-align: justify;
-  line-height: 1.6;
+  line-height: 1.75;
 }
 article .entry h1,
 article .entry h2,
@@ -301,12 +297,14 @@ article .entry ul,
 article .entry ol,
 article .entry table,
 article .entry dl {
-  margin: 0 0 20px;
+  margin: 0 0 16px;
 }
 article .entry h1,
 article .entry h2,
 article .entry h3 {
   line-height: 1.1;
+  margin-top: 20px;
+  margin-bottom: 10px;
 }
 article .entry h1 {
   font-size: 28px;
@@ -368,23 +366,27 @@ article .entry .caption:before {
 }
 article .entry code,
 article .entry pre {
-  font-family: Monaco, Bitstream Vera Sans Mono, Lucida Console, Terminal;
+  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
   color: #333;
-  font-size: 0.8em;
+  font-size: 13px;
   white-space: pre-wrap;
   word-wrap: break-word;
 }
 article .entry code {
-  font-size: 12px;
-}
-article .entry pre {
-  padding: 10px 16px;
-  background: #f6f6f6;
-  color: #f8f8f2;
-  margin: 0 0 10px;
+  padding: 2px 4px;
+  color: #c7254e;
+  background-color: #f9f2f4;
   -webkit-border-radius: 4px;
   border-radius: 4px;
-  border: 1px solid #ccc;
+}
+article .entry pre {
+  padding: 9px 14px;
+  background: #f7f7f9;
+  color: #f8f8f2;
+  margin: 0 0 14px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  border: 1px solid #e1e1e8;
 }
 @media screen and (max-width: 580px) {
   article .entry pre {
@@ -393,7 +395,12 @@ article .entry pre {
   }
 }
 article .entry pre code {
-  color: #a7195d;
+  color: #333;
+  white-space: pre-wrap;
+  background-color: transparent;
+  -webkit-border-radius: 0;
+  border-radius: 0;
+  padding: 0;
 }
 li article .entry pre {
   margin-left: -60px;
