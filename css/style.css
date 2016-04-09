@@ -35,17 +35,8 @@ footer {
   display: block;
 }
 a {
-  color: #337ab7;
+  color: #069;
   text-decoration: none;
-}
-a:focus,
-a:hover {
-  color: #23527c;
-  text-decoration: underline;
-}
-a:active,
-a:hover {
-  outline: 0;
 }
 p {
   margin: 0 0 16px;
@@ -285,11 +276,23 @@ article header .title a {
 }
 article header .title a:hover {
   color: #069;
-  text-decoration: none;
 }
 article .entry {
   text-align: justify;
   line-height: 1.75;
+}
+article .entry a {
+  color: #337ab7;
+  text-decoration: none;
+}
+article .entry a:focus,
+article .entry a:hover {
+  color: #23527c;
+  text-decoration: underline;
+}
+article .entry a:active,
+article .entry a:hover {
+  outline: 0;
 }
 article .entry h1,
 article .entry h2,
@@ -392,7 +395,6 @@ article .entry code {
 article .entry pre {
   padding: 9px 14px;
   background: #f7f7f9;
-  color: #f8f8f2;
   margin: 0 0 14px;
   -webkit-border-radius: 4px;
   border-radius: 4px;
@@ -465,10 +467,6 @@ article footer a.more-link:before {
 }
 article footer a.comment-link:before {
   content: '\f075';
-}
-article footer a:focus,
-article footer a:hover {
-  text-decoration: none;
 }
 article footer .categories,
 article footer .tags {

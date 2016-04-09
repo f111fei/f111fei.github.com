@@ -129,11 +129,21 @@ article
 
         &:hover
           color color-link
-          text-decoration none
 
   .entry
     text-align justify
     line-height 1.75
+    
+    a
+      color #337ab7
+      text-decoration none
+      
+    a:focus, a:hover
+      color #23527c
+      text-decoration underline
+      
+    a:active, a:hover
+      outline 0
 
     h1, h2, h3, h4, h5, h6
       color #222
@@ -213,7 +223,6 @@ article
     pre
       padding 9px 14px
       background #f7f7f9
-      color #f8f8f2
       margin 0 0 14px
       border-radius 4px
       border 1px solid #e1e1e8
@@ -285,9 +294,6 @@ article
       &.comment-link
         &:before
           content '\f075'
-          
-      &:focus, &:hover
-        text-decoration: none;
 
     .categories, .tags
       position relative
