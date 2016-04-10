@@ -7,8 +7,8 @@
 </section>
 <% } else if (theme.duoshuo_shortname && page.comments){ %>
 <section id="comment">
-  <!-- <h1 class="title"><%= __('comment') %></h1> -->
-  <div class="ds-thread" data-title="<%= item.title %>">
-  </div>
+  <!-- 多说评论框 start -->
+  <div class="ds-thread" data-thread-key="<%= item.date.toDate().getTime() %>" data-title="<%= item.title %>" data-url="<%= page.permalink %>"></div>
+  <!-- 多说评论框 end -->
 </section>
 <% } %>
