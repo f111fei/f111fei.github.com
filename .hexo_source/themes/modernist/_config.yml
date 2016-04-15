@@ -13,7 +13,7 @@ widgets:
   - blogroll
 
 blogrolls:
-  - domlib: http://blog.domlib.com/
+  - domlib: http://www.idom.me
 
 fancybox: true
 
