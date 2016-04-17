@@ -278,7 +278,6 @@ article header .title a:hover {
   color: #069;
 }
 article .entry {
-  text-align: justify;
   line-height: 1.75;
 }
 article .entry a {
@@ -399,12 +398,6 @@ article .entry pre {
   -webkit-border-radius: 4px;
   border-radius: 4px;
   border: 1px solid #e1e1e8;
-}
-@media screen and (max-width: 580px) {
-  article .entry pre {
-    margin: 0 -20px 16px;
-    padding: 10px 20px;
-  }
 }
 article .entry pre code {
   color: #333;

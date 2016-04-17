@@ -1,0 +1,686 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  
+  <title>vscode源码剖析 | xzper</title>
+  <meta name="author" content="xzper">
+  
+  <meta name="description" content="xzper | f111fei | egret | html5">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+  <meta property="og:title" content="vscode源码剖析"/>
+  <meta property="og:site_name" content="xzper"/>
+
+  <link rel="alternate" href="/atom.xml" title="xzper" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <!--<script src="//libs.useso.com/js/jquery/1.8.0/jquery.min.js"></script>-->
+  <script src="/js/jquery.min.js"></script>
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?f41eaf36a0e12123fc3b4874c7608a47";
+      var s = document.getElementsByTagName("script")[0]; 
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  
+</head>
+
+
+<body>
+  <div class="wrapper">
+    <header id="header"><div class="title">
+  <h1><a href="/">xzper</a></h1>
+  <p><a href="/">前行在被夕阳染红的街道</a></p>
+</div>
+<nav class="nav">
+  <ul>
+    
+      <li><a href="/">主页</a></li>
+    
+      <li><a href="/archives">所有文章</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div></header>
+    <div class="content"><article class="post">
+  <header>
+    
+      <div class="icon"></div>
+      <time datetime="2016-04-16T16:37:03.000Z"><a href="/2016/04/17/vscode源码剖析/">4月 17 2016</a></time>
+    
+    
+  
+    <h1 class="title">vscode源码剖析</h1>
+  
+
+  </header>
+  
+  <div class="entry">
+    
+      <p>vscode作为微软推出的现代编辑器已经在GitHub上<a href="https://github.com/Microsoft/vscode" target="_blank" rel="external">开源</a>了。用过vscode的人都纷纷表示速度极快，秒杀同为使用<a href="https://github.com/electron/electron" target="_blank" rel="external">Electron</a>架构的<a href="https://github.com/atom/atom" target="_blank" rel="external">Atom</a>。这次我们从源码级别来剖析为何vscode快速，高效。</p>
+<a id="more"></a>
+<h2 id="Electron">Electron</h2>
+<p><code>Electron</code> 是基于 <code>Node.js</code> 和 <code>Chromium</code> 的跨平台桌面应用开发框架。使用 <code>JavaScipt</code>，<code>HTML</code>，<code>CSS</code> 真正将 <code>Node.js</code> 带到了前端。<code>Electron</code> 通过 <code>BrowserWindow</code> 可以创建一个本地窗口，并加载一个<code>HTML</code>文档，<code>BrowserWindow</code>中的内容就是一个浏览器窗口，不仅能创建<code>DOM</code>元素，同时能使用任意的Node模块，并且还可以通过<code>IPC</code>与主进程通讯。</p>
+<h2 id="多进程">多进程</h2>
+<p>每一个 <code>Electron</code> 应用都对应一个主进程(main process)， 主进程通过<code>BrowserWindow</code>创建的每个本地窗口对应一个渲染进程(renderer process)。</p>
+<p><img src="http://xzper.qiniudn.com/2016/04/1.png" alt=""></p>
+<h3 id="主进程">主进程</h3>
+<p>vscode的主进程主要负责创建窗口和菜单，生命周期管理，自动更新等与系统相关的功能。</p>
+<h3 id="渲染进程">渲染进程</h3>
+<p>绝大多数代码都是运行在渲染进程中的，渲染进程负责界面的显示，响应用户操作。前面说到在浏览器中也可以使用Node模块，渲染进程还通过Node创建了一个插件子进程，负责插件的初始化。另外渲染进程还可以创建Worker执行一些复杂的计算，比如markdown的解析。</p>
+<h3 id="插件进程">插件进程</h3>
+<p>每一个渲染进程同时也对应一个插件进程，插件运行在单独的进程不会对渲染进程造成影响，这也是vscode比atom要快的原因。Atom中插件是直接运行在渲染进程中的，所以当插件很多的时候会卡。同时又由于vscode的插件运行在一个普通的Node进程中，所以对UI的操作能力是比较弱的，这点不及Atom。</p>
+<h2 id="VSCode_Loader">VSCode Loader</h2>
+<p><a href="https://github.com/Microsoft/vscode-loader" target="_blank" rel="external">VSCode Loader</a>是类似于 <a href="https://github.com/requirejs/requirejs" target="_blank" rel="external">RequireJS</a> 的一个异步加载模块(<a href="https://github.com/amdjs/amdjs-api/wiki/AMD" target="_blank" rel="external">AMD</a>)。所有的TypeScript源码都被编译成了使用AMD规范的js文件，使用时通过这个loader加载。</p>
+<p>虽然主进程(Node进程)是使用CommonJS规范的，但是在浏览器中的代码加载是异步的，所以使用AMD是没有争议的。在vscode中的一些核心代码，基本库都是用TypeScript编写的，也会被编译成AMD规范的js，这些基本代码也会被主进程用到，所以主进程里面也用到了这个loader。同理，插件进程和Worker都会使用这个loader加载代码。</p>
+<p>VSCode Loader不仅实现了类似RequireJS的<a href="https://github.com/Microsoft/vscode/blob/master/src/vs/loader.js" target="_blank" rel="external">模块加载</a>功能，还附带几个插件可以加载css(<a href="https://github.com/Microsoft/vscode/blob/master/src/vs/css.js" target="_blank" rel="external">css.js</a>)和<a href="https://github.com/Microsoft/vscode/blob/master/src/vs/text.js" target="_blank" rel="external">文档</a>，以及实现<a href="https://github.com/Microsoft/vscode/blob/master/src/vs/nls.js" target="_blank" rel="external">多语言</a>。</p>
+<h2 id="项目结构">项目结构</h2>
+<p>vscode的主要目录结构如下:</p>
+<pre><code>├── build                 <span class="comment">// gulp打包编译相关脚本</span>
+├── node_modules          <span class="comment">// 依赖模块</span>
+├── src                   <span class="comment">// 源代码和素材(ts,js,css,svg,html等)</span>
+│    ├── typings           <span class="comment">// 常用模块定义</span>
+│    ├── vs
+│    │    ├── base         <span class="comment">// 核心模块，常用库和基本组件</span>
+│    │    ├── editor       <span class="comment">// 编辑器模块</span>
+│    │    ├── languages    <span class="comment">// 默认编辑器语言支持</span>
+│    │    ├── platform     <span class="comment">// 核心功能接口定义和基本实现</span>
+│    │    ├── workbench    <span class="comment">// 业务逻辑功能实现</span>
+│    │    ├── loader.js    <span class="comment">// vscode loader</span>
+│    │    └── vscode.d.ts  <span class="comment">// 插件API定义</span>
+│    └── main.js          <span class="comment">// 主进程入口</span>
+├── gulpfile.js          <span class="comment">// gulp打包编译入口</span>
+├── product.json         <span class="comment">// 产品描述文件</span>
+└── <span class="keyword">package</span>.json
+</code></pre><h3 id="base"><a href="https://github.com/Microsoft/vscode/tree/master/src/vs/base" target="_blank" rel="external">base</a></h3>
+<p>base包封装了大量API，实现常用功能。在vscode中目录结构都是都是按照browser，common，node，electron的方式划分的。</p>
+<ul>
+<li>browser 实现浏览器相关的功能。</li>
+<li>common 实现不依赖node模块的基本功能。</li>
+<li>node 实现需要node模块支持的功能，比如文件操作。</li>
+<li>electron 实现需要electron api的功能，比如ipc通讯。</li>
+</ul>
+<h4 id="browser"><a href="https://github.com/Microsoft/vscode/tree/master/src/vs/base/browser" target="_blank" rel="external">browser</a></h4>
+<p>browser中实现了一个简单的UI库，包括 <code>Button</code>，<code>CheckBox</code>，<code>List</code>，<code>Scrollbar</code>等常用组件。并且封装了一套类似JQuery的DOM操作API(参见 <a href="https://github.com/Microsoft/vscode/blob/master/src/vs/base/browser/dom.ts" target="_blank" rel="external">dom.ts</a> 和 <a href="https://github.com/Microsoft/vscode/blob/master/src/vs/base/browser/dom.ts" target="_blank" rel="external">builder.ts</a>)。</p>
+<h4 id="common"><a href="https://github.com/Microsoft/vscode/tree/master/src/vs/base/common" target="_blank" rel="external">common</a></h4>
+<p>common包中封装了大量实用工具类。如</p>
+<ul>
+<li><a href="https://github.com/Microsoft/vscode/blob/master/src/vs/base/common/arrays.ts" target="_blank" rel="external">arrays.ts</a>，<a href="https://github.com/Microsoft/vscode/blob/master/src/vs/base/common/strings.ts" target="_blank" rel="external">strings.ts</a>，<a href="https://github.com/Microsoft/vscode/blob/master/src/vs/base/common/objects.ts" target="_blank" rel="external">objects.ts</a> 封装了一套类似underscore的api。</li>
+<li><a href="https://github.com/Microsoft/vscode/blob/master/src/vs/base/common/uri.ts" target="_blank" rel="external">uri.ts</a> 和 <a href="https://github.com/Microsoft/vscode/blob/master/src/vs/base/common/paths.ts" target="_blank" rel="external">paths.ts</a> 实现了路径解析功能。</li>
+<li><a href="https://github.com/Microsoft/vscode/blob/master/src/vs/base/common/winjs.base.js" target="_blank" rel="external">winjs.base.js</a> 实现了一个功能强大的Promise。</li>
+</ul>
+<p>另外还有很多其他的工具类，每一个模块的耦合度都很低，基本都可以单独拿出来用，学习起来也和容易。这里就不一一介绍了。</p>
+<h4 id="node"><a href="https://github.com/Microsoft/vscode/tree/master/src/vs/base/node" target="_blank" rel="external">node</a></h4>
+<p>node包中封装了一些node实现的功能。如</p>
+<ul>
+<li><a href="https://github.com/Microsoft/vscode/blob/master/src/vs/base/node/extfs.ts" target="_blank" rel="external">extfs.ts</a> 和 <a href="https://github.com/Microsoft/vscode/blob/master/src/vs/base/node/pfs.ts" target="_blank" rel="external">pfs.ts</a> 封装了文件操作相关的api。</li>
+<li><a href="https://github.com/Microsoft/vscode/blob/master/src/vs/base/node/request.ts" target="_blank" rel="external">request.ts</a> 封装了网络请求的api，能方便的发送网络请求，加载json，下载文件。</li>
+<li><a href="https://github.com/Microsoft/vscode/blob/master/src/vs/base/node/service.cp.ts" target="_blank" rel="external">service.cp.ts</a> 和 <a href="https://github.com/Microsoft/vscode/blob/master/src/vs/base/node/service.net.ts" target="_blank" rel="external">service.net.ts</a> 封装了socket和进程通讯的api。</li>
+<li><a href="https://github.com/Microsoft/vscode/blob/master/src/vs/base/node/zip.ts" target="_blank" rel="external">zip.ts</a> 封装了解压缩文件的操作</li>
+</ul>
+<h4 id="parts"><a href="https://github.com/Microsoft/vscode/tree/master/src/vs/base/parts" target="_blank" rel="external">parts</a></h4>
+<p>这个包额外定义了一些复杂的UI组件，tree 和 quickopen。</p>
+<h3 id="editor_and_language"><a href="https://github.com/Microsoft/vscode/tree/master/src/vs/editor" target="_blank" rel="external">editor</a> and <a href="https://github.com/Microsoft/vscode/tree/master/src/vs/language" target="_blank" rel="external">language</a></h3>
+<p>本篇主要了解vscode基本框架的结构，这两包作为编辑器功能的主要实现，这里面的逻辑太复杂就不细说了。</p>
+<h3 id="platform_and_workbench"><a href="https://github.com/Microsoft/vscode/tree/master/src/vs/platform" target="_blank" rel="external">platform</a> and <a href="https://github.com/Microsoft/vscode/tree/master/src/vs/workbench" target="_blank" rel="external">workbench</a></h3>
+<p>vscode中基本所有的具体功能实现代码都在这两包中。platform主要定义了一些服务的接口和简单实现，workbench则实现了这些接口，并且创建了一个工作台，构建了一个完整界面结构。</p>
+<hr>
+<p>下面从程序入口开始，从源码一步一步来看vscode是怎样运行起来的。</p>
+<h2 id="启动主进程">启动主进程</h2>
+<p>Eletron通过<a href="https://github.com/Microsoft/vscode/blob/master/package.json" target="_blank" rel="external">package.json</a>中的<a href="https://github.com/Microsoft/vscode/blob/master/package.json#L8" target="_blank" rel="external">main字段</a>来定义应用入口。<a href="https://github.com/Microsoft/vscode/blob/master/src/main.js" target="_blank" rel="external">main.js</a> 是vscode的入口。</p>
+<h3 id="初始化loader">初始化loader</h3>
+<p>这个模块是一个壳，主要解析多语言配置，然后初始化loader，通过loader加载 <a href="https://github.com/Microsoft/vscode/blob/master/src/vs/workbench/electron-main/main.ts" target="_blank" rel="external">main.ts</a>。</p>
+<pre><code><span class="comment">// Load our code once ready</span>
+app.once(<span class="string">'ready'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{
+    <span class="keyword">var</span> nlsConfig = getNLSConfiguration();
+    process.env[<span class="string">'VSCODE_NLS_CONFIG'</span>] = <span class="built_in">JSON</span>.stringify(nlsConfig);
+    <span class="built_in">require</span>(<span class="string">'./bootstrap-amd'</span>).bootstrap(<span class="string">'vs/workbench/electron-main/main'</span>);
+});
+</code></pre><p>这里的 <a href="https://github.com/Microsoft/vscode/blob/master/src/bootstrap-amd.js" target="_blank" rel="external">bootstrap-amd.js</a> 负责创建一个loader，实现异步加载。</p>
+<pre><code>loader.config({
+    baseUrl: uriFromPath(path.join(__dirname)),
+    catchError: <span class="literal">true</span>,
+    nodeRequire: <span class="built_in">require</span>,
+    nodeMain: __filename,
+    <span class="string">'vs/nls'</span>: nlsConfig
+});
+
+......
+
+exports.bootstrap = <span class="function"><span class="keyword">function</span> <span class="params">(entrypoint)</span> </span>{
+    <span class="keyword">if</span> (!entrypoint) {
+        <span class="keyword">return</span>;
+    }
+
+    loader([entrypoint], <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{ }, <span class="function"><span class="keyword">function</span> <span class="params">(err)</span> </span>{ <span class="built_in">console</span>.error(err); });
+};
+</code></pre><h3 id="解析命令行参数">解析命令行参数</h3>
+<p>在 <a href="https://github.com/Microsoft/vscode/blob/master/src/vs/workbench/electron-main/main.ts" target="_blank" rel="external">main.ts</a> 中依赖一个 <a href="https://github.com/Microsoft/vscode/blob/master/src/vs/workbench/electron-main/env.ts" target="_blank" rel="external">env</a> 的模块</p>
+<pre><code><span class="reserved">import</span> env = <span class="built_in">require</span>(<span class="string">'vs/workbench/electron-main/env'</span>);
+</code></pre><p>该模块负责命令行参数的解析，以及读取 <a href="https://github.com/Microsoft/vscode/blob/master/package.json" target="_blank" rel="external">package.json</a> 和 <a href="https://github.com/Microsoft/vscode/blob/master/product.json" target="_blank" rel="external">product.json</a> 保存软件的一些基本信息，主要变量如下：</p>
+<pre><code><span class="comment">// 是否是发行版</span>
+<span class="keyword">export</span> <span class="keyword">const</span> isBuilt = !process.env.VSCODE_DEV;
+<span class="comment">// 应用程序根目录</span>
+<span class="keyword">export</span> <span class="keyword">const</span> appRoot = path.dirname(uri.parse(<span class="built_in">require</span>.toUrl(<span class="string">''</span>)).fsPath);
+<span class="comment">// 产品配置</span>
+<span class="keyword">export</span> <span class="keyword">const</span> product: IProductConfiguration = productContents;
+<span class="comment">// 程序版本</span>
+<span class="keyword">export</span> <span class="keyword">const</span> version = app.getVersion();
+<span class="comment">// 命令行参数</span>
+<span class="keyword">export</span> <span class="keyword">const</span> cliArgs = parseCli();
+<span class="comment">// 数据文件目录</span>
+<span class="keyword">export</span> <span class="keyword">const</span> appHome = app.getPath(<span class="string">'userData'</span>);
+<span class="comment">// setting文件路径</span>
+<span class="keyword">export</span> <span class="keyword">const</span> appSettingsPath = path.join(appSettingsHome, <span class="string">'settings.json'</span>);
+<span class="comment">// keybindings文件路径</span>
+<span class="keyword">export</span> <span class="keyword">const</span> appKeybindingsPath = path.join(appSettingsHome, <span class="string">'keybindings.json'</span>);
+<span class="comment">// 用户插件目录</span>
+<span class="keyword">export</span> <span class="keyword">const</span> userExtensionsHome = cliArgs.extensionsHomePath || path.join(userHome, <span class="string">'extensions'</span>);
+</code></pre><h3 id="初始化管理器">初始化管理器</h3>
+<p>在main.ts的main方法中，初始化了主进程中的各个管理器</p>
+<pre><code>// Lifecycle
+lifecycle.manager.ready();
+
+// <span class="operator"><span class="keyword">Load</span> settings
+settings.manager.loadSync();</span>
+
+// Propagate to clients
+windows.manager.ready(userEnv);
+
+// <span class="operator"><span class="keyword">Install</span> Menu
+menu.manager.ready();</span>
+
+.....
+
+// Setup auto <span class="operator"><span class="keyword">update</span>
+UpdateManager.initialize();</span>
+</code></pre><ul>
+<li><a href="https://github.com/Microsoft/vscode/blob/master/src/vs/workbench/electron-main/lifecycle.ts" target="_blank" rel="external">lifecycle</a> 负责管理软件的生命周期，派发<code>onBeforeQuit</code>等事件。</li>
+<li><a href="https://github.com/Microsoft/vscode/blob/master/src/vs/workbench/electron-main/settings.ts" target="_blank" rel="external">setting</a> 负责管理用户设置和快捷键绑定的读取和存储。</li>
+<li><a href="https://github.com/Microsoft/vscode/blob/master/src/vs/workbench/electron-main/windows.ts" target="_blank" rel="external">windows</a> 负责窗口的创建和管理，非常核心的一个模块。</li>
+<li><a href="https://github.com/Microsoft/vscode/blob/master/src/vs/workbench/electron-main/menus.ts" target="_blank" rel="external">menus</a> 负责菜单栏的创建。</li>
+<li><a href="https://github.com/Microsoft/vscode/blob/master/src/vs/workbench/electron-main/update-manager.ts" target="_blank" rel="external">update-manager</a> 自动更新功能。</li>
+</ul>
+<p>以上管理器中大量使用了Eletron的 <code>ipc</code> 模块发送接收渲染进程的消息，来实现主进程和渲染进程的交互。</p>
+<h3 id="打开第一个窗口">打开第一个窗口</h3>
+<p>在main.ts的main方法的最后</p>
+<pre><code><span class="comment">// Open our first window</span>
+<span class="keyword">if</span> (<span class="keyword">env</span>.cliArgs.openNewWindow &amp;&amp; <span class="keyword">env</span>.cliArgs.pathArguments.length === <span class="number">0</span>) {
+    windows.manager.open({ cli: <span class="keyword">env</span>.cliArgs, forceNewWindow: true, forceEmpty: true }); <span class="comment">// new window if "-n" was used without paths</span>
+} <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">global</span>.macOpenFiles &amp;&amp; <span class="keyword">global</span>.macOpenFiles.length &amp;&amp; (!<span class="keyword">env</span>.cliArgs.pathArguments || !<span class="keyword">env</span>.cliArgs.pathArguments.length)) {
+    windows.manager.open({ cli: <span class="keyword">env</span>.cliArgs, pathsToOpen: <span class="keyword">global</span>.macOpenFiles }); <span class="comment">// mac: open-file event received on startup</span>
+} <span class="keyword">else</span> {
+    windows.manager.open({ cli: <span class="keyword">env</span>.cliArgs, forceNewWindow: <span class="keyword">env</span>.cliArgs.openNewWindow, diffMode: <span class="keyword">env</span>.cliArgs.diffMode }); <span class="comment">// default: read paths from cli</span>
+}
+</code></pre><p>调用了 <code>windows</code> 模块的 <code>open</code> 方法打开了第一个窗口。这里调用了 <code>env.cliArgs</code> 获取命令行参数传递给 <code>open</code> 方法来实现不同的打开方式。</p>
+<p>在 <code>open</code> 方法中创建一个了 <code>VSCodeWindow</code> 实例，并且通过 <code>toConfiguration</code> 方法创建了一个 <code>IWindowConfiguration</code> 的对象。</p>
+<p><code>IWindowConfiguration</code> 中定义了大量的 <code>env</code> 中的信息，包括环境变量，命令行参数，软件信息等。在之后 <code>IWindowConfiguration</code> 会作为参数传递给 <code>VSCodeWindow</code> 的 <code>load</code> 方法。</p>
+<p><code>VSCodeWindow</code> 包装了一个 <code>BrowserWindow</code> 对象。<code>load</code> 方法调用 <code>getUrl</code> 加载了一个的 <a href="https://github.com/Microsoft/vscode/blob/master/src/vs/workbench/electron-browser/index.html" target="_blank" rel="external">html文件</a>。</p>
+<pre><code><span class="keyword">private</span> getUrl(config: IWindowConfiguration): <span class="built_in">string</span> {
+    <span class="keyword">let</span> url = <span class="built_in">require</span>.toUrl(<span class="string">'vs/workbench/electron-browser/index.html'</span>);
+
+    <span class="comment">// Config</span>
+    url += <span class="string">'?config='</span> + <span class="built_in">encodeURIComponent</span>(<span class="built_in">JSON</span>.stringify(config));
+
+    <span class="keyword">return</span> url;
+}
+</code></pre><p>可以看到 <code>IWindowConfiguration</code> 被序列化成字符串作为参数传递给了 <code>index.html</code>。由于在浏览器进程要获取主进程中 <code>env</code> 模块的数据比较复杂(需要使用 <code>ipc</code> 通讯)。所以这里直接将一些基本信息打包成config传递给了浏览器进程。这时浏览器窗口才正式打开并初始化。</p>
+<h2 id="启动浏览器">启动浏览器</h2>
+<h3 id="初始化loader-1">初始化loader</h3>
+<p>浏览器的入口在 <a href="https://github.com/Microsoft/vscode/blob/master/src/vs/workbench/electron-browser/index.html" target="_blank" rel="external">index.html</a> 中。与主进程类似这里也对loader进行了初始化并加载浏览器主模块 <a href="https://github.com/Microsoft/vscode/blob/master/src/vs/workbench/electron-browser/main.ts" target="_blank" rel="external">main</a> 。主要代码如下：</p>
+<pre><code><span class="comment">// 解析config参数</span>
+<span class="keyword">var</span> args = parseURLQueryArgs();
+<span class="keyword">var</span> configuration = <span class="built_in">JSON</span>.parse(args[<span class="string">'config'</span>]);
+......
+<span class="comment">// loader的加载根目录</span>
+<span class="keyword">var</span> rootUrl = uriFromPath(configuration.appRoot) + <span class="string">'/out'</span>;
+<span class="comment">// 加载loader</span>
+createScript(rootUrl + <span class="string">'/vs/loader.js'</span>, <span class="function"><span class="keyword">function</span><span class="params">()</span> </span>{
+    <span class="comment">// 多语言配置</span>
+    <span class="keyword">var</span> nlsConfig;
+    <span class="keyword">try</span> {
+        <span class="keyword">var</span> config = process.env[<span class="string">'VSCODE_NLS_CONFIG'</span>];
+        <span class="keyword">if</span> (config) {
+            nlsConfig = <span class="built_in">JSON</span>.parse(config);
+        }
+    } <span class="keyword">catch</span> (e) {
+    }
+    <span class="keyword">if</span> (!nlsConfig) {
+        nlsConfig = { availableLanguages: {} };
+    }
+    <span class="comment">// 配置loader</span>
+    <span class="built_in">require</span>.config({
+        baseUrl: rootUrl,
+        <span class="string">'vs/nls'</span>: nlsConfig,
+        recordStats: configuration.enablePerformance
+    });
+    ......
+    <span class="built_in">require</span>([
+        <span class="comment">// 项目正式发布后大多数的js都被合并进了workbench.main.js中</span>
+        <span class="string">'vs/workbench/workbench.main'</span>,
+        <span class="string">'vs/nls!vs/workbench/workbench.main'</span>,
+        <span class="string">'vs/css!vs/workbench/workbench.main'</span>
+    ], <span class="function"><span class="keyword">function</span><span class="params">()</span> </span>{
+        timers.afterLoad = <span class="keyword">new</span> <span class="built_in">Date</span>();
+
+        <span class="comment">// 浏览器主模块</span>
+        <span class="keyword">var</span> main = <span class="built_in">require</span>(<span class="string">'vs/workbench/electron-browser/main'</span>);
+
+        <span class="comment">// config作为参数，调用startup启动主模块</span>
+        main.startup(configuration, globalSettings).then(<span class="function"><span class="keyword">function</span><span class="params">()</span> </span>{
+            mainStarted = <span class="literal">true</span>;
+        }, <span class="function"><span class="keyword">function</span><span class="params">(error)</span> </span>{ onError(error, enableDeveloperTools) });
+    });
+});
+</code></pre><h3 id="初始化工作台">初始化工作台</h3>
+<p>在 <a href="https://github.com/Microsoft/vscode/blob/master/src/vs/workbench/electron-browser/main.ts" target="_blank" rel="external">main</a> 模块的 <code>startup</code> 方法中进一步加工 <code>config</code>，并创建了一个 <code>workspace</code>。</p>
+<pre><code>export function startup(environment: IMainEnvironment, globalSettings: IGlobalSettings): winjs<span class="built_in">.</span>TPromise<span class="subst">&lt;</span><span class="literal">void</span><span class="subst">&gt;</span> {
+
+    <span class="comment">// 将主进程中的环境变量合并到浏览器进程</span>
+    assign(process<span class="built_in">.</span>env, environment<span class="built_in">.</span>userEnv);
+
+    <span class="comment">// Shell Configuration</span>
+    <span class="keyword">let</span> shellConfiguration: IConfiguration <span class="subst">=</span> {
+        env: environment
+    };
+    <span class="attribute">...</span><span class="attribute">...</span>
+    <span class="keyword">let</span> shellOptions: IOptions <span class="subst">=</span> {
+        <span class="attribute">...</span><span class="attribute">...</span>
+    };
+    <span class="attribute">...</span><span class="attribute">...</span>
+    <span class="comment">// Open workbench</span>
+    <span class="keyword">return</span> openWorkbench(getWorkspace(environment), shellConfiguration, shellOptions);
+}
+
+function getWorkspace(environment: IMainEnvironment): IWorkspace {
+    <span class="keyword">if</span> (<span class="subst">!</span>environment<span class="built_in">.</span>workspacePath) {
+        <span class="keyword">return</span> <span class="built_in">null</span>;
+    }
+    <span class="attribute">...</span><span class="attribute">...</span>
+    <span class="keyword">let</span> workspace: IWorkspace <span class="subst">=</span> {
+        <span class="string">'resource'</span>: workspaceResource,
+        <span class="string">'id'</span>: platform<span class="built_in">.</span>isLinux <span class="subst">?</span> realWorkspacePath : realWorkspacePath<span class="built_in">.</span>toLowerCase(),
+        <span class="string">'name'</span>: folderName,
+        <span class="string">'uid'</span>: platform<span class="built_in">.</span>isLinux <span class="subst">?</span> folderStat<span class="built_in">.</span>ino : folderStat<span class="built_in">.</span>birthtime<span class="built_in">.</span>getTime(),
+        <span class="string">'mtime'</span>: folderStat<span class="built_in">.</span>mtime<span class="built_in">.</span>getTime()
+    };
+
+    <span class="keyword">return</span> workspace;
+}
+</code></pre><p>这里的 <code>environment</code> 就是上文的 <code>config</code>。 <code>IWorkspace</code> 记录了当前打开的文件夹路径等信息(当打开单文件时 <code>IWorkspace</code> 不存在)。</p>
+<pre><code><span class="reserved">function</span> openWorkbench(<span class="attribute">workspace</span>: IWorkspace, <span class="attribute">configuration</span>: IConfiguration, <span class="attribute">options</span>: IOptions): winjs.TPromise&lt;<span class="reserved">void</span>&gt; {
+    <span class="reserved">let</span> eventService = <span class="keyword">new</span> EventService();
+    <span class="reserved">let</span> contextService = <span class="keyword">new</span> WorkspaceContextService(eventService, workspace, configuration, options);
+    <span class="reserved">let</span> configurationService = <span class="keyword">new</span> ConfigurationService(contextService, eventService);
+
+    <span class="keyword">return</span> configurationService.initialize<span class="function"><span class="params">()</span>.<span class="title">then</span><span class="params">(() =&gt; {
+            ......
+            <span class="reserved">let</span> shell = <span class="keyword">new</span> WorkbenchShell(<span class="built_in">document</span>.body, workspace, {
+                configurationService,
+                eventService,
+                contextService
+            }, configuration, options);
+            shell.open();
+            ......
+    })</span>;
+}</span>
+</code></pre><p>在 <code>openWorkbench</code> 创建了三个基本服务(Service)，并将 <code>config</code>，<code>workspace</code> 等参数传给 <code>WorkbenchShell</code> 。<code>WorkbenchShell</code> 获取html文档的 <code>body</code> 节点准备创建界面。</p>
+<h3 id="初始化服务">初始化服务</h3>
+<p><a href="https://github.com/Microsoft/vscode/blob/master/src/vs/workbench/electron-browser/shell.ts" target="_blank" rel="external">WorkbenchShell</a> 主要负责初始化各服务(Service)，并创建了一个 <code>Workbench</code> 完成界面的初始化工作。</p>
+<p>常用的Service比如</p>
+<ul>
+<li>IStorageService 浏览器进程数据的持久化存储与读取。</li>
+<li>IWorkspaceContextService 获取工作空间数据和config等基本配置信息。</li>
+<li>IKeybindingService 管理快捷键相关的注册。</li>
+<li>IFileService 封装了文件操作的相关API，并实现 <code>FileWatcher</code> 功能。</li>
+<li>IExtensionService 管理插件的初始化，加载和交互。</li>
+<li>IInstantiationService 负责创建实例对象，这个Service比较重要，下面单独说明。</li>
+</ul>
+<p><code>initInstantiationService</code> 方法中创建了各个服务，并返回 <code>IInstantiationService</code>。</p>
+<h5 id="IInstantiationService">IInstantiationService</h5>
+<p>在vscode中随处可见 <code>IInstantiationService</code> 的应用。以 <code>CloseWindowAction</code> 为例</p>
+<pre><code>export <span class="class"><span class="keyword">class</span> <span class="title">CloseWindowAction</span> <span class="inheritance"><span class="keyword">extends</span></span> <span class="title">Action</span> </span>{
+
+    <span class="keyword">public</span> <span class="keyword">static</span> ID = <span class="string">'workbench.action.closeWindow'</span>;
+    <span class="keyword">public</span> <span class="keyword">static</span> LABEL = nls.localize(<span class="string">'closeWindow'</span>, <span class="string">"Close Window"</span>);
+
+    constructor(id: string, label: string, @IWindowService <span class="keyword">private</span> windowService: IWindowService) {
+        <span class="keyword">super</span>(CloseWindowAction.ID, label);
+    }
+
+    <span class="keyword">public</span> run(): TPromise&lt;<span class="keyword">boolean</span>&gt; {
+        <span class="keyword">this</span>.windowService.getWindow().close();
+
+        <span class="keyword">return</span> TPromise.as(<span class="keyword">true</span>);
+    }
+}
+</code></pre><p>在构造函数(<code>constructor</code>)中，后面的参数写法比较特殊</p>
+<pre><code><span class="annotation">@IWindowService</span> <span class="keyword">private</span> windowService: IWindowService
+</code></pre><p>使用了 <code>@IWindowService</code> 这种decorate语法。当要创建 <code>CloseWindowAction</code> 这个实例时，可以使用 <code>IInstantiationService</code> 只需要传入前两个参数，在<code>IInstantiationService</code> 中能获取所有的其他服务对象， <code>windowService</code> 这个参数由 <code>IInstantiationService</code> 传入。</p>
+<pre><code><span class="keyword">this</span>.instantiationService.createInstance(CloseWindowAction, CloseWindowAction.ID， CloseWindowAction.LABEL);
+</code></pre><h3 id="创建Workbench">创建Workbench</h3>
+<p><a href="https://github.com/Microsoft/vscode/blob/master/src/vs/workbench/electron-browser/shell.ts" target="_blank" rel="external">WorkbenchShell</a> 的 <code>createContents</code> 方法还创建了一个 <code>Workbench</code> 负责整个界面的创建。</p>
+<pre><code>private createContents(<span class="attribute">parent</span>: Builder): Builder {
+    ......
+    <span class="regexp">//</span> Instantiation service <span class="reserved">with</span> services
+    <span class="reserved">let</span> instantiationService = <span class="keyword">this</span>.initInstantiationService();
+    ......
+    <span class="regexp">//</span> Workbench
+    <span class="keyword">this</span>.workbench = <span class="keyword">new</span> Workbench(workbenchContainer.getHTMLElement(), <span class="keyword">this</span>.workspace, <span class="keyword">this</span>.configuration, <span class="keyword">this</span>.options, instantiationService);
+    <span class="keyword">this</span>.workbench.startup({
+        <span class="attribute">onServicesCreated</span>: <span class="function"><span class="params">()</span> =&gt;</span> {
+            <span class="keyword">this</span>.initExtensionSystem();
+        },
+        <span class="attribute">onWorkbenchStarted</span>: <span class="function"><span class="params">()</span> =&gt;</span> {
+            <span class="keyword">this</span>.onWorkbenchStarted();
+        }
+    });
+    ......
+}
+</code></pre><p><code>Workbench</code> 是 <code>IPartService</code> 的具体实现。vscode由多个Part组成。</p>
+<ul>
+<li>activitybar 是最左边(也可以设置到右边)的选项卡。目前有 <code>Explore</code>，<code>Search</code>，<code>Git</code>，<code>Debug</code> 这4个选项卡。</li>
+<li>sidebar 是activitybar选中的内容。</li>
+<li>editor 是最主要的编辑器部分。</li>
+<li>statusbar 是下方的状态栏。</li>
+<li>panel 是状态栏上方的面板选项卡，目前主要有 <code>output</code>，<code>debug</code>，<code>errorlist</code> 等几个面板。</li>
+<li>quickopen 是悬浮在中上方的弹出界面，常用的命令面板(F1)就是一个<code>quickopen widget</code>。</li>
+</ul>
+<p><img src="http://xzper.qiniudn.com/2016/04/2.png" alt=""></p>
+<p>下面的代码展示了各个part的创建，并添加到显示列表。</p>
+<pre><code><span class="keyword">private</span> <span class="title">renderWorkbench</span>(): <span class="keyword">void</span> {
+    ......
+    <span class="comment">// Create Parts</span>
+    <span class="keyword">this</span>.createActivityBarPart();
+    <span class="keyword">this</span>.createSidebarPart();
+    <span class="keyword">this</span>.createEditorPart();
+    <span class="keyword">this</span>.createPanelPart();
+    <span class="keyword">this</span>.createStatusbarPart();
+
+    <span class="comment">// Create QuickOpen</span>
+    <span class="keyword">this</span>.createQuickOpen();
+
+    <span class="comment">// Add Workbench to DOM</span>
+    <span class="keyword">this</span>.workbenchContainer.build(<span class="keyword">this</span>.container);
+}
+</code></pre><h2 id="扩展点的注册和实现">扩展点的注册和实现</h2>
+<p>vscode中几乎每个部分都是可扩展的。例如最常见的有快捷键命令的注册，编辑器类型的扩展，扩展输出面板Channel。下面以 <code>ViewletRegistry</code> 为例，分析 <code>activitybar</code> 和 <code>sidebar</code> 上面的 <code>Explore</code> 文件浏览器是如何显示的。</p>
+<h3 id="contribution">contribution</h3>
+<p>通常情况下以 <code>.contribution</code> 结尾的模块，都用作扩展点的注册。由于一般情况下这些模块不会被其他模块依赖，所以要提供一个入口来加载这些模块，这个入口就是 <a href="https://github.com/Microsoft/vscode/blob/master/src/vs/workbench/workbench.main.js" target="_blank" rel="external">workbench.main</a>。</p>
+<p>其中 <code>Explore</code> 文件浏览器的注册是在 <a href="https://github.com/Microsoft/vscode/blob/master/src/vs/workbench/parts/files/browser/files.contribution.ts" target="_blank" rel="external">files.contribution</a> 中定义的。</p>
+<pre><code><span class="comment">// Register Viewlet</span>
+(&lt;ViewletRegistry&gt;Registry.<span class="keyword">as</span>(ViewletExtensions.Viewlets)).registerViewlet(<span class="keyword">new</span> ViewletDescriptor(
+    <span class="string">'vs/workbench/parts/files/browser/explorerViewlet'</span>,
+    <span class="string">'ExplorerViewlet'</span>,
+    VIEWLET_ID,
+    nls.localize(<span class="string">'explore'</span>, <span class="string">"Explorer"</span>),
+    <span class="string">'explore'</span>,
+    <span class="number">0</span>
+));
+
+(&lt;ViewletRegistry&gt;Registry.<span class="keyword">as</span>(ViewletExtensions.Viewlets)).setDefaultViewletId(VIEWLET_ID);
+</code></pre><p><code>explorerViewlet</code> 模块是 <code>Explore</code> 的界面显示入口。</p>
+<h3 id="registry">registry</h3>
+<p>platform 中定义了 <code>IRegistry</code> 接口及实现。</p>
+<pre><code>export interface IRegistry {
+
+    <span class="javadoc">/**
+     * Adds the extension functions and properties defined by data to the
+     * platform. The provided id must be unique.
+     *<span class="javadoctag"> @param</span> id a unique identifier
+     *<span class="javadoctag"> @param</span> data a contribution
+     */</span>
+    add(id: string, data: any): <span class="keyword">void</span>;
+
+    <span class="javadoc">/**
+     * Returns true iff there is an extension with the provided id.
+     *<span class="javadoctag"> @param</span> id an extension idenifier
+     */</span>
+    knows(id: string): <span class="keyword">boolean</span>;
+
+    <span class="javadoc">/**
+     * Returns the extension functions and properties defined by the specified key or null.
+     *<span class="javadoctag"> @param</span> id an extension idenifier
+     */</span>
+    as(id: string): any;
+    as&lt;T&gt;(id: string): T;
+}
+</code></pre><p><code>add</code> 添加一个注册点， <code>as</code> 方法获取一个注册点对象。</p>
+<p><a href="https://github.com/Microsoft/vscode/blob/master/src/vs/workbench/browser/viewlet.ts" target="_blank" rel="external">viewlet</a> 模块添加了 <code>ViewletRegistry</code>。</p>
+<pre><code>Registry.<span class="built_in">add</span>(Extensions.Viewlets, <span class="keyword">new</span> ViewletRegistry());
+</code></pre><p>之后可以通过 <code>Registry.as(Extensions.Viewlets)</code> 获取 <code>ViewletRegistry</code> 注册不同的 <code>Viewlet</code>。</p>
+<h3 id="实现注册功能">实现注册功能</h3>
+<p>所有的注册信息储存在 <code>ViewletRegistry</code> 中，使用时通过 <code>getViewlet</code> 或者 <code>getViewlets</code> 方法获取。 <a href="https://github.com/Microsoft/vscode/blob/master/src/vs/workbench/browser/parts/activitybar/activitybarPart.ts" target="_blank" rel="external">activitybarPart</a> 实现了注册点的读取，并填充 <code>ActionBar</code>，显示出来。</p>
+<pre><code>private createViewletSwitcher(<span class="attribute">div</span>: Builder): <span class="reserved">void</span> {
+
+    <span class="regexp">//</span> Viewlet switcher <span class="keyword">is</span> <span class="literal">on</span> top
+    <span class="keyword">this</span>.viewletSwitcherBar = <span class="keyword">new</span> ActionBar(div, {
+        .......
+    });
+    <span class="keyword">this</span>.viewletSwitcherBar.getContainer().addClass(<span class="string">'position-top'</span>);
+
+    <span class="regexp">//</span> Build Viewlet Actions <span class="keyword">in</span> correct order
+    <span class="reserved">let</span> activeViewlet = <span class="keyword">this</span>.viewletService.getActiveViewlet();
+    <span class="reserved">let</span> registry = (&lt;ViewletRegistry&gt;Registry.as(ViewletExtensions.Viewlets));
+    <span class="reserved">let</span> <span class="attribute">viewletActions</span>: Action[] = registry.getViewlets()     <span class="regexp">//</span> 获取注册的viewlets
+        .sort<span class="function"><span class="params">((v1: ViewletDescriptor, v2: ViewletDescriptor) =&gt; v1.order - v2.order)</span>
+        .<span class="title">map</span><span class="params">((viewlet: ViewletDescriptor) =&gt; {
+            <span class="reserved">let</span> action = <span class="keyword">this</span>.instantiationService.createInstance(ViewletActivityAction, viewlet.id + <span class="string">'.activity-bar-action'</span>, viewlet);
+            ......
+            <span class="keyword">return</span> action;
+        })</span>;
+
+    // <span class="title">Add</span> <span class="title">to</span> <span class="title">viewlet</span> <span class="title">switcher</span>
+    <span class="title">this</span>.<span class="title">viewletSwitcherBar</span>.<span class="title">push</span><span class="params">(viewletActions, { label: <span class="literal">true</span>, icon: <span class="literal">true</span> })</span>;
+}</span>
+</code></pre><p>类似的这种扩展点还有很多，如:</p>
+<ul>
+<li>IWorkbenchActionRegistry 注册一个action和快捷键，并出现在命令面板中。</li>
+<li>IEditorRegistry 注册一种编辑器。</li>
+<li>IConfigurationRegistry 注册设置项。</li>
+<li>IActionBarRegistry 注册右键菜单。</li>
+</ul>
+<p>这种通过注册扩展点的架构方式，使得vscode整体变得很容易扩展。</p>
+<h2 id="VSCode_PK_Atom">VSCode PK Atom</h2>
+<p>vscode整体架构给人一种很清晰明了的感觉。多进程从主进程到浏览器，从浏览器到插件系统，服务驱动，可扩展的结构。</p>
+<p>另外无论是UI组件还是工具和加载器都是自身实现的，没有借助第三方模块，使得耦合性和性能都得到了很好的保障。这也是vscode速度比Atom快的原因。</p>
+<p>尽管扩展vscode自身是很容易的，但是目前vscode开放的插件接口还是极其有限。由于为了保证渲染进程的安全和速度，插件是一个单独的Node进程，插件进程无法创建UI，这一点使得vscode的插件开放没有Atom灵活，很多需要借助UI的插件功能也无法实现。</p>
+<h2 id="结语">结语</h2>
+<p>微软大法好</p>
+
+    
+  </div>
+  <footer>
+    
+      
+  
+  <div class="categories">
+    <a href="/categories/nodejs/">nodejs</a>
+  </div>
+
+      
+  
+  <div class="tags">
+    <a href="/tags/vscode/">vscode</a>, <a href="/tags/nodejs/">nodejs</a>
+  </div>
+
+    
+    <div class="clearfix"></div>
+  </footer>
+</article>
+
+
+<section id="comment">
+  <!-- 多说评论框 start -->
+  <div class="ds-thread" data-thread-key="1460824623000" data-title="vscode源码剖析" data-url="http://xzper.com/2016/04/17/vscode源码剖析/"></div>
+  <!-- 多说评论框 end -->
+</section>
+</div>
+  </div>
+  <div class="widget-wrapper">
+    <aside id="sidebar">
+  
+  
+    
+      
+      
+
+<div class="widget tag first">
+  <h3 class="title">分类</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/ActionScript3/">ActionScript3</a><small>4</small></li>
+  
+    <li><a href="/categories/Egret/">Egret</a><small>1</small></li>
+  
+    <li><a href="/categories/nodejs/">nodejs</a><small>5</small></li>
+  
+    <li><a href="/categories/感悟/">感悟</a><small>1</small></li>
+  
+    <li><a href="/categories/未分类/">未分类</a><small>3</small></li>
+  
+    <li><a href="/categories/框架/">框架</a><small>2</small></li>
+  
+    <li><a href="/categories/解读/">解读</a><small>2</small></li>
+  
+  </ul>
+</div>
+
+    
+      
+      
+
+<div class="widget tag">
+  <h3 class="title">标签</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/ActionScript3/">ActionScript3</a><small>2</small></li>
+  
+    <li><a href="/tags/Egret/">Egret</a><small>1</small></li>
+  
+    <li><a href="/tags/FlexLite/">FlexLite</a><small>2</small></li>
+  
+    <li><a href="/tags/Hexo/">Hexo</a><small>1</small></li>
+  
+    <li><a href="/tags/gulp/">gulp</a><small>1</small></li>
+  
+    <li><a href="/tags/nodejs/">nodejs</a><small>5</small></li>
+  
+    <li><a href="/tags/puremvc/">puremvc</a><small>1</small></li>
+  
+    <li><a href="/tags/vscode/">vscode</a><small>4</small></li>
+  
+    <li><a href="/tags/架构/">架构</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+    
+      
+      
+
+<div class="widget tagcloud">
+  <h3 class="title">标签云</h3>
+  <div class="entry">
+    <a href="/tags/ActionScript3/" style="font-size: 13.33px;">ActionScript3</a><a href="/tags/Egret/" style="font-size: 10.00px;">Egret</a><a href="/tags/FlexLite/" style="font-size: 13.33px;">FlexLite</a><a href="/tags/Hexo/" style="font-size: 10.00px;">Hexo</a><a href="/tags/gulp/" style="font-size: 10.00px;">gulp</a><a href="/tags/nodejs/" style="font-size: 20.00px;">nodejs</a><a href="/tags/puremvc/" style="font-size: 10.00px;">puremvc</a><a href="/tags/vscode/" style="font-size: 16.67px;">vscode</a><a href="/tags/架构/" style="font-size: 10.00px;">架构</a>
+  </div>
+</div>
+
+    
+      
+      
+
+<div class="widget recent-posts first newline">
+  <h3 class="title">最近的文章</h3>
+  <ul class="entry">
+    
+      <li>
+        <a href="/2016/04/17/vscode源码剖析/">vscode源码剖析</a>
+      </li>
+    
+      <li>
+        <a href="/2016/04/09/gulp流式操作/">gulp流式操作</a>
+      </li>
+    
+      <li>
+        <a href="/2015/11/29/调试vscode/">调试vscode</a>
+      </li>
+    
+      <li>
+        <a href="/2015/11/29/编译vscode/">编译vscode</a>
+      </li>
+    
+      <li>
+        <a href="/2015/11/29/搭建vscode调试环境/">vscode编译和调试nodejs/typescript项目</a>
+      </li>
+    
+  </ul>
+</div>
+
+    
+      
+      
+
+<div class="widget blogroll">
+  <h3 class="title">友情链接</h3>
+  <ul class="entry">
+  
+    
+    <li><a href="http://www.idom.me" target="_blank">domlib</a></li>
+  
+  </ul>
+</div>
+
+    
+  
+</aside>
+<div class="clearfix"></div>
+  </div>
+  <footer id="footer"><div class="copyright">
+  
+  &copy; 2016 <a href="/">xzper</a>
+  
+</div>
+<div class="theme-copyright">
+  Theme by <a href="https://github.com/orderedlist" target="_blank">orderedlist</a>
+   | 
+  Redesign by <a href="http://heroicyang.com/" target="_blank">Heroic Yang</a>
+</div>
+<div class="clearfix"></div></footer>
+  <script src="/js/scale.fix.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+  var duoshuoQuery = { short_name: 'xzper' };
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';
+    ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+  (function($){
+    $('.fancybox').fancybox();
+  })(jQuery);
+</script>
+
+</body>
+</html>

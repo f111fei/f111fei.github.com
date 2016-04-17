@@ -55,6 +55,40 @@
   <header>
     
       <div class="icon"></div>
+      <time datetime="2016-04-16T16:37:03.000Z"><a href="/2016/04/17/vscode源码剖析/">4月 17 2016</a></time>
+    
+    
+  
+    <h1 class="title"><a href="/2016/04/17/vscode源码剖析/">vscode源码剖析</a></h1>
+  
+
+  </header>
+  
+  <div class="entry">
+    
+      <p>vscode作为微软推出的现代编辑器已经在GitHub上<a href="https://github.com/Microsoft/vscode" target="_blank" rel="external">开源</a>了。用过vscode的人都纷纷表示速度极快，秒杀同为使用<a href="https://github.com/electron/electron" target="_blank" rel="external">Electron</a>架构的<a href="https://github.com/atom/atom" target="_blank" rel="external">Atom</a>。这次我们从源码级别来剖析为何vscode快速，高效。</p>
+
+    
+  </div>
+  <footer class="end-sep">
+    
+      
+        <div class="alignleft">
+          <a href="/2016/04/17/vscode源码剖析/#more" class="more-link">阅读全文</a>
+        </div>
+      
+      
+    
+    <div class="clearfix"></div>
+  </footer>
+</article>
+
+
+
+  <article class="post">
+  <header>
+    
+      <div class="icon"></div>
       <time datetime="2016-04-09T09:26:41.000Z"><a href="/2016/04/09/gulp流式操作/">4月 9 2016</a></time>
     
     
@@ -373,49 +407,6 @@
 
 
 
-  <article class="post">
-  <header>
-    
-      <div class="icon"></div>
-      <time datetime="2014-09-04T13:58:03.000Z"><a href="/2014/09/04/快捷键管理/">9月 4 2014</a></time>
-    
-    
-  
-    <h1 class="title"><a href="/2014/09/04/快捷键管理/">分享一个小巧的快捷键管理工具类</a></h1>
-  
-
-  </header>
-  
-  <div class="entry">
-    
-      <p>最近要完成软件中的快捷键模块。基本需求就是能做到让用户自由设置。基本之前的所有按键都是写死在代码中的，就像下面这样糟糕：</p>
-<pre><code><span class="keyword">this</span>.addEventListener(KeyboardEvent.KEY_DOWN,onKeyDown);
-
-<span class="keyword">private</span> <span class="function"><span class="keyword">function</span> <span class="title">onKeyDown</span><span class="params">(event:KeyboardEvent)</span><span class="type">:void</span>
-</span>{
-    <span class="keyword">if</span>(event.keyCode==Keyboard.S&amp;&amp;event.ctrlKey)
-    {
-        ...dosomething
-    }
-}
-</code></pre>
-    
-  </div>
-  <footer class="end-sep">
-    
-      
-        <div class="alignleft">
-          <a href="/2014/09/04/快捷键管理/#more" class="more-link">阅读全文</a>
-        </div>
-      
-      
-    
-    <div class="clearfix"></div>
-  </footer>
-</article>
-
-
-
 
 <nav id="pagination">
   
@@ -441,7 +432,7 @@
   
     <li><a href="/categories/Egret/">Egret</a><small>1</small></li>
   
-    <li><a href="/categories/nodejs/">nodejs</a><small>4</small></li>
+    <li><a href="/categories/nodejs/">nodejs</a><small>5</small></li>
   
     <li><a href="/categories/感悟/">感悟</a><small>1</small></li>
   
@@ -472,11 +463,11 @@
   
     <li><a href="/tags/gulp/">gulp</a><small>1</small></li>
   
-    <li><a href="/tags/nodejs/">nodejs</a><small>4</small></li>
+    <li><a href="/tags/nodejs/">nodejs</a><small>5</small></li>
   
     <li><a href="/tags/puremvc/">puremvc</a><small>1</small></li>
   
-    <li><a href="/tags/vscode/">vscode</a><small>3</small></li>
+    <li><a href="/tags/vscode/">vscode</a><small>4</small></li>
   
     <li><a href="/tags/架构/">架构</a><small>1</small></li>
   
@@ -503,6 +494,10 @@
   <ul class="entry">
     
       <li>
+        <a href="/2016/04/17/vscode源码剖析/">vscode源码剖析</a>
+      </li>
+    
+      <li>
         <a href="/2016/04/09/gulp流式操作/">gulp流式操作</a>
       </li>
     
@@ -516,10 +511,6 @@
     
       <li>
         <a href="/2015/11/29/搭建vscode调试环境/">vscode编译和调试nodejs/typescript项目</a>
-      </li>
-    
-      <li>
-        <a href="/2015/07/11/TP-MR12U刷openwrt-不死boot/">TP-MR12U路由器刷openwrt和不死boot</a>
       </li>
     
   </ul>
