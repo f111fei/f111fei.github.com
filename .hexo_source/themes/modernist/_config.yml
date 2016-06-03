@@ -13,7 +13,10 @@ widgets:
   - blogroll
 
 blogrolls:
-  - domlib: http://www.idom.me
+  - idom: http://www.idom.me
+  - featherj: http://featherj.org
+  - A闪: http://ashan.org
+  - xsstomy: http://xsstomy.com
 
 fancybox: true
 
