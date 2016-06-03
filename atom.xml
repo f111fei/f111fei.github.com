@@ -4,7 +4,7 @@
   <subtitle><![CDATA[前行在被夕阳染红的街道]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://xzper.com/"/>
-  <updated>2016-06-03T03:27:19.953Z</updated>
+  <updated>2016-06-03T03:32:55.903Z</updated>
   <id>http://xzper.com/</id>
   
   <author>
@@ -1458,7 +1458,7 @@ override <span class="keyword">protected</span> <span class="function"><span cla
     <link href="http://xzper.com/2015/01/24/%E7%AA%81%E7%A0%B4AIR%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%9D%83%E9%99%90%E9%99%90%E5%88%B6/"/>
     <id>http://xzper.com/2015/01/24/突破AIR程序的权限限制/</id>
     <published>2015-01-24T05:27:45.000Z</published>
-    <updated>2015-06-05T07:24:43.398Z</updated>
+    <updated>2016-06-03T03:32:35.758Z</updated>
     <content type="html"><![CDATA[<p>AIR中有些API在没有权限的情况下是不生效的，甚至不报错也没没有任何提示。例如文件系统中对敏感目录的文件操作，File.applicationDirectory这个API的文档是这样说的</p>
 <blockquote>
 <p>出于安全原因，不推荐修改应用程序目录中的内容，有些平台上的操作系统会阻止此操作。<br>如果要存储特定于应用程序的数据，请考虑使用应用程序存储目录 (File.applicationStorageDirectory)。</p>
@@ -1510,7 +1510,7 @@ override <span class="keyword">protected</span> <span class="function"><span cla
 }
 </code></pre><p>如果觉得这种传参调用不好用，可以改一下。在目标程序启动后，可以实现A程序与B程序的进程通讯。A向B程序相互发消息就更加灵活了。我们的方案是把B程序也做成一个AIR应用，这样就可以使用LocalConnection实现两个AIR程序的通讯了。</p>
 <p>elevate的下载地址,有兴趣的可以hack下:</p>
-<p>Windows：<a href="http://xzper.qiniudn.com/2015/01/elevate.exe" target="_blank" rel="external">elevate.exe</a></p>
+<p>Windows：<a href="http://xzper.qiniudn.com/2015/01/elevate.zip" target="_blank" rel="external">elevate.exe</a></p>
 <p>Mac：<a href="http://xzper.qiniudn.com/2015/01/elevate.scpt" target="_blank" rel="external">elevate.scpt</a></p>
 ]]></content>
     <summary type="html">
