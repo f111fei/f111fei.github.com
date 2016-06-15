@@ -26,11 +26,15 @@ EgretWing3是Egret团队基于VSCode开发的最新编辑器，相比于EgretWin
 - **状态栏(Status Bar)** 最下方，显示当前打开项目和文件的一些信息
 
 
-**菜单栏**可以通过切换菜单栏命令来设置是否显示
+**菜单栏**可以通过**切换菜单栏**命令来设置是否显示
 
 ![](http://xzper.qiniudn.com/2016/06/wing3/3.png)
 
-**左侧栏，右侧栏，面板**这几个部分可以通过鼠标操作来打开和关闭，如下图
+**左侧栏，右侧栏，面板**可以通过视图菜单中的相关命令来切换是否显示
+
+![](http://xzper.qiniudn.com/2016/06/wing3/28.png)
+
+还可以通过鼠标操作来打开和关闭，如下图
 
 ![](http://xzper.qiniudn.com/2016/06/wing3/2.gif)
 
@@ -38,6 +42,10 @@ EgretWing3是Egret团队基于VSCode开发的最新编辑器，相比于EgretWin
 ## 工作空间 ##
 
 EgretWing可以通过打开一个文件或者文件夹进行代码编写。EgretWing也可以同时打开多个窗口，每个窗口对应一个文件或者文件。当一个窗口打开的是一个文件夹时，这个文件夹被称为当前工作空间。
+
+可以使用菜单栏中的 **文件---新建窗口** 命令(`Ctrl+Shift+N`)打开一个新窗口。
+新建项目(`Alt+Shift+P`)在项目创建成功后也会自动打开新窗口。
+
 
 一般来说，每个工作空间就对应一个项目。在工作空间目录下有一个特殊的文件夹 `.wing`。这个文件夹存放当前工作空间的一些设置和配置文件。常见的几个配置文件如 `task.json` , `launch.json` , `settings.json`，这几个文件的作用下面会具体说明。
 
@@ -359,7 +367,7 @@ EgretWing支持多种语言的自动补全功能，如: JavaScript, JSON, HTML, 
 
 ## 多选 ##
 
-EgretWing支持多个光标可以快速编辑相似的文本。 可以使用 `Alt+Click` 快捷键添加多个光标，每一个光标都是独立的。 也可以使用 `Ctrl+Alt+Down` 或者 `Ctrl+Alt+Up` 在下面或者上面插入光标。
+EgretWing支持多个光标，可以快速编辑相似的文本。 可以使用 `Alt+Click` 快捷键添加多个光标，每一个光标都是独立的。 也可以使用 `Ctrl+Alt+Down` 或者 `Ctrl+Alt+Up` 在下面或者上面插入光标。
 
 ![](http://xzper.qiniudn.com/2016/06/wing3/28.gif)
 
@@ -372,7 +380,7 @@ EgretWing支持多个光标可以快速编辑相似的文本。 可以使用 `Al
 
 ## 代码折叠 ##
 
-你可以使用在行号和行开始出的折叠图标来折叠代码。
+你可以使用在行号右边的折叠图标来折叠代码。
 
 ![](http://xzper.qiniudn.com/2016/06/wing3/30.gif)
 
@@ -391,13 +399,3 @@ EgretWing支持多个光标可以快速编辑相似的文本。 可以使用 `Al
 - 切换到上一个编辑位置 (`Alt+Left`)
 - 格式化代码 (`Shift+Alt+F`)，EgretWing2.5下为`Ctrl+I`
 - 删除当前行 (`Ctrl+Shift+k`)，EgretWing2.5下为`Ctrl+D`
-
-
-
-
-
-
-
-
-
-
