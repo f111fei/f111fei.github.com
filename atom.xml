@@ -4,7 +4,7 @@
   <subtitle><![CDATA[前行在被夕阳染红的街道]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://xzper.com/"/>
-  <updated>2016-06-14T12:25:27.858Z</updated>
+  <updated>2016-07-18T07:23:57.510Z</updated>
   <id>http://xzper.com/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://xzper.com/2016/06/14/wing3/"/>
     <id>http://xzper.com/2016/06/14/wing3/</id>
     <published>2016-06-14T12:03:12.000Z</published>
-    <updated>2016-06-14T12:25:20.307Z</updated>
+    <updated>2016-06-15T02:00:35.157Z</updated>
     <content type="html"><![CDATA[<p>EgretWing3是Egret团队基于VSCode开发的最新编辑器，相比于EgretWing2.5最显著的优势就是快。</p>
 <p>然而对于习惯使用EgretWing2.5的用户，初次使用EgretWing3可能会觉得难以上手。EgretWing2.5主要是参考eclipse，FlashBuilder等传统IDE设计的，对于习惯使用eclipse系列工具的开发者EgretWing2.5的上手是非常容易的，而EgretWing3的操作方式对于习惯于传统IDE的用户来说，并不是那么友好。本文主要介绍EgretWing3的一些基本用法。</p>
 <a id="more"></a>
@@ -35,12 +35,15 @@
 <li><strong>右侧栏(Utility Bar)</strong> 位于编辑器右侧，由多个子视图组成，子视图目前可以通过插件API扩展</li>
 <li><strong>状态栏(Status Bar)</strong> 最下方，显示当前打开项目和文件的一些信息</li>
 </ul>
-<p><strong>菜单栏</strong>可以通过切换菜单栏命令来设置是否显示</p>
+<p><strong>菜单栏</strong>可以通过<strong>切换菜单栏</strong>命令来设置是否显示</p>
 <p><img src="http://xzper.qiniudn.com/2016/06/wing3/3.png" alt=""></p>
-<p><strong>左侧栏，右侧栏，面板</strong>这几个部分可以通过鼠标操作来打开和关闭，如下图</p>
+<p><strong>左侧栏，右侧栏，面板</strong>可以通过视图菜单中的相关命令来切换是否显示</p>
+<p><img src="http://xzper.qiniudn.com/2016/06/wing3/28.png" alt=""></p>
+<p>还可以通过鼠标操作来打开和关闭，如下图</p>
 <p><img src="http://xzper.qiniudn.com/2016/06/wing3/2.gif" alt=""></p>
 <h2 id="工作空间">工作空间</h2>
 <p>EgretWing可以通过打开一个文件或者文件夹进行代码编写。EgretWing也可以同时打开多个窗口，每个窗口对应一个文件或者文件。当一个窗口打开的是一个文件夹时，这个文件夹被称为当前工作空间。</p>
+<p>可以使用菜单栏中的 <strong>文件—-新建窗口</strong> 命令(<code>Ctrl+Shift+N</code>)打开一个新窗口。<br>新建项目(<code>Alt+Shift+P</code>)在项目创建成功后也会自动打开新窗口。</p>
 <p>一般来说，每个工作空间就对应一个项目。在工作空间目录下有一个特殊的文件夹 <code>.wing</code>。这个文件夹存放当前工作空间的一些设置和配置文件。常见的几个配置文件如 <code>task.json</code> , <code>launch.json</code> , <code>settings.json</code>，这几个文件的作用下面会具体说明。</p>
 <blockquote>
 <p>EgretWing和WebStorm都是基于文件夹来表示工作空间，这个工作空间就是文件系统中的一个目录。而Eclipse的工作空间则是由多个项目构成，每个项目对应一个目录，而工作空间是这些目录的集合。几乎所有的IDE都会有一个特殊的文件夹存放工作空间的配置。如 WebStorm的 <code>.idea</code> 文件夹， Eclipse的 <code>.metadata</code> 文件夹。EgretWing中的 <code>.wing</code> 文件夹也是类似，只不过里面的文件一般都是json文件，有时候我们也会手动修改这些配置设置工作空间的行为。</p>
@@ -261,13 +264,13 @@
 <p>也可以在错误面板中查看出现的错误</p>
 <p><img src="http://xzper.qiniudn.com/2016/06/wing3/27.png" alt=""></p>
 <h2 id="多选">多选</h2>
-<p>EgretWing支持多个光标可以快速编辑相似的文本。 可以使用 <code>Alt+Click</code> 快捷键添加多个光标，每一个光标都是独立的。 也可以使用 <code>Ctrl+Alt+Down</code> 或者 <code>Ctrl+Alt+Up</code> 在下面或者上面插入光标。</p>
+<p>EgretWing支持多个光标，可以快速编辑相似的文本。 可以使用 <code>Alt+Click</code> 快捷键添加多个光标，每一个光标都是独立的。 也可以使用 <code>Ctrl+Alt+Down</code> 或者 <code>Ctrl+Alt+Up</code> 在下面或者上面插入光标。</p>
 <p><img src="http://xzper.qiniudn.com/2016/06/wing3/28.gif" alt=""></p>
 <h2 id="跨行选择">跨行选择</h2>
 <p>按住 <code>Shift+Alt</code> 移动光标可以选择多行文本。</p>
 <p><img src="http://xzper.qiniudn.com/2016/06/wing3/29.gif" alt=""></p>
 <h2 id="代码折叠">代码折叠</h2>
-<p>你可以使用在行号和行开始出的折叠图标来折叠代码。</p>
+<p>你可以使用在行号右边的折叠图标来折叠代码。</p>
 <p><img src="http://xzper.qiniudn.com/2016/06/wing3/30.gif" alt=""></p>
 <p>也可以使用快捷键折叠和展开代码：</p>
 <ul>
