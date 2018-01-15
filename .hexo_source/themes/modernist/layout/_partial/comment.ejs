@@ -4,6 +4,9 @@
 <script src="<%- config.root %>gitment/gitment.browser.js"></script>
 <script>
 var gitment = new Gitment({
+  id: "<%= item.title %>",
+  title: "<%= item.title %>",
+  link: decodeURI(document.location.href),
   owner: 'f111fei',
   repo: 'f111fei.github.com',
   oauth: {
