@@ -28,7 +28,7 @@ tags: Egret
 
 接下来我们需要生成一个资源描述文件resource.json，在游戏开始之前读取这个json来加载对应的文件。egret的资源加载机制可以参考 [这里](https://github.com/egret-labs/egret-core/wiki/Using%20Resource%20System) 现在已经有 [工具](http://bbs.egret-labs.org/thread-48-1-1.html) 能自动生成这个resource.json了。按照下图配置。**注意：虽然我们的资源有图片，但是对应的json文件已经记录了图片的位置，所以在这个工具中我们不需要添加对应的图片只添加json文件就行了。**
 
-<center>![](http://xzper.qiniudn.com/2014/06/ResTool.png)</center>
+<center>![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2014/06/ResTool.png)</center>
 
 在项目初始化时，使用RES加载资源，简单明了。
 
@@ -176,7 +176,7 @@ command属于控制器。负责收发消息和处理简单的事务。在Startup
 
 先来看看菜单长什么样子
 
-![](http://xzper.qiniudn.com/2014/06/菜单.jpg)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2014/06/菜单.jpg)
 
 我们会发现这个菜单。有些是静态文本，是一直不变的，我偷懒直接用了一张图片代替了，图片可以用egret.gui.UIAsset。
 
@@ -286,7 +286,7 @@ command属于控制器。负责收发消息和处理简单的事务。在Startup
 
 **②制作游戏区域--------了解九宫格和容器布局**
 
-![](http://xzper.qiniudn.com/2014/06/游戏演示.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2014/06/游戏演示.png)
 
 再次来观察这个游戏的主界面。有一张纯色的背景图，还有4x4个空白的格子，随着游戏的进行会多出带数字的格子，游戏结束了还会出现胜利的界面。
 

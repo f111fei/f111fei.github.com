@@ -65,10 +65,10 @@
   
   <div class="entry">
     
-      <p>最近2048比较火，然后我又正好在学习pureMVC，之前对于pureMVC的了解只停留在理论上，正好拿这个游戏来练练手。废话不多说，游戏预览：<a href="http://xzper.qiniudn.com/2014/04/2048flexlite/Main.html" target="_blank" rel="external">2048</a></p>
+      <p>最近2048比较火，然后我又正好在学习pureMVC，之前对于pureMVC的了解只停留在理论上，正好拿这个游戏来练练手。废话不多说，游戏预览：<a href="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2014/04/2048flexlite/Main.html" target="_blank" rel="external">2048</a></p>
 <a id="more"></a>
 <p><strong>1.MVC的基本运行原理</strong></p>
-<p><img src="http://xzper.qiniudn.com/2014/04/mvc结构图.png" alt="mvc结构图"></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2014/04/mvc结构图.png" alt="mvc结构图"></p>
 <p><span style="font-family: 微软雅黑;"><span>图：</span></span><span><span style="font-family: Calibri;">MVC</span><span style="font-family: 微软雅黑;">结构图（实线——&gt;表示依赖；虚线</span><span style="font-family: Calibri;">——&gt;</span><span style="font-family: 微软雅黑;">表示事件</span><span style="font-family: Calibri;">/</span></span><span style="font-family: 微软雅黑;"><span>通知等</span><span>）</span></span></p>
 <ul>
 <li><p><strong>模型（Model）</strong> 用于封装与应用程序的业务逻辑相关的数据以及对数据的处理方法。“模型”有对数据直接访问的权力，例如对数据库的访问。“模型”不依赖“视图”和“控制器”，也就是说，模型不关心它会被如何显示或是如何被操作。但是模型中数据的变化一般会通过一种刷新机制被公布。为了实现这种机制，那些用于监视此模型的视图必须事先在此模型上注册，从而，视图可以了解在数据模型上发生的改变。（比较：<a href="http://zh.wikipedia.org/wiki/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F" title="观察者模式" target="_blank" rel="external">观察者模式</a>（<a href="http://zh.wikipedia.org/wiki/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F" title="软件设计模式" target="_blank" rel="external">软件设计模式</a>））</p>
@@ -86,7 +86,7 @@
 </ul>
 <p><strong>3.从实例学习pureMVC</strong></p>
 <p>先来看下工程目录结构</p>
-<p><img src="http://xzper.qiniudn.com/2014/04/2048工程结构.png" alt="2048工程结构"></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2014/04/2048工程结构.png" alt="2048工程结构"></p>
 <p><strong>1.xxxPrepCommand</strong> 框架初始化时，注册对应必须的Command和Proxy。（另外说下由于FlexLite的组件需要在CreateComplete才能获取皮肤实例，所以Mediator的注册都是在viewComponent中完成的）</p>
 <p><strong>2.GameCommand</strong> 处理各类事务。比如 玩家按下了方向键，收到消息调用GridProxy的移动方法改变数据，比如GridProxy移动格子分数改变了，通知GameCommand 调用GameProxy的更新分数方法改变分数，比如处理重置游戏的事务，通知各个数据模块重置数据</p>
 <p><strong>3.GameProxy</strong> 处理游戏数据，比如更新分数，处理游戏结果</p>
@@ -96,8 +96,8 @@
 <p><strong>7.**</strong>MainMenuMediator** 接收更新分数的消息，调用MainGameUI的方法更新分数与重置</p>
 <p><strong>8.ResultWindowMediator</strong> 发送游戏重置的消息，以及自销毁。这是一个短生命的Mediator</p>
 <p>其实这个游戏本来一开始我是用Flex开发的，最后完成的时候发现swf太大加载太慢，于是换成了比较小巧的FlexLite。整个移植过程没有动Model和Controller的一行代码，Mediator改动的也很少。充分说明了MVC的代码重用和关注点分离。这也是我用pureMVC的初次尝试，可能理解还有很多不到位和错误的地方，在此抛砖引玉。最后附上源代码下载：</p>
-<p>FlexLite版：<a href="http://xzper.qiniudn.com/2014/04/2048flexlite.rar" target="_blank" rel="external">2048flexlite</a></p>
-<p>Flex版：<a href="http://xzper.qiniudn.com/2014/04/2048flex.rar" target="_blank" rel="external">2048flex</a></p>
+<p>FlexLite版：<a href="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2014/04/2048flexlite.rar" target="_blank" rel="external">2048flexlite</a></p>
+<p>Flex版：<a href="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2014/04/2048flex.rar" target="_blank" rel="external">2048flex</a></p>
 <p>参考文章：</p>
 <p>[1] <a href="http://www.cnblogs.com/skynet/archive/2012/12/29/2838303.html" target="_blank" rel="external">http://www.cnblogs.com/skynet/archive/2012/12/29/2838303.html</a></p>
 

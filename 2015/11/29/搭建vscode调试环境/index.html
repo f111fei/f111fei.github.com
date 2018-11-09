@@ -72,9 +72,9 @@
 <h3 id="构建项目">构建项目</h3>
 <p>vscode使用<strong>task.json</strong>来配置项目的构建过程。</p>
 <p>打开命令面板(Ctrl+Shift+P)选择Run Build Task(Ctrl+Shift+B)</p>
-<p><img src="http://xzper.qiniudn.com/2015/11/1.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/11/1.png" alt=""></p>
 <p>如果当前工作空间没有<strong>task.json</strong>配置文件此时会出现提示</p>
-<p><img src="http://xzper.qiniudn.com/2015/11/2.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/11/2.png" alt=""></p>
 <p>选择 Configure Task Runner 自动创建<strong>task.json</strong>。该配置文件在工作空间的.vscode目录下，这个目录也是存放vscode配置的文件夹。</p>
 <p>vscode默认的task配置文件中给出了执行tsc 和 gulp模板配置。简单介绍一下<strong>task.json</strong>的写法</p>
 <pre><code>{
@@ -101,7 +101,7 @@
 <h3 id="运行和调试项目">运行和调试项目</h3>
 <p>vscode默认支持nodejs，ts，js等项目的调试。使用<strong>launch.json</strong>p配置调试参数。</p>
 <p>调试启动调试的默认快捷键是F5， 如果没有<strong>launch.json</strong>则会弹窗提示选择调试环境，并自动创建<strong>launch.json</strong>。</p>
-<p><img src="http://xzper.qiniudn.com/2015/11/3.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/11/3.png" alt=""></p>
 <p>以调试node项目为例，简单说明下<strong>launch.json</strong>的写法</p>
 <pre><code>{
     <span class="string">"version"</span>: <span class="string">"0.2.0"</span>,
@@ -160,7 +160,7 @@
 </code></pre><p>端口号是随机的，vscode能打断点调试是因为他内部监听了这个端口，并与node通讯实现调试。</p>
 <p>attach就是监听的任务。例如<strong>其他程序</strong>启动了一个node应用并使用了—debug-brk参数开启了5858端口使程序暂停在了第一行。此时启动attach任务，就可以监听到这个端口，并在<strong>vscode里面</strong>调试这个node应用了。</p>
 <p>附上一张vscode调试面板的截图</p>
-<p><img src="http://xzper.qiniudn.com/2015/11/debugging_hero.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/11/debugging_hero.png" alt=""></p>
 <p>有关如何调试的教程</p>
 <p><a href="https://code.visualstudio.com/docs/editor/debugging" target="_blank" rel="external">https://code.visualstudio.com/docs/editor/debugging</a></p>
 

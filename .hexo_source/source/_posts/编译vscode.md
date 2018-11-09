@@ -9,7 +9,7 @@ tags: [vscode,nodejs]
 
 <!--more-->
 
-![](http://xzper.qiniudn.com/2015/11/4.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/11/4.png)
 
 看一下目录结构
 
@@ -43,7 +43,7 @@ tags: [vscode,nodejs]
 
 2. node-gyp安装失败
 
-![](http://xzper.qiniudn.com/2015/11/5.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/11/5.png)
 
 这个似乎是需要机器上有Visual Studio，这个东西的功能应该就是构建一些本机文件用的，安装失败没关系，我们可以从其他地方得到这些本机文件。
 
@@ -78,7 +78,7 @@ ps: 最近node-inspector老是安装不上也是因为这个的原因，有没�
 
 几分钟后编译完成，可能会有一个错误。
 
-![](http://xzper.qiniudn.com/2015/11/6.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/11/6.png)
 
 要解决这个问题直接使用
 

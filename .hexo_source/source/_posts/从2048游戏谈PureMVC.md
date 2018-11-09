@@ -4,13 +4,13 @@ date: 2014-04-27 02:03:56
 tags: puremvc
 ---
 
-最近2048比较火，然后我又正好在学习pureMVC，之前对于pureMVC的了解只停留在理论上，正好拿这个游戏来练练手。废话不多说，游戏预览：[2048](http://xzper.qiniudn.com/2014/04/2048flexlite/Main.html)
+最近2048比较火，然后我又正好在学习pureMVC，之前对于pureMVC的了解只停留在理论上，正好拿这个游戏来练练手。废话不多说，游戏预览：[2048](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2014/04/2048flexlite/Main.html)
 
 <!--more-->
 
 **1.MVC的基本运行原理**
 
-![mvc结构图](http://xzper.qiniudn.com/2014/04/mvc结构图.png)
+![mvc结构图](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2014/04/mvc结构图.png)
 
 <span style="font-family: 微软雅黑;"><span>图：</span></span><span><span style="font-family: Calibri;">MVC</span><span style="font-family: 微软雅黑;">结构图（实线——&gt;表示依赖；虚线</span><span style="font-family: Calibri;">----&gt;</span><span style="font-family: 微软雅黑;">表示事件</span><span style="font-family: Calibri;">/</span></span><span style="font-family: 微软雅黑;"><span>通知等</span><span>）</span></span>
 
@@ -30,7 +30,7 @@ tags: puremvc
 
 先来看下工程目录结构
 
-![2048工程结构](http://xzper.qiniudn.com/2014/04/2048工程结构.png)
+![2048工程结构](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2014/04/2048工程结构.png)
 
 **1.xxxPrepCommand** 框架初始化时，注册对应必须的Command和Proxy。（另外说下由于FlexLite的组件需要在CreateComplete才能获取皮肤实例，所以Mediator的注册都是在viewComponent中完成的）
 
@@ -50,9 +50,9 @@ tags: puremvc
 
 其实这个游戏本来一开始我是用Flex开发的，最后完成的时候发现swf太大加载太慢，于是换成了比较小巧的FlexLite。整个移植过程没有动Model和Controller的一行代码，Mediator改动的也很少。充分说明了MVC的代码重用和关注点分离。这也是我用pureMVC的初次尝试，可能理解还有很多不到位和错误的地方，在此抛砖引玉。最后附上源代码下载：
 
-FlexLite版：[2048flexlite](http://xzper.qiniudn.com/2014/04/2048flexlite.rar)
+FlexLite版：[2048flexlite](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2014/04/2048flexlite.rar)
 
-Flex版：[2048flex](http://xzper.qiniudn.com/2014/04/2048flex.rar)
+Flex版：[2048flex](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2014/04/2048flex.rar)
 
 参考文章：
 

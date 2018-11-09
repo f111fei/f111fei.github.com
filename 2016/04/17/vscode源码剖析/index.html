@@ -71,7 +71,7 @@
 <p><code>Electron</code> 是基于 <code>Node.js</code> 和 <code>Chromium</code> 的跨平台桌面应用开发框架。使用 <code>JavaScipt</code>，<code>HTML</code>，<code>CSS</code> 真正将 <code>Node.js</code> 带到了前端。<code>Electron</code> 通过 <code>BrowserWindow</code> 可以创建一个本地窗口，并加载一个<code>HTML</code>文档，<code>BrowserWindow</code>中的内容就是一个浏览器窗口，不仅能创建<code>DOM</code>元素，同时能使用任意的Node模块，并且还可以通过<code>IPC</code>与主进程通讯。</p>
 <h2 id="多进程">多进程</h2>
 <p>每一个 <code>Electron</code> 应用都对应一个主进程(main process)， 主进程通过<code>BrowserWindow</code>创建的每个本地窗口对应一个渲染进程(renderer process)。</p>
-<p><img src="http://xzper.qiniudn.com/2016/04/1.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/04/1.png" alt=""></p>
 <h3 id="主进程">主进程</h3>
 <p>vscode的主进程主要负责创建窗口和菜单，生命周期管理，自动更新等与系统相关的功能。</p>
 <h3 id="渲染进程">渲染进程</h3>
@@ -394,7 +394,7 @@ function getWorkspace(environment: IMainEnvironment): IWorkspace {
 <li>panel 是状态栏上方的面板选项卡，目前主要有 <code>output</code>，<code>debug</code>，<code>errorlist</code> 等几个面板。</li>
 <li>quickopen 是悬浮在中上方的弹出界面，常用的命令面板(F1)就是一个<code>quickopen widget</code>。</li>
 </ul>
-<p><img src="http://xzper.qiniudn.com/2016/04/2.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/04/2.png" alt=""></p>
 <p>下面的代码展示了各个part的创建，并添加到显示列表。</p>
 <pre><code><span class="keyword">private</span> <span class="title">renderWorkbench</span>(): <span class="keyword">void</span> {
     ......

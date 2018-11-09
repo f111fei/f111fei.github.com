@@ -46,11 +46,11 @@ vscode里面主要有三种环境： Main， PluginHost， ExtensionHost
 
 主进程环境是最容易调试的，直接选择菜单栏 Help - Toggle Developer Tools
 
-![](http://xzper.qiniudn.com/2015/11/7.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/11/7.png)
 
 打开开发者工具，就可以直接使用chrome的调试功能查看和调试源代码了。
 
-![](http://xzper.qiniudn.com/2015/11/8.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/11/8.png)
 
 不过可能由于打开这个面板的时机比较晚，会错过一些启动类代码的执行。不过通过切换工作空间，来重新执行一般加载过程，在这之前打断点就行了。
 
@@ -85,7 +85,7 @@ ps: vscode-chrome-debug插件的GitHub地址
 
 最后在一开始打开的那个vscode里面切换到调试面板，选择 Attach to VSCode。
 
-![](http://xzper.qiniudn.com/2015/11/9.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/11/9.png)
 
 按下F5或者点击调试按钮，程序就会Attach9222端口，并停在第一行了。之后在其他地方设置断点就行了。支持直接在ts文件上打断点，因为默认的编译参数是开启了sourceMap选项的。
 
@@ -141,7 +141,7 @@ node里面`--debug-brk`参数表示在程序的第一行设置断点。那么想
 
 然后使用从git clone下来的vscode文件夹作为工作空间目录，打开另外一个vscode的调试面板，将配置切换成 Attach to Extension Host， 使用F5开启调试。会自动断点在插件进程入口的第一行
 
-![](http://xzper.qiniudn.com/2015/11/10.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/11/10.png)
 
 - code命令实际上是调用的发行版安装目录下bin/code.js。之前如果调试主进程使用code命令开启要调试的vscode，断点会停在code.js的第一行，这样就没法在主进程的代码里面断点了。这里可以使用code命令是因为不需要调试主进程。
 
@@ -151,7 +151,7 @@ node里面`--debug-brk`参数表示在程序的第一行设置断点。那么想
 
 但是由于是发行版的vscode，vscode本身的源代码被混淆压缩了，只能调试用户的插件代码，没法调试vscode自身的代码。就像下面这样，如果会提示Source is not available。
 
-![](http://xzper.qiniudn.com/2015/11/11.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/11/11.png)
 
 如果想要显示vscode的源码，可以使用上一篇提到的[创建符号链接的办法](http://xzper.com/2015/11/29/%E7%BC%96%E8%AF%91vscode/#mklink)，让vscode始终使用源代码运行。不知道有没有直接通过修改`launch.json`文件来指定源代码目录的方法。
 

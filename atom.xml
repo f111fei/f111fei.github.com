@@ -4,7 +4,7 @@
   <subtitle><![CDATA[前行在被夕阳染红的街道]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://xzper.com/"/>
-  <updated>2018-01-15T08:06:20.596Z</updated>
+  <updated>2018-11-09T03:43:40.995Z</updated>
   <id>http://xzper.com/</id>
   
   <author>
@@ -19,13 +19,13 @@
     <link href="http://xzper.com/2016/06/14/wing3/"/>
     <id>http://xzper.com/2016/06/14/wing3/</id>
     <published>2016-06-14T12:03:12.000Z</published>
-    <updated>2018-01-15T06:08:29.064Z</updated>
+    <updated>2018-11-09T03:41:48.480Z</updated>
     <content type="html"><![CDATA[<p>EgretWing3是Egret团队基于VSCode开发的最新编辑器，相比于EgretWing2.5最显著的优势就是快。</p>
 <p>然而对于习惯使用EgretWing2.5的用户，初次使用EgretWing3可能会觉得难以上手。EgretWing2.5主要是参考eclipse，FlashBuilder等传统IDE设计的，对于习惯使用eclipse系列工具的开发者EgretWing2.5的上手是非常容易的，而EgretWing3的操作方式对于习惯于传统IDE的用户来说，并不是那么友好。本文主要介绍EgretWing3的一些基本用法。</p>
 <a id="more"></a>
 <h1 id="基本概念">基本概念</h1>
 <h2 id="窗口布局">窗口布局</h2>
-<p><img src="http://xzper.qiniudn.com/2016/06/wing3/1.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/1.png" alt=""></p>
 <p>如上图，EgretWing窗口主要有下面几个部分组成：</p>
 <ul>
 <li><strong>菜单栏(Menu Bar)</strong> 可以通过菜单栏执行一些常用命令</li>
@@ -36,11 +36,11 @@
 <li><strong>状态栏(Status Bar)</strong> 最下方，显示当前打开项目和文件的一些信息</li>
 </ul>
 <p><strong>菜单栏</strong>可以通过<strong>切换菜单栏</strong>命令来设置是否显示</p>
-<p><img src="http://xzper.qiniudn.com/2016/06/wing3/3.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/3.png" alt=""></p>
 <p><strong>左侧栏，右侧栏，面板</strong>可以通过视图菜单中的相关命令来切换是否显示</p>
-<p><img src="http://xzper.qiniudn.com/2016/06/wing3/28.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/28.png" alt=""></p>
 <p>还可以通过鼠标操作来打开和关闭，如下图</p>
-<p><img src="http://xzper.qiniudn.com/2016/06/wing3/2.gif" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/2.gif" alt=""></p>
 <h2 id="工作空间">工作空间</h2>
 <p>EgretWing可以通过打开一个文件或者文件夹进行代码编写。EgretWing也可以同时打开多个窗口，每个窗口对应一个文件或者文件。当一个窗口打开的是一个文件夹时，这个文件夹被称为当前工作空间。</p>
 <p>可以使用菜单栏中的 <strong>文件—-新建窗口</strong> 命令(<code>Ctrl+Shift+N</code>)打开一个新窗口。<br>新建项目(<code>Alt+Shift+P</code>)在项目创建成功后也会自动打开新窗口。</p>
@@ -67,7 +67,7 @@
 <span class="comment">// 默认换行符</span>
 <span class="string">"files.eol"</span>: <span class="string">"\r\n"</span>
 </code></pre><p>可以通过菜单栏，<strong>文件—-首选项</strong>菜单打开<strong>用户设置</strong>或者<strong>工作空间设置</strong></p>
-<p><img src="http://xzper.qiniudn.com/2016/06/wing3/4.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/4.png" alt=""></p>
 <p>设置分为<strong>用户设置</strong>和<strong>工作空间设置</strong>。用户设置是全局的，在任何地方都可以生效，用户设置会覆盖默认设置。用户设置保存在用户缓存目录的 settings.json 中。<br>工作空间设置是针对某个文件夹的，只对当前工作空间有效，工作空间设置会覆盖用户设置。工作空间设置保存在当前工作空间下的 .wing/settings.json 中。<br>所以最终的优先级是 <strong>工作空间设置  &gt; 用户设置 &gt; 默认设置</strong>。</p>
 <p>通过修改 <code>settings.json</code> 文件改变当前的设置。例如我习惯的用户配置就是这样写的</p>
 <pre><code>{
@@ -107,10 +107,10 @@
     </span>}
 ]
 </code></pre><p>在EgretWing3中有很多命令的快捷键与EgretWing2.5的默认快捷键不一样，可以使用 插件菜单中的 <strong>IDE迁移向导 —- 导入其他IDE设置</strong>，选择EgretWing2.5自动修改 <code>keybindings.json</code> 文件导入EgretWing2.5的快捷键。</p>
-<p><img src="http://xzper.qiniudn.com/2016/06/wing3/9.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/9.png" alt=""></p>
 <h2 id="任务配置">任务配置</h2>
 <p>设置当前工作空间下 <code>.wing/tasks.json</code> 可以自定义任务。常见的任务如 构建，清理，发布。这些任务通过一般是执行命令行程序来实现的。<br>如果当前工作空间下的 <code>.wing</code> 文件夹没有 <code>tasks.json</code> 。可以通过命令面板中的 <strong>Tasks: Configure Task Runner</strong> 命令选择一个任务模板。</p>
-<p><img src="http://xzper.qiniudn.com/2016/06/wing3/5.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/5.png" alt=""></p>
 <p>对于一般的Egret项目，在创建项目的时候已经自动生成了与Egret命令行匹配的任务： <strong>构建(Ctrl+Shift+B)，清理，发布</strong>。<code>tasks.json</code> 如下：</p>
 <pre><code>{
     "<span class="attribute">version</span>": <span class="value"><span class="string">"0.1.0"</span></span>,
@@ -147,9 +147,9 @@
 </span>}
 </code></pre><h2 id="启动配置">启动配置</h2>
 <p>当需要运行或者调试当前项目时，需要设置启动配置。与任务配置类似，启动配置保存在当前工作空间下的 <code>.wing/launch.json</code> 中。<br>默认可以使用快捷键F5，<strong>启动或者调试</strong>当前项目。也可以切换左侧栏到调试选项卡在下拉框中选择一个启动配置，然后点击运行。</p>
-<p><img src="http://xzper.qiniudn.com/2016/06/wing3/7.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/7.png" alt=""></p>
 <p>如果当前工作空间下不存在 <code>launch.json</code> 使用F5会出现选择启动配置模板的选择框。</p>
-<p><img src="http://xzper.qiniudn.com/2016/06/wing3/6.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/6.png" alt=""></p>
 <p>对于一般的Egret项目，在创建项目的时候已经自动生成了与Egret项目匹配的启动配置： 包含使用内置播放器调试，使用Chrome调试，附加到Chrome进程等配置，轻松调试和启动Egret项目 。<code>tasks.json</code> 如下：</p>
 <pre><code>{
     <span class="string">"version"</span>: <span class="string">"0.2.0"</span>,
@@ -196,32 +196,32 @@
 <h1 id="常用面板">常用面板</h1>
 <h2 id="命令面板">命令面板</h2>
 <p>命令面板能方便的查找和执行命令，使用快捷键 <strong>F1</strong> 或者 <strong>Ctrl+Shift+P</strong> 呼出面板。</p>
-<p><img src="http://xzper.qiniudn.com/2016/06/wing3/8.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/8.png" alt=""></p>
 <p>面板每一项都是一个命令，如果该命令有快捷键在右侧会显示对应的快捷键。</p>
 <h2 id="文件操作">文件操作</h2>
 <p>左侧栏的文件选项卡中，包含了当前工作空间的文件列表树。使用右键菜单能显示可以执行的命令。</p>
-<p><img src="http://xzper.qiniudn.com/2016/06/wing3/10.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/10.png" alt=""></p>
 <h2 id="全局搜索">全局搜索</h2>
 <p>右侧栏的搜索选项卡中能对当前工作空间中的所有文件和内容进行搜索，并且支持正则表达式以及模式匹配和过滤等高级设置选项。</p>
-<p><img src="http://xzper.qiniudn.com/2016/06/wing3/11.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/11.png" alt=""></p>
 <h2 id="GIT">GIT</h2>
 <p>EgretWing内置Git管理工具， 在右侧栏的GIT选项卡中能直接提交，拉取，推送代码到Git仓库。</p>
-<p><img src="http://xzper.qiniudn.com/2016/06/wing3/12.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/12.png" alt=""></p>
 <p>在状态栏左侧也能显示远程仓库与本地仓库的同步状态。</p>
-<p><img src="http://xzper.qiniudn.com/2016/06/wing3/13.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/13.png" alt=""></p>
 <p>单击更改的文件列表，在编辑器能打开比较编辑器查看改变的具体细节。</p>
-<p><img src="http://xzper.qiniudn.com/2016/06/wing3/17.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/17.png" alt=""></p>
 <h2 id="调试和调试控制台">调试和调试控制台</h2>
 <p>如果配置了 <code>launch.json</code> 可以通过快捷键F5 或者 调试面板启动调试。在调试模式下，调试选项卡中的<strong>变量，监视，调用堆栈，断点</strong>折叠菜单都是可用的。</p>
-<p><img src="http://xzper.qiniudn.com/2016/06/wing3/14.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/14.png" alt=""></p>
 <p>面板中的调试面板中显示程序运行中的输出和报错信息，在下方的输入框中也能输入表达式并动态执行得到计算结果。这个面板与Chrome开发者工具中的Console面板功能类似。</p>
 <h2 id="输出">输出</h2>
 <p>输出面板显示一些提示消息，显示当前运行状态。输出面板有多个频道(<code>Channel</code>)区分不同输出的来源。</p>
 <p>例如Tasks频道会输出项目编译过程中相关的信息，GIT频道输出Git执行过程中的信息，Project频道输出项目创建相关的信息等。</p>
-<p><img src="http://xzper.qiniudn.com/2016/06/wing3/15.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/15.png" alt=""></p>
 <h2 id="终端">终端</h2>
 <p>EgretWing内置了一个终端命令行执行窗口，能方便的直接在EgretWing内部使用命令行。</p>
-<p><img src="http://xzper.qiniudn.com/2016/06/wing3/16.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/16.png" alt=""></p>
 <p>点击右侧的 <code>+</code> 图标能新建一个命令行窗口，右侧的列表显示当前所有打开的命令行窗口。</p>
 <h1 id="代码编辑">代码编辑</h1>
 <h2 id="多编辑器">多编辑器</h2>
@@ -232,46 +232,46 @@
 <li>在当前激活的编辑器中使用快捷键 <code>Ctrl+\</code> 将把当前编辑器一分为二</li>
 <li>在文件夹选项卡的右键菜单上选择 <strong>在新编辑器中打开</strong></li>
 </ul>
-<p><img src="http://xzper.qiniudn.com/2016/06/wing3/18.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/18.png" alt=""></p>
 <h2 id="智能提示">智能提示</h2>
 <p>EgretWing支持多种语言的自动补全功能，如: JavaScript, JSON, HTML, CSS, Less, Sass, C# and TypeScript。</p>
-<p><img src="http://xzper.qiniudn.com/2016/06/wing3/19.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/19.png" alt=""></p>
 <h2 id="参数提示">参数提示</h2>
 <p>在 JavaScript，TypeScript中，输入方法的参数时能看到当前输入参数的类型和注释说明。如果是重载方法，可以通过 <code>上箭头</code> 和 <code>下箭头</code> 快捷键选择需要参数。</p>
-<p><img src="http://xzper.qiniudn.com/2016/06/wing3/20.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/20.png" alt=""></p>
 <h2 id="悬浮提示">悬浮提示</h2>
 <p>当鼠标移动到文字上时，如果该字符是一个变量或者下面例子中的css选择器，将出现一个悬浮提示框。</p>
-<p><img src="http://xzper.qiniudn.com/2016/06/wing3/21.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/21.png" alt=""></p>
 <h2 id="跳转到定义">跳转到定义</h2>
 <p>如果语言支持,可以按下快捷键<code>F12</code>跳转到光标所在位置的变量或者方法的定义。</p>
 <p>也可以按下 <code>Ctrl</code> 键鼠标移动到变量或者方法上，将显示方法定义细节。</p>
-<p><img src="http://xzper.qiniudn.com/2016/06/wing3/22.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/22.png" alt=""></p>
 <blockquote>
 <p>你还可以使用 <code>Ctrl+Click</code> 调整到定义，或者使用 <code>Ctrl+Alt+Click</code> 在新编辑器中打开定义。如果打开了一个新编辑器窗口，你能够使用 <code>Ctrl+Alt+Left</code> 返回到之前的编辑器。</p>
 </blockquote>
 <h2 id="快速大纲">快速大纲</h2>
 <p>使用快捷键 <code>Ctrl+Shift+O</code> 能够打开快速大纲面板(在之前的EgretWing2.5版本中这个快捷键是<code>Ctrl+O</code>)显示当前文件中定义的所有类，方法和变量。</p>
-<p><img src="http://xzper.qiniudn.com/2016/06/wing3/23.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/23.png" alt=""></p>
 <h2 id="查找引用">查找引用</h2>
 <p>可以通过执行<strong>查找所有引用</strong>(快捷键<code>Shift+F12</code>)命令找到当前变量或者方法被引用的所有位置。</p>
-<p><img src="http://xzper.qiniudn.com/2016/06/wing3/24.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/24.png" alt=""></p>
 <h2 id="重命名变量">重命名变量</h2>
 <p>一些语言(如TypeScript)支持全局重命名变量。使用快捷键<code>F2</code>输入变量的新名称并按下<code>Enter</code>，项目中所有使用该变量的位置将被重命名。</p>
-<p><img src="http://xzper.qiniudn.com/2016/06/wing3/25.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/25.png" alt=""></p>
 <h2 id="错误和警告">错误和警告</h2>
 <p>当文件出现语法错误或者警告时，将提示错误，使用快捷键 <code>Ctrl+Shift+M</code> 查看所有的错误</p>
-<p><img src="http://xzper.qiniudn.com/2016/06/wing3/26.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/26.png" alt=""></p>
 <p>也可以在错误面板中查看出现的错误</p>
-<p><img src="http://xzper.qiniudn.com/2016/06/wing3/27.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/27.png" alt=""></p>
 <h2 id="多选">多选</h2>
 <p>EgretWing支持多个光标，可以快速编辑相似的文本。 可以使用 <code>Alt+Click</code> 快捷键添加多个光标，每一个光标都是独立的。 也可以使用 <code>Ctrl+Alt+Down</code> 或者 <code>Ctrl+Alt+Up</code> 在下面或者上面插入光标。</p>
-<p><img src="http://xzper.qiniudn.com/2016/06/wing3/28.gif" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/28.gif" alt=""></p>
 <h2 id="跨行选择">跨行选择</h2>
 <p>按住 <code>Shift+Alt</code> 移动光标可以选择多行文本。</p>
-<p><img src="http://xzper.qiniudn.com/2016/06/wing3/29.gif" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/29.gif" alt=""></p>
 <h2 id="代码折叠">代码折叠</h2>
 <p>你可以使用在行号右边的折叠图标来折叠代码。</p>
-<p><img src="http://xzper.qiniudn.com/2016/06/wing3/30.gif" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/30.gif" alt=""></p>
 <p>也可以使用快捷键折叠和展开代码：</p>
 <ul>
 <li>折叠 (<code>Ctrl+Shift+[</code>)</li>
@@ -308,14 +308,14 @@
     <link href="http://xzper.com/2016/04/17/vscode%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/"/>
     <id>http://xzper.com/2016/04/17/vscode源码剖析/</id>
     <published>2016-04-16T16:37:03.000Z</published>
-    <updated>2018-01-15T06:08:29.063Z</updated>
+    <updated>2018-11-09T03:41:48.441Z</updated>
     <content type="html"><![CDATA[<p>vscode作为微软推出的现代编辑器已经在GitHub上<a href="https://github.com/Microsoft/vscode" target="_blank" rel="external">开源</a>了。用过vscode的人都纷纷表示速度极快，秒杀同为使用<a href="https://github.com/electron/electron" target="_blank" rel="external">Electron</a>架构的<a href="https://github.com/atom/atom" target="_blank" rel="external">Atom</a>。这次我们从源码级别来剖析为何vscode快速，高效。</p>
 <a id="more"></a>
 <h2 id="Electron">Electron</h2>
 <p><code>Electron</code> 是基于 <code>Node.js</code> 和 <code>Chromium</code> 的跨平台桌面应用开发框架。使用 <code>JavaScipt</code>，<code>HTML</code>，<code>CSS</code> 真正将 <code>Node.js</code> 带到了前端。<code>Electron</code> 通过 <code>BrowserWindow</code> 可以创建一个本地窗口，并加载一个<code>HTML</code>文档，<code>BrowserWindow</code>中的内容就是一个浏览器窗口，不仅能创建<code>DOM</code>元素，同时能使用任意的Node模块，并且还可以通过<code>IPC</code>与主进程通讯。</p>
 <h2 id="多进程">多进程</h2>
 <p>每一个 <code>Electron</code> 应用都对应一个主进程(main process)， 主进程通过<code>BrowserWindow</code>创建的每个本地窗口对应一个渲染进程(renderer process)。</p>
-<p><img src="http://xzper.qiniudn.com/2016/04/1.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/04/1.png" alt=""></p>
 <h3 id="主进程">主进程</h3>
 <p>vscode的主进程主要负责创建窗口和菜单，生命周期管理，自动更新等与系统相关的功能。</p>
 <h3 id="渲染进程">渲染进程</h3>
@@ -638,7 +638,7 @@ function getWorkspace(environment: IMainEnvironment): IWorkspace {
 <li>panel 是状态栏上方的面板选项卡，目前主要有 <code>output</code>，<code>debug</code>，<code>errorlist</code> 等几个面板。</li>
 <li>quickopen 是悬浮在中上方的弹出界面，常用的命令面板(F1)就是一个<code>quickopen widget</code>。</li>
 </ul>
-<p><img src="http://xzper.qiniudn.com/2016/04/2.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/04/2.png" alt=""></p>
 <p>下面的代码展示了各个part的创建，并添加到显示列表。</p>
 <pre><code><span class="keyword">private</span> <span class="title">renderWorkbench</span>(): <span class="keyword">void</span> {
     ......
@@ -759,7 +759,7 @@ function getWorkspace(environment: IMainEnvironment): IWorkspace {
     <link href="http://xzper.com/2016/04/09/gulp%E6%B5%81%E5%BC%8F%E6%93%8D%E4%BD%9C/"/>
     <id>http://xzper.com/2016/04/09/gulp流式操作/</id>
     <published>2016-04-09T09:26:41.000Z</published>
-    <updated>2018-01-15T06:08:29.062Z</updated>
+    <updated>2018-01-15T06:08:29.063Z</updated>
     <content type="html"><![CDATA[<p>对于很多刚刚接触<a href="https://github.com/gulpjs/gulp" target="_blank" rel="external">gulp</a>的人来说，常常觉得gulp中的stream操作不可理解。本篇将介绍stream在gulp中的应用，探究gulp中的流式操作。</p>
 <p>一般来说gulp插件开发或者自定义任务都需要借助一些stream的包装模块。比较常用的有<a href="https://github.com/dominictarr/event-stream" target="_blank" rel="external">event-stream</a> 和 <a href="https://github.com/rvagg/through2" target="_blank" rel="external">through2</a>。</p>
 <a id="more"></a>
@@ -1127,7 +1127,7 @@ var output = ReadWriteStream2；
     <link href="http://xzper.com/2015/11/29/%E8%B0%83%E8%AF%95vscode/"/>
     <id>http://xzper.com/2015/11/29/调试vscode/</id>
     <published>2015-11-29T05:27:11.000Z</published>
-    <updated>2018-01-15T06:08:29.068Z</updated>
+    <updated>2018-11-09T03:41:48.501Z</updated>
     <content type="html"><![CDATA[<p>在调试vscode之前，有必要先了解一下vscode的运行过程。</p>
 <h4 id="vscode的启动过程">vscode的启动过程</h4>
 <p>electron是vscode的内核，vscode的启动类在package.json中定义</p>
@@ -1150,9 +1150,9 @@ this.pluginHostProcessHandle = <span class="keyword">cp</span>.fork(uri.parse(re
 <p>vscode里面主要有三种环境： Main， PluginHost， ExtensionHost</p>
 <h5 id="Main">Main</h5>
 <p>主进程环境是最容易调试的，直接选择菜单栏 Help - Toggle Developer Tools</p>
-<p><img src="http://xzper.qiniudn.com/2015/11/7.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/11/7.png" alt=""></p>
 <p>打开开发者工具，就可以直接使用chrome的调试功能查看和调试源代码了。</p>
-<p><img src="http://xzper.qiniudn.com/2015/11/8.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/11/8.png" alt=""></p>
 <p>不过可能由于打开这个面板的时机比较晚，会错过一些启动类代码的执行。不过通过切换工作空间，来重新执行一般加载过程，在这之前打断点就行了。</p>
 <p>还有一种用vscode/chrome调试vscode主进程的办法。打开vscode，使用从git clone下来的vscode文件夹作为工作空间目录。修改.vscode文件夹中默认的<code>launch.json</code>文件，最后改为</p>
 <pre><code>{
@@ -1177,7 +1177,7 @@ this.pluginHostProcessHandle = <span class="keyword">cp</span>.fork(uri.parse(re
 </li>
 </ul>
 <p>最后在一开始打开的那个vscode里面切换到调试面板，选择 Attach to VSCode。</p>
-<p><img src="http://xzper.qiniudn.com/2015/11/9.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/11/9.png" alt=""></p>
 <p>按下F5或者点击调试按钮，程序就会Attach9222端口，并停在第一行了。之后在其他地方设置断点就行了。支持直接在ts文件上打断点，因为默认的编译参数是开启了sourceMap选项的。</p>
 <h5 id="PluginHost">PluginHost</h5>
 <p>由于插件进程是从主进程启动的，想要直接调试有点困难。我翻遍了官方的教程也没有找到相关文档。后来被我从源代码里面找到了其中的秘密。</p>
@@ -1213,14 +1213,14 @@ this.pluginHostProcessHandle = <span class="keyword">cp</span>.fork(uri.parse(re
 <pre><code><span class="title">code</span> . --<span class="built_in">debug</span>BrkPluginHost
 </code></pre><p>打开一个要调试的vscode，这时vscode的的主进程启动，插件进程断点在了第一行，等待Attach连接到5870端口。</p>
 <p>然后使用从git clone下来的vscode文件夹作为工作空间目录，打开另外一个vscode的调试面板，将配置切换成 Attach to Extension Host， 使用F5开启调试。会自动断点在插件进程入口的第一行</p>
-<p><img src="http://xzper.qiniudn.com/2015/11/10.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/11/10.png" alt=""></p>
 <ul>
 <li>code命令实际上是调用的发行版安装目录下bin/code.js。之前如果调试主进程使用code命令开启要调试的vscode，断点会停在code.js的第一行，这样就没法在主进程的代码里面断点了。这里可以使用code命令是因为不需要调试主进程。</li>
 </ul>
 <h5 id="ExtensionHost">ExtensionHost</h5>
 <p>用户开发的Extension的调试。这个本来是最简单的，因为官方的插件项目示例，里面已经自动生成了配置，在开发插件时直接按F5启动extensionHost类型的调试设置就可以调试用户的插件了。</p>
 <p>但是由于是发行版的vscode，vscode本身的源代码被混淆压缩了，只能调试用户的插件代码，没法调试vscode自身的代码。就像下面这样，如果会提示Source is not available。</p>
-<p><img src="http://xzper.qiniudn.com/2015/11/11.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/11/11.png" alt=""></p>
 <p>如果想要显示vscode的源码，可以使用上一篇提到的<a href="http://xzper.com/2015/11/29/%E7%BC%96%E8%AF%91vscode/#mklink" target="_blank" rel="external">创建符号链接的办法</a>，让vscode始终使用源代码运行。不知道有没有直接通过修改<code>launch.json</code>文件来指定源代码目录的方法。</p>
 <p>附：<br>这里加一些比较有用的启动参数</p>
 <ul>
@@ -1259,11 +1259,11 @@ this.pluginHostProcessHandle = <span class="keyword">cp</span>.fork(uri.parse(re
     <link href="http://xzper.com/2015/11/29/%E7%BC%96%E8%AF%91vscode/"/>
     <id>http://xzper.com/2015/11/29/编译vscode/</id>
     <published>2015-11-28T19:03:12.000Z</published>
-    <updated>2018-01-15T06:08:29.067Z</updated>
+    <updated>2018-11-09T03:41:48.492Z</updated>
     <content type="html"><![CDATA[<p>由于工作需要，最近开始研究vscode的源代码，这样就需要编译和调试vscode。</p>
 <p>先从GitHub(<a href="https://github.com/Microsoft/vscode" target="_blank" rel="external">https://github.com/Microsoft/vscode</a>)上clone一下vscode的源代码，顺便去点个star吧。</p>
 <a id="more"></a>
-<p><img src="http://xzper.qiniudn.com/2015/11/4.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/11/4.png" alt=""></p>
 <p>看一下目录结构</p>
 <ul>
 <li><p><strong>.build</strong> 是electron可执行文件的路径，clone出来的项目是不带这个文件夹的，需要build出来。后面会讲到。</p>
@@ -1292,7 +1292,7 @@ scripts\npm <span class="keyword">install</span></span>
 <ol>
 <li>node-gyp安装失败</li>
 </ol>
-<p><img src="http://xzper.qiniudn.com/2015/11/5.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/11/5.png" alt=""></p>
 <p>这个似乎是需要机器上有Visual Studio，这个东西的功能应该就是构建一些本机文件用的，安装失败没关系，我们可以从其他地方得到这些本机文件。</p>
 <p>ps: 最近node-inspector老是安装不上也是因为这个的原因，有没有大神能告之解决办法。</p>
 <h4 id="2-拷贝一些重要文件">2.拷贝一些重要文件</h4>
@@ -1311,7 +1311,7 @@ http<span class="variable">s:</span>//github.<span class="keyword">com</span>/Mi
 <p>这一步反倒很简单，vscode使用了gulp进行自动构建，只需要找vscode项目目录下，使用一行命令就行了。</p>
 <pre><code><span class="title">gulp</span> watch
 </code></pre><p>几分钟后编译完成，可能会有一个错误。</p>
-<p><img src="http://xzper.qiniudn.com/2015/11/6.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/11/6.png" alt=""></p>
 <p>要解决这个问题直接使用</p>
 <pre><code>npm <span class="operator"><span class="keyword">install</span> run-<span class="keyword">in</span>-terminal</span>
 </code></pre><p>安装一下这个模块就行了。</p>
@@ -1349,7 +1349,7 @@ mklink /D app D:<span class="command">\workSpace</span><span class="command">\vs
     <link href="http://xzper.com/2015/11/29/%E6%90%AD%E5%BB%BAvscode%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/"/>
     <id>http://xzper.com/2015/11/29/搭建vscode调试环境/</id>
     <published>2015-11-28T16:46:30.000Z</published>
-    <updated>2018-01-15T06:08:29.066Z</updated>
+    <updated>2018-11-09T03:41:48.519Z</updated>
     <content type="html"><![CDATA[<p>vscode是微软最新推出的使用<a href="https://github.com/atom/atom" title="atom" target="_blank" rel="external">atom</a>的<a href="https://github.com/atom/electron" title="electron" target="_blank" rel="external">electron</a>技术开发的新一代文本编辑器。</p>
 <p>同时最近也在GitHub(<a href="https://github.com/Microsoft/vscode" target="_blank" rel="external">https://github.com/Microsoft/vscode</a>)上开源了。</p>
 <p>本文简单的教大家如何使用vscode的构建和调试功能。</p>
@@ -1357,9 +1357,9 @@ mklink /D app D:<span class="command">\workSpace</span><span class="command">\vs
 <h3 id="构建项目">构建项目</h3>
 <p>vscode使用<strong>task.json</strong>来配置项目的构建过程。</p>
 <p>打开命令面板(Ctrl+Shift+P)选择Run Build Task(Ctrl+Shift+B)</p>
-<p><img src="http://xzper.qiniudn.com/2015/11/1.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/11/1.png" alt=""></p>
 <p>如果当前工作空间没有<strong>task.json</strong>配置文件此时会出现提示</p>
-<p><img src="http://xzper.qiniudn.com/2015/11/2.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/11/2.png" alt=""></p>
 <p>选择 Configure Task Runner 自动创建<strong>task.json</strong>。该配置文件在工作空间的.vscode目录下，这个目录也是存放vscode配置的文件夹。</p>
 <p>vscode默认的task配置文件中给出了执行tsc 和 gulp模板配置。简单介绍一下<strong>task.json</strong>的写法</p>
 <pre><code>{
@@ -1386,7 +1386,7 @@ mklink /D app D:<span class="command">\workSpace</span><span class="command">\vs
 <h3 id="运行和调试项目">运行和调试项目</h3>
 <p>vscode默认支持nodejs，ts，js等项目的调试。使用<strong>launch.json</strong>p配置调试参数。</p>
 <p>调试启动调试的默认快捷键是F5， 如果没有<strong>launch.json</strong>则会弹窗提示选择调试环境，并自动创建<strong>launch.json</strong>。</p>
-<p><img src="http://xzper.qiniudn.com/2015/11/3.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/11/3.png" alt=""></p>
 <p>以调试node项目为例，简单说明下<strong>launch.json</strong>的写法</p>
 <pre><code>{
     <span class="string">"version"</span>: <span class="string">"0.2.0"</span>,
@@ -1445,7 +1445,7 @@ mklink /D app D:<span class="command">\workSpace</span><span class="command">\vs
 </code></pre><p>端口号是随机的，vscode能打断点调试是因为他内部监听了这个端口，并与node通讯实现调试。</p>
 <p>attach就是监听的任务。例如<strong>其他程序</strong>启动了一个node应用并使用了—debug-brk参数开启了5858端口使程序暂停在了第一行。此时启动attach任务，就可以监听到这个端口，并在<strong>vscode里面</strong>调试这个node应用了。</p>
 <p>附上一张vscode调试面板的截图</p>
-<p><img src="http://xzper.qiniudn.com/2015/11/debugging_hero.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/11/debugging_hero.png" alt=""></p>
 <p>有关如何调试的教程</p>
 <p><a href="https://code.visualstudio.com/docs/editor/debugging" target="_blank" rel="external">https://code.visualstudio.com/docs/editor/debugging</a></p>
 ]]></content>
@@ -1470,7 +1470,7 @@ mklink /D app D:<span class="command">\workSpace</span><span class="command">\vs
     <link href="http://xzper.com/2015/07/11/TP-MR12U%E5%88%B7openwrt-%E4%B8%8D%E6%AD%BBboot/"/>
     <id>http://xzper.com/2015/07/11/TP-MR12U刷openwrt-不死boot/</id>
     <published>2015-07-11T08:09:38.000Z</published>
-    <updated>2018-01-15T06:08:29.061Z</updated>
+    <updated>2018-11-09T03:41:48.484Z</updated>
     <content type="html"><![CDATA[<p>前不久买了一个无线路由器TP-MR12U，买这个东西的初衷是想和家里另外一个主路由做桥接并自动上vpn，这样两个wifi信号一个和谐上网，一个科学上网。然而，买来后才发现这个路由器是v2版本的，并不能同时支持开启无线中继wds和vpn拨号功能，也就是然并卵。经过一番调查，发现或许可以通过刷入openwrt固件的方式实现这些功能。于是，就有了此教程。刷机有风险，入市需谨慎。</p>
 <a id="more"></a>
 <p>openwrt是一个嵌入式的Linux系统，在各种路由器中应用广泛。OpenWrt的特点：</p>
@@ -1501,45 +1501,45 @@ mklink /D app D:<span class="command">\workSpace</span><span class="command">\vs
 <p><a href="https://coding.net/u/xzper/p/xzper/git/raw/master/.hexo_source/source/resource/2015/07/TPRouter.zip" target="_blank" rel="external">TPRouter.zip</a></p>
 <h2 id="TPRouter-zip">TPRouter.zip</h2>
 <p>1.打开TPRouter，点击浏览，选择解锁了U-Boot分区的固件1，看清楚文件名千万别选错了。如下图修改：</p>
-<p><img src="http://xzper.qiniudn.com/2015/07/01.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/07/01.png" alt=""></p>
 <p>修改完成后，再次打开就会发现固件标示变为了00120201。上面压缩包中的文件已经修改好，可以跳过这一步，有不放心的可以打开看看。</p>
 <p>2.第一次戳菊花，开机状态下按住路由器reset按5秒，重置路由器。</p>
 <p>3.使用网线连接路由器和电脑，电脑也不要连接其他的无线网，电脑ip使用自动获取。浏览器打开192.168.1.1，进入路由器界面。选择系统工具→软件升级。点击浏览选择修改好的固件1，并升级。<br>等待过程中可以打开cmd窗口，输入</p>
 <pre><code><span class="title">ping</span> <span class="number">192.168.1.1</span> -t
 </code></pre><p>用来检查电脑和路由的连接状态，一旦ping通了说明路由器初始化好了。</p>
 <p>4.重启好了之后，再次打开192.168.1.1即可看到高大上openwrt的初始界面了。</p>
-<p><img src="http://xzper.qiniudn.com/2015/07/02.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/07/02.png" alt=""></p>
 <p>也先别激动，这次刚刚开始。</p>
 <p>5.以上步骤刷入了一个u-boot分区可以写入的系统，接下来就是将不死boot写入到u-boot分区。打开putty，使用Telnet协议以命令行的模式登陆路由器。注意是<strong>使用Telnet连接</strong>，设置如下图：</p>
-<p><img src="http://xzper.qiniudn.com/2015/07/03.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/07/03.png" alt=""></p>
 <p>6.openwrt的默认账号是root，密码没有。为了能使用WinSCP给路由器上传文件，需要设置路由器的密码，在putty中输入以下命令：</p>
 <pre><code><span class="title">passwd</span> root
 </code></pre><p>然后按照提示输入要设置的密码。输入密码不会显示到控制台但是已经输入了。控制台输出如下：</p>
-<p><img src="http://xzper.qiniudn.com/2015/07/04.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/07/04.png" alt=""></p>
 <p>7.使用WinSCP将不死boot固件3上传到路由器的tmp文件夹。打开WinSCP，按照如下图配置：</p>
-<p><img src="http://xzper.qiniudn.com/2015/07/05.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/07/05.png" alt=""></p>
 <p>注意协议类型选择SCP。</p>
 <p>点击Login后会弹出一个Warning窗口，不要管，点击add或者yes。进入管理界面。左边选中固件所在目录，右边选中/tmp目录。将breed-ar9331-mr12u.bin拖入左边上传到路由器tmp目录下。如下图：</p>
-<p><img src="http://xzper.qiniudn.com/2015/07/06.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/07/06.png" alt=""></p>
 <p>8.上传好了之后就该刷入不死boot了。首先重启putty，使用ssh的方式连接路由器。设置如下图：</p>
-<p><img src="http://xzper.qiniudn.com/2015/07/07.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/07/07.png" alt=""></p>
 <p>跟 WinSCP 一样，如果是第一次使用 PuTTY 登录路由，那么会有一些确定窗口，点击yes。进入到命令行窗口，然后输入用户名root和密码。如下图：</p>
-<p><img src="http://xzper.qiniudn.com/2015/07/08.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/07/08.png" alt=""></p>
 <p>先使用cat命令查看一下当前的分区。输入命令</p>
 <pre><code> cat /<span class="keyword">proc</span>/mtd
 </code></pre><p>输出如下：</p>
-<p><img src="http://xzper.qiniudn.com/2015/07/09.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/07/09.png" alt=""></p>
 <p>这次要刷入的就是u-boot分区</p>
 <p>再获取路由器的mac地址。输入命令</p>
 <pre><code><span class="title">ifconfig</span> eth0
 </code></pre><p>输出如下：</p>
-<p><img src="http://xzper.qiniudn.com/2015/07/10.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/07/10.png" alt=""></p>
 <p>图中红框框起来打码的部分就是mac地址。先记录并备份一下待会会用到。</p>
 <p>最后输入命令刷入不死boot</p>
 <pre><code><span class="keyword">cd</span> /tmp
 mtd <span class="keyword">write</span> breed-ar9331-mr12u.bin <span class="keyword">u</span>-boot
 </code></pre><p>成功的话，如下图：</p>
-<p><img src="http://xzper.qiniudn.com/2015/07/11.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/07/11.png" alt=""></p>
 <p>最后输入<code>reboot</code>命令重启路由器或者直接将路由器关机。</p>
 <p>Tips：如果你一开始的openwrt固件是官方的，因为默认是锁了u-boot分区的。到了这一步就会报错</p>
 <pre><code>Could <span class="keyword">not</span> <span class="keyword">open</span> mtd device: u-boot
@@ -1547,13 +1547,13 @@ Can<span class="attribute">'t</span> <span class="keyword">open</span> device <s
 </code></pre><p>提示无法写入到u-boot分区。解决办法参见最后的FAQ。</p>
 <p>9.进入u-boot控制台。路由器<strong>和电脑连接</strong>，在路由器<strong>关机状态</strong>下，使用暴菊工具<strong>按住reset按钮</strong>不放，打开路由器开关，过一会会看到蓝色灯亮一下，再过一会会看到蓝色灯闪4下，这时松开reset按钮。在浏览器中输入192.168.1.1，即可进入u-boot设置界面。</p>
 <p>10.修改mac地址。u-root会将mac地址重置，此时需要将mac地址还原回来，不然有些功能无法使用，比如无线功能。将之前备份好的mac地址输入到设置框中，如下图设置：</p>
-<p><img src="http://xzper.qiniudn.com/2015/07/12.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/07/12.png" alt=""></p>
 <p>11.刷入官方的openwrt固件。在u-boot控制台选择固件更新→固件，选中固件2点击上传。如下图：</p>
-<p><img src="http://xzper.qiniudn.com/2015/07/13.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/07/13.png" alt=""></p>
 <p>这时等待更新就行了。</p>
 <p>有了不死boot就可以随意刷了，变砖了重复步骤9-11。</p>
 <p>12.路由器重启后进入192.168.1.1即可看到官方的openwrt的luci界面了。至此不死boot和openwrt刷入成功，撒花庆祝。</p>
-<p><img src="http://xzper.qiniudn.com/2015/07/14.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/07/14.png" alt=""></p>
 <p>至于如何配置openwrt实现开篇所说的功能，等下回再说吧。特此感谢@hackpascal大牛的固件。</p>
 <p>【FAQ】</p>
 <p>1.问：步骤8中使用mdt命令提示无法写入怎么办？</p>
@@ -1583,9 +1583,9 @@ reboot
     <link href="http://xzper.com/2015/05/11/%E4%B8%80%E6%AC%A1%E6%9B%B2%E6%8A%98%E7%9A%84%E8%B0%83%E8%AF%95%E7%BB%8F%E5%8E%86/"/>
     <id>http://xzper.com/2015/05/11/一次曲折的调试经历/</id>
     <published>2015-05-11T13:31:26.000Z</published>
-    <updated>2018-01-15T06:08:29.064Z</updated>
+    <updated>2018-11-09T03:41:48.441Z</updated>
     <content type="html"><![CDATA[<p>前不久在FlexLite的开发者群里面遇到一个开发者的提问，说是在使用List的时候水平滚动条的大小有错误。截图大概是下面这样：</p>
-<p><img src="http://xzper.qiniudn.com/2015/05/01.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/05/01.png" alt=""></p>
 <a id="more"></a>
 <p>可以看到水平滚动条的宽度是不对的。经过简单的了解，发现代码没错。本着(好)助(奇)人(害)为(死)乐(猫)的精神，决定找出问题所在。我简化代码，写了个DEMO，也复现了这个问题。代码大致如下只有两个类：<br>主类：</p>
 <pre><code><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">FlexLiteTest</span><span class="params">()</span>
@@ -1650,23 +1650,23 @@ override <span class="keyword">protected</span> <span class="function"><span cla
 </code></pre><p>或者</p>
 <pre><code><span class="attribute">scroller.horizontalScrollBar.skinName </span>=<span class="string"> MyHScrollBarSkin; </span>
 </code></pre><p>最后的结果是没问题的，如下图：</p>
-<p><img src="http://xzper.qiniudn.com/2015/05/02.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/05/02.png" alt=""></p>
 <p>那么问题肯定就出在了那个滚动条皮肤上面了。细看代码，发现其实滚动条皮肤就重写了一个createChildren的方法，啥也没干。此时思维陷入僵局…看来此路不通。</p>
 <p>既然是显示结果的问题，那么换种思路，从结果入手，滚动条的宽度比预期值小了很多，通过FlexLite框架自带的一个调试工具，可以清楚地看到运行时各个组件大小位置的实际值测量值和布局结果。调试工具需要在项目开始初始化</p>
 <pre><code>Debugger.initialize(stage);
 </code></pre><p>然后默认按F11开启。通过调试面板定位到滚动条，如下图：</p>
-<p><img src="http://xzper.qiniudn.com/2015/05/03.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/05/03.png" alt=""></p>
 <p>发现水平滚动条的宽度是对的，布局宽为400，但是皮肤的宽是错的。<br>因为FlexLite里面有两种皮肤，一种是Skin可显示对象版的皮肤和StateSkin非显示对象皮肤。这里用到的是继承自Skin的可显示对象皮肤。布局的宽和测量宽是一样的都是86。</p>
-<p><img src="http://xzper.qiniudn.com/2015/05/04.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/05/04.png" alt=""></p>
 <p>那么问题就出在这里了。滚动条皮肤的布局宽(layoutBoundsWidth)是错误的，理应该也是400。这时可以回到代码了，在适当的地方下断点，找到原因，问题就能解决了。</p>
 <p>我给重写了下MyHScrollBarSkin的setLayoutBoundsSize，并在这里下断点。这样可以找出什么地方给MyHScrollBarSkin设置了一个错误的布局尺寸。</p>
-<p><img src="http://xzper.qiniudn.com/2015/05/05.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/05/05.png" alt=""></p>
 <p>启动程序。发现这个断点根本就进不去，也就是说没有任何地方设置水平滚动条的布局尺寸，那么滚动条的布局尺寸是哪里来的呢，通过UIComponent的源码发现，没有设置布局尺寸的话，通过getter方法获取到的layoutBoundsWidth值就是explicitWidth或者measuredWidth，显然这地方是使用的measuredWidth。看到这里，问题就变成了setLayoutBoundsSize这个方法为何没有被调用。</p>
 <p>通过查看调用层次结构，发现本来setLayoutBoundsSize应该在UIAssets的updateDisplayList方法里面被调用的（因为SkinnableComponent继承自UIAssets，刷新显示列表的时候会设置皮肤的布局属性）。于是我在UIAssets的updateDisplayList方法里面下断点，尝试找到皮肤没有被布局的原因。由于updateDisplayList会被反复调用，为了更精确我给断点加了条件表达式这样会少很多麻烦。</p>
-<p><img src="http://xzper.qiniudn.com/2015/05/06.png" alt=""></p>
-<p><img src="http://xzper.qiniudn.com/2015/05/07.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/05/06.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/05/07.png" alt=""></p>
 <p>因为只有滚动条才有value属性，用这个表达式可以确保断点每次进入时都是滚动条触发的。经过几次断点，发现问题是出了在一个scaleSkin的实例变量上面。这个变量不知是何原因变成了false，导致条件判断不通过，导致皮肤没有被布局。</p>
-<p><img src="http://xzper.qiniudn.com/2015/05/08.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/05/08.png" alt=""></p>
 <p>答案似乎近在眼前了，scaleSkin被设置成了false导致皮肤没有跟着主机组件进行缩放。那么找到设置scaleSkin这个值为false的位置就行了。理所当然的，我使用调用层次结构和查找引用的功能企图找到项目中设置这个值的地方，然而得到的结果却是除了初始化给这个属性赋值了一次true以外，没有任何地方给这个属性重新赋值。甚至使用了Ctrl+H全局搜索这个scaleSkin的字符串得到结果也是一样。这个结果难免让我无法接受。scaleSkin被莫名其妙地改了值？</p>
 <p>既然这样，我决定改一下UIAssets的代码，将scaleSkin的定义方式从public的声明方式改为getter/setter方法，这样可以下断点调试何时设置了scaleSkin的值。</p>
 <pre><code><span class="keyword">private</span> <span class="keyword">var</span> _scaleSkin:Boolean = <span class="literal">true</span>;
@@ -1711,11 +1711,11 @@ override <span class="keyword">protected</span> <span class="function"><span cla
     }
 }
 </code></pre><p>我发现在for each某一个循环之后，scaleSkin发生了变化。同时通过断点发现skinParts居然还包含了一个scaleSkin的值</p>
-<p><img src="http://xzper.qiniudn.com/2015/05/09.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/05/09.png" alt=""></p>
 <p>果然罪魁祸首找到了，就是这里。使用[]的方式对属性进行赋值，逃过了查找引用和全局搜索。真是天网恢恢，总会漏那么一点。</p>
 <p>在卸载旧皮肤的时候（因为在ListSkin里面HScroller添加到显示列表会有一个主题皮肤，然后在MyListSkin会又设置一次HScroller的皮肤，所以会触发卸载皮肤的方法）框架内部将scaleSkin当成了皮肤部件，使用了 this[“scaleSkin”] = null 的方式改变了这个属性的值。</p>
 <p>那么新的问题又产生了，scaleSkin怎么会成为了皮肤部件？通过查看SkinPartUtil的getSkinParts方法</p>
-<p><img src="http://xzper.qiniudn.com/2015/05/10.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/05/10.png" alt=""></p>
 <p>不难发现第47行，没有使用toString()，导致判断永远成立，这个类里面的所有public的属性都被当做了皮肤部件。解决办法就是加上toString()。</p>
 <pre><code><span class="keyword">if</span>(basicTypes.indexOf(node.@<span class="class"><span class="keyword">type</span>.<span class="title">toString</span></span>())==-<span class="number">1</span>)
 </code></pre><p>另外SkinnableComponent在卸载皮肤校验时,没有判断部件是否也存在与皮肤中，可以将</p>
@@ -1725,11 +1725,11 @@ override <span class="keyword">protected</span> <span class="function"><span cla
 <pre><code><span class="keyword">if</span>(!(partName <span class="keyword">in</span> <span class="keyword">this</span>)||!(partName <span class="keyword">in</span> <span class="keyword">this</span>.skin))
     <span class="keyword">continue</span>;
 </code></pre><p>到这里问题才算是彻底解决了。遇到问题还是需要刨根问底，不然永远只能停留在表面上。<br>最后附上错误代码的DEMO项目，<s>留个纪念</s>：</p>
-<p><a href="http://xzper.qiniudn.com/2015/05/FlexLiteTest.zip" title="FlexLiteTest" target="_blank" rel="external">http://xzper.qiniudn.com/2015/05/FlexLiteTest.zip</a></p>
+<p><a href="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/05/FlexLiteTest.zip" title="FlexLiteTest" target="_blank" rel="external">https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/05/FlexLiteTest.zip</a></p>
 ]]></content>
     <summary type="html">
     <![CDATA[<p>前不久在FlexLite的开发者群里面遇到一个开发者的提问，说是在使用List的时候水平滚动条的大小有错误。截图大概是下面这样：</p>
-<p><img src="http://xzper.qiniudn.com/2015/05/01.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/05/01.png" alt=""></p>
 ]]>
     
     </summary>
@@ -1747,7 +1747,7 @@ override <span class="keyword">protected</span> <span class="function"><span cla
     <link href="http://xzper.com/2015/01/24/%E7%AA%81%E7%A0%B4AIR%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%9D%83%E9%99%90%E9%99%90%E5%88%B6/"/>
     <id>http://xzper.com/2015/01/24/突破AIR程序的权限限制/</id>
     <published>2015-01-24T05:27:45.000Z</published>
-    <updated>2018-01-15T06:08:29.067Z</updated>
+    <updated>2018-11-09T03:41:48.519Z</updated>
     <content type="html"><![CDATA[<p>AIR中有些API在没有权限的情况下是不生效的，甚至不报错也没没有任何提示。例如文件系统中对敏感目录的文件操作，File.applicationDirectory这个API的文档是这样说的</p>
 <blockquote>
 <p>出于安全原因，不推荐修改应用程序目录中的内容，有些平台上的操作系统会阻止此操作。<br>如果要存储特定于应用程序的数据，请考虑使用应用程序存储目录 (File.applicationStorageDirectory)。</p>
@@ -1799,8 +1799,8 @@ override <span class="keyword">protected</span> <span class="function"><span cla
 }
 </code></pre><p>如果觉得这种传参调用不好用，可以改一下。在目标程序启动后，可以实现A程序与B程序的进程通讯。A向B程序相互发消息就更加灵活了。我们的方案是把B程序也做成一个AIR应用，这样就可以使用LocalConnection实现两个AIR程序的通讯了。</p>
 <p>elevate的下载地址,有兴趣的可以hack下:</p>
-<p>Windows：<a href="http://xzper.qiniudn.com/2015/01/elevate.zip" target="_blank" rel="external">elevate.exe</a></p>
-<p>Mac：<a href="http://xzper.qiniudn.com/2015/01/elevate.scpt" target="_blank" rel="external">elevate.scpt</a></p>
+<p>Windows：<a href="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/01/elevate.zip" target="_blank" rel="external">elevate.exe</a></p>
+<p>Mac：<a href="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/01/elevate.scpt" target="_blank" rel="external">elevate.scpt</a></p>
 ]]></content>
     <summary type="html">
     <![CDATA[<p>AIR中有些API在没有权限的情况下是不生效的，甚至不报错也没没有任何提示。例如文件系统中对敏感目录的文件操作，File.applicationDirectory这个API的文档是这样说的</p>
@@ -1880,7 +1880,7 @@ NativeApplication.nativeApplication.<span class="keyword">exit</span>();
     <link href="http://xzper.com/2014/10/25/Flex%E6%A1%86%E6%9E%B6%E4%B8%AD%E6%A0%B7%E5%BC%8F%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E4%B8%8EAS3%E4%B8%AD%E7%9A%84%E5%8E%9F%E5%9E%8B%E9%93%BE%E7%BB%A7%E6%89%BF/"/>
     <id>http://xzper.com/2014/10/25/Flex框架中样式的实现原理与AS3中的原型链继承/</id>
     <published>2014-10-25T05:53:06.000Z</published>
-    <updated>2018-01-15T06:08:29.061Z</updated>
+    <updated>2018-11-09T03:41:48.440Z</updated>
     <content type="html"><![CDATA[<p>在Flex中setStyle这个特性特别好用，当一个容器Group的样式时，那么这个容器的子项的样式也会跟着起作用。比如设置Application的<code>fontSize</code>这个样式为20，那么如果不显式设置子项的<code>fontSize</code>，子项的字体大小就都会是20，而不用每次子项再去重复设置了，这个特性对于开发者来讲是至关重要的，能减少很多重复的代码。而这个特性的实现，离不开原型链继承这个重要概念。</p>
 <a id="more"></a>
 <p>原型链继承这个词已经不是陌生词汇了，对于JS程序员来说更是再熟悉不过了。AS3作为一个面向对象的脚本语言，原型链继承早已淡出AS3程序员的视野。说到AS语言，其实AS1，AS2都很像JS，AS3则来了个180°转变，变成了面向对象了。早在AS1，AS2的时代，对象间的继承就是使用原型链继承的方式实现的，事实上这一特性也得到了保留，AS3也可以使用这种方式实现继承。</p>
@@ -1976,7 +1976,7 @@ childStyle = <span class="keyword">new</span> factory();
 factory.prototype = <span class="literal">null</span>;
 </code></pre><hr>
 <p>这种原型链的描述方式完全符合Flex样式的设计思想。Flex的每个组件都持有两套样式表，可继承的样式和不可继承的样式。不可继承的样式不做传递，可继承的样式会添加到原型链中。当一个容器的子组件被添加的时候，子组件的样式表会被重新初始化，将父级的样式表添加到自己的原型链，然后添加自己的样式。最终自己的样式改变不会影响父级，父级的样式改变，如果自己没有显式定义就会跟随父级改变。关于Flex样式的原理详细的可以看下面的参考文章。</p>
-<p>本文代码下载: <a href="http://xzper.qiniudn.com/2014%2F10%2FStyleTest.zip" target="_blank" rel="external">Click Me</a></p>
+<p>本文代码下载: <a href="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2014%2F10%2FStyleTest.zip" target="_blank" rel="external">Click Me</a></p>
 <p>参考文章：</p>
 <p>[1] <a href="http://blog.csdn.net/terryzero/article/details/4581459" target="_blank" rel="external">Flex样式工作原理</a></p>
 <p>[2] <a href="http://blog.csdn.net/holybozo/article/details/1345606" target="_blank" rel="external">AS3 面向对象 高级话题</a></p>
@@ -2435,7 +2435,7 @@ factory.prototype = <span class="literal">null</span>;
     <link href="http://xzper.com/2014/08/17/%E6%B5%85%E6%9E%90Hexo%E7%9A%84Generate%E5%91%BD%E4%BB%A4/"/>
     <id>http://xzper.com/2014/08/17/浅析Hexo的Generate命令/</id>
     <published>2014-08-16T22:54:10.000Z</published>
-    <updated>2018-01-15T06:08:29.066Z</updated>
+    <updated>2018-01-15T06:08:29.067Z</updated>
     <content type="html"><![CDATA[<p><a href="https://github.com/hexojs/hexo" target="_blank" rel="external">Hexo</a>是一个轻量级的静态博客站点生成框架，使用NodeJS开发。经过我两个通宵的努力总算把这个东西研究了一个大概，这里拿来分享一下。</p>
 <a id="more"></a>
 <h2 id="Processor">Processor</h2>
@@ -2518,7 +2518,7 @@ node --debug-brk=<span class="number">5858</span> <span class="constant">E</span
     <link href="http://xzper.com/2014/08/09/%E6%A1%86%E6%9E%B6%E5%8C%85%E7%BB%93%E6%9E%84%E7%9A%84%E8%AE%BE%E8%AE%A1/"/>
     <id>http://xzper.com/2014/08/09/框架包结构的设计/</id>
     <published>2014-08-08T16:43:25.000Z</published>
-    <updated>2018-01-15T06:08:29.066Z</updated>
+    <updated>2018-01-15T06:08:29.067Z</updated>
     <content type="html"><![CDATA[<p>这里的框架拿Flex或者FlexLite以及Egret做例子。框架的包结构划分应该是以调用关系为依据划分的，尽量把需要相互调用的类放在一个包下面。这样最终得到的结果就是各个包之间相互独立，理想情况下即使你删除一个包，其他的也不受影响。但是现实肯定不是理想的，包之间总是还有依赖。这些有依赖的东西，大部分就是框架里面核心的东西了。这时候就把这些公共依赖的部分抽出来，放到一个核心包下，比如叫core。 从另一种角度上来讲，所谓的框架”核心类”，实际上就是一些公共耦合的类。这样其他的包都和这个核心包有依赖关系，但是他们彼此之间没有依赖关系。</p>
 <a id="more"></a>
 <p>举一个例子：上面说到的三种框架都有一些枚举类，提供一下静态字符串，通常为其他类的某些属性提供值。再具体一点可以在Flex的spark.components包下面可以看到有一个PopUpPosition的一个枚举类，这里可能会奇怪，这个叫做components的包下面不应该都是放一些UI组件么，怎么多出了这么一个东西。别急，我们来看一下官方API描述：</p>
@@ -2543,7 +2543,7 @@ node --debug-brk=<span class="number">5858</span> <span class="constant">E</span
     <link href="http://xzper.com/2014/07/02/%E8%A7%A3%E8%AF%BBDXML%E7%BC%96%E8%AF%91%E5%99%A8/"/>
     <id>http://xzper.com/2014/07/02/解读DXML编译器/</id>
     <published>2014-07-02T08:22:49.000Z</published>
-    <updated>2018-01-15T06:08:29.067Z</updated>
+    <updated>2018-01-15T06:08:29.068Z</updated>
     <content type="html"><![CDATA[<p>DXML就是FlexLite中由FlexLiteStdio生成的皮肤文件，类似于Flex中的MXML。实际上区别没多少，可能最大的区别就是MXML支持Script脚本。DXML架构设计对编写各类UI编辑器，各类代码生成工具都有很好的参考价值。这里主要分析DXML编译器是如何将DXML文件转换为as代码。</p>
 <a id="more"></a>
 <p><strong>1.如何使用DXML编译器</strong></p>
@@ -2697,7 +2697,7 @@ node --debug-brk=<span class="number">5858</span> <span class="constant">E</span
     <link href="http://xzper.com/2014/06/22/%E4%BD%BF%E7%94%A8egret%E5%BC%80%E5%8F%912048/"/>
     <id>http://xzper.com/2014/06/22/使用egret开发2048/</id>
     <published>2014-06-22T12:41:00.000Z</published>
-    <updated>2018-01-15T06:08:29.065Z</updated>
+    <updated>2018-11-09T03:41:48.471Z</updated>
     <content type="html"><![CDATA[<p>2048是最近很火的一个小游戏，<a href="http://gabrielecirulli.github.io/2048/" target="_blank" rel="external">原版</a> 就是用JavaScript写的。恰巧最近Egret PublicBeta，观望和学习了一阵后，发现egret正好适合开发这类游戏。Egret使用TypeScript作为开发语言，最终编译为JavaScript，正好和原始版本PK一下。</p>
 <p>游戏预览：<a href="http://xzper.com/project/2048egret/" target="_blank" rel="external">点我体验</a></p>
 <a id="more"></a>
@@ -2710,7 +2710,7 @@ node --debug-brk=<span class="number">5858</span> <span class="constant">E</span
 <p>这里我们用到的资源主要有按钮，背景，文字以及数字这些图片。我们选择把这些图片都打包在一起合成一张大图就像 <a href="http://xzper.com/project/2048egret/resource/assets/source.png" target="_blank" rel="external">这样</a> 和 <a href="http://xzper.com/project/2048egret/resource/assets/number.png" target="_blank" rel="external">这样</a> 这样做可以减少URL请求数，还能减少资源的体积，把一些具有相同特征的图片放在一起便于管理。在egret里面这种类型的资源就是sheet。只有图片是不够的，还需要一个json描述文件来说明这张图每一张小图片的位置和大小。目前已经有成熟的工具来生成sheet和json。这里我用到的是 <a href="http://www.renderhjs.net/shoebox/" target="_blank" rel="external">ShoeBox</a> 配合这个 <a href="https://github.com/runinspring/egretTools" target="_blank" rel="external">插件</a> 来生成egret能识别的json。安装好插件后， 将每一张图片命名，然后将这些图片选中拖入Sprites Sheet中然后配置好生成的文件名点击save就能得到一张大图和一个json了，将图片和json放入”resource/assets/“文件夹下以备使用。此外ShoeBox还能读取swf将MovieClip导出为这种大图，按每一帧自动命名，这里的number.png就是这样导出的，下面有原始素材下载地址。</p>
 <p><strong>②资源加载</strong></p>
 <p>接下来我们需要生成一个资源描述文件resource.json，在游戏开始之前读取这个json来加载对应的文件。egret的资源加载机制可以参考 <a href="https://github.com/egret-labs/egret-core/wiki/Using%20Resource%20System" target="_blank" rel="external">这里</a> 现在已经有 <a href="http://bbs.egret-labs.org/thread-48-1-1.html" target="_blank" rel="external">工具</a> 能自动生成这个resource.json了。按照下图配置。<strong>注意：虽然我们的资源有图片，但是对应的json文件已经记录了图片的位置，所以在这个工具中我们不需要添加对应的图片只添加json文件就行了。</strong></p>
-<center><img src="http://xzper.qiniudn.com/2014/06/ResTool.png" alt=""></center>
+<center><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2014/06/ResTool.png" alt=""></center>
 
 <p>在项目初始化时，使用RES加载资源，简单明了。</p>
 <pre><code><span class="keyword">private</span> <span class="title">onAddToStage</span>(event:egret.Event){
@@ -2815,7 +2815,7 @@ context.stage.<span class="variable">scaleMode =</span> scaleMode;
 <p><strong>5.egret的GUI</strong></p>
 <p><strong>①制作菜单———-认识皮肤部件</strong></p>
 <p>先来看看菜单长什么样子</p>
-<p><img src="http://xzper.qiniudn.com/2014/06/菜单.jpg" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2014/06/菜单.jpg" alt=""></p>
 <p>我们会发现这个菜单。有些是静态文本，是一直不变的，我偷懒直接用了一张图片代替了，图片可以用egret.gui.UIAsset。</p>
 <p>还有当前得分和最高分已经那个向上飘的数字是动态的，可以选用egret.gui.Label这个组件。</p>
 <p>一个重试按钮，既然已经说了是按钮了我们就用egret.gui.Button好了。</p>
@@ -2914,7 +2914,7 @@ context.stage.<span class="variable">scaleMode =</span> scaleMode;
 </code></pre><p>   }</p>
 <p>在构造函数里面赋值skinName传入皮肤的类引用，这个解析过程就是SkinAdapter完成的。 可以看到主机组件有一个partAdded进行皮肤组件的配对。这个时候我们就可以获取到对应的皮肤组件，来进行操作了，</p>
 <p><strong>②制作游戏区域————了解九宫格和容器布局</strong></p>
-<p><img src="http://xzper.qiniudn.com/2014/06/游戏演示.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2014/06/游戏演示.png" alt=""></p>
 <p>再次来观察这个游戏的主界面。有一张纯色的背景图，还有4x4个空白的格子，随着游戏的进行会多出带数字的格子，游戏结束了还会出现胜利的界面。</p>
 <p>先来看看第一张图。也许你认为这个背景一张4x4的图片不就搞定了么。不过我们这个2048单元格的数量可是可以任意调整的，可以是5x5，或者6x6甚至更多，这样才具备灵活性。你只需要改变CommandData的size属性就可以了(PS:游戏胜利的条件默认是达成2048，也可以通过修改CommandData的winValue属性来修改条件比如8192时胜利或者像上面那样32的时候胜利，想不输都难)。</p>
 <p>我们继承SkinnableContainer建立一个MainGameUI的类作为容器来显示上面的界面，当然同时还需要一个皮肤MainGameUISkin。先来确定skinParts，如下：</p>
@@ -3228,7 +3228,7 @@ context.stage.<span class="variable">scaleMode =</span> scaleMode;
     <link href="http://xzper.com/2014/06/15/%E6%96%B0%E6%89%8B%E5%BC%95%E5%AF%BC%E2%80%94%E8%84%9A%E6%9C%AC%E8%AE%BE%E8%AE%A1/"/>
     <id>http://xzper.com/2014/06/15/新手引导—脚本设计/</id>
     <published>2014-06-14T19:49:56.000Z</published>
-    <updated>2018-01-15T06:08:29.066Z</updated>
+    <updated>2018-11-09T03:41:48.496Z</updated>
     <content type="html"><![CDATA[<p>最近在做游戏的新手引导模块。由于是关卡式的引导，所以很适合用读取引导脚本的方式来开发。</p>
 <p><strong>脚本和命令配置</strong></p>
 <a id="more"></a>
@@ -3308,9 +3308,9 @@ public function convert(<span class="keyword">type</span>:String , value:String)
 </code></pre><p>我们可以根据业务逻辑的不同，自由的定制参数类型解析器，命令函数解析器和函数库。</p>
 <p><strong>脚本编辑器</strong></p>
 <p>脚本编辑器是一个可视化的工具，能方便快速的创建脚本，你只需要先写好命令配置xml。编辑器会根据xml自动生成命令列表，然后向脚本中自由的加入命令。预览图：</p>
-<p><img src="http://xzper.qiniudn.com/2014/06/editor.png" alt=""></p>
-<p>新手引导示例：<a href="http://xzper.qiniudn.com/2014/06/Guide.rar" target="_blank" rel="external">Guide</a></p>
-<p>脚本编辑器：<a href="http://xzper.qiniudn.com/2014/06/ScriptEditor.rar" target="_blank" rel="external">ScriptEditor</a></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2014/06/editor.png" alt=""></p>
+<p>新手引导示例：<a href="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2014/06/Guide.rar" target="_blank" rel="external">Guide</a></p>
+<p>脚本编辑器：<a href="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2014/06/ScriptEditor.rar" target="_blank" rel="external">ScriptEditor</a></p>
 ]]></content>
     <summary type="html">
     <![CDATA[<p>最近在做游戏的新手引导模块。由于是关卡式的引导，所以很适合用读取引导脚本的方式来开发。</p>
@@ -3328,11 +3328,11 @@ public function convert(<span class="keyword">type</span>:String , value:String)
     <link href="http://xzper.com/2014/04/27/%E4%BB%8E2048%E6%B8%B8%E6%88%8F%E8%B0%88PureMVC/"/>
     <id>http://xzper.com/2014/04/27/从2048游戏谈PureMVC/</id>
     <published>2014-04-26T18:03:56.000Z</published>
-    <updated>2018-01-15T06:08:29.064Z</updated>
-    <content type="html"><![CDATA[<p>最近2048比较火，然后我又正好在学习pureMVC，之前对于pureMVC的了解只停留在理论上，正好拿这个游戏来练练手。废话不多说，游戏预览：<a href="http://xzper.qiniudn.com/2014/04/2048flexlite/Main.html" target="_blank" rel="external">2048</a></p>
+    <updated>2018-11-09T03:41:48.441Z</updated>
+    <content type="html"><![CDATA[<p>最近2048比较火，然后我又正好在学习pureMVC，之前对于pureMVC的了解只停留在理论上，正好拿这个游戏来练练手。废话不多说，游戏预览：<a href="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2014/04/2048flexlite/Main.html" target="_blank" rel="external">2048</a></p>
 <a id="more"></a>
 <p><strong>1.MVC的基本运行原理</strong></p>
-<p><img src="http://xzper.qiniudn.com/2014/04/mvc结构图.png" alt="mvc结构图"></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2014/04/mvc结构图.png" alt="mvc结构图"></p>
 <p><span style="font-family: 微软雅黑;"><span>图：</span></span><span><span style="font-family: Calibri;">MVC</span><span style="font-family: 微软雅黑;">结构图（实线——&gt;表示依赖；虚线</span><span style="font-family: Calibri;">——&gt;</span><span style="font-family: 微软雅黑;">表示事件</span><span style="font-family: Calibri;">/</span></span><span style="font-family: 微软雅黑;"><span>通知等</span><span>）</span></span></p>
 <ul>
 <li><p><strong>模型（Model）</strong> 用于封装与应用程序的业务逻辑相关的数据以及对数据的处理方法。“模型”有对数据直接访问的权力，例如对数据库的访问。“模型”不依赖“视图”和“控制器”，也就是说，模型不关心它会被如何显示或是如何被操作。但是模型中数据的变化一般会通过一种刷新机制被公布。为了实现这种机制，那些用于监视此模型的视图必须事先在此模型上注册，从而，视图可以了解在数据模型上发生的改变。（比较：<a href="http://zh.wikipedia.org/wiki/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F" title="观察者模式" target="_blank" rel="external">观察者模式</a>（<a href="http://zh.wikipedia.org/wiki/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F" title="软件设计模式" target="_blank" rel="external">软件设计模式</a>））</p>
@@ -3350,7 +3350,7 @@ public function convert(<span class="keyword">type</span>:String , value:String)
 </ul>
 <p><strong>3.从实例学习pureMVC</strong></p>
 <p>先来看下工程目录结构</p>
-<p><img src="http://xzper.qiniudn.com/2014/04/2048工程结构.png" alt="2048工程结构"></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2014/04/2048工程结构.png" alt="2048工程结构"></p>
 <p><strong>1.xxxPrepCommand</strong> 框架初始化时，注册对应必须的Command和Proxy。（另外说下由于FlexLite的组件需要在CreateComplete才能获取皮肤实例，所以Mediator的注册都是在viewComponent中完成的）</p>
 <p><strong>2.GameCommand</strong> 处理各类事务。比如 玩家按下了方向键，收到消息调用GridProxy的移动方法改变数据，比如GridProxy移动格子分数改变了，通知GameCommand 调用GameProxy的更新分数方法改变分数，比如处理重置游戏的事务，通知各个数据模块重置数据</p>
 <p><strong>3.GameProxy</strong> 处理游戏数据，比如更新分数，处理游戏结果</p>
@@ -3360,13 +3360,13 @@ public function convert(<span class="keyword">type</span>:String , value:String)
 <p><strong>7.**</strong>MainMenuMediator** 接收更新分数的消息，调用MainGameUI的方法更新分数与重置</p>
 <p><strong>8.ResultWindowMediator</strong> 发送游戏重置的消息，以及自销毁。这是一个短生命的Mediator</p>
 <p>其实这个游戏本来一开始我是用Flex开发的，最后完成的时候发现swf太大加载太慢，于是换成了比较小巧的FlexLite。整个移植过程没有动Model和Controller的一行代码，Mediator改动的也很少。充分说明了MVC的代码重用和关注点分离。这也是我用pureMVC的初次尝试，可能理解还有很多不到位和错误的地方，在此抛砖引玉。最后附上源代码下载：</p>
-<p>FlexLite版：<a href="http://xzper.qiniudn.com/2014/04/2048flexlite.rar" target="_blank" rel="external">2048flexlite</a></p>
-<p>Flex版：<a href="http://xzper.qiniudn.com/2014/04/2048flex.rar" target="_blank" rel="external">2048flex</a></p>
+<p>FlexLite版：<a href="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2014/04/2048flexlite.rar" target="_blank" rel="external">2048flexlite</a></p>
+<p>Flex版：<a href="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2014/04/2048flex.rar" target="_blank" rel="external">2048flex</a></p>
 <p>参考文章：</p>
 <p>[1] <a href="http://www.cnblogs.com/skynet/archive/2012/12/29/2838303.html" target="_blank" rel="external">http://www.cnblogs.com/skynet/archive/2012/12/29/2838303.html</a></p>
 ]]></content>
     <summary type="html">
-    <![CDATA[<p>最近2048比较火，然后我又正好在学习pureMVC，之前对于pureMVC的了解只停留在理论上，正好拿这个游戏来练练手。废话不多说，游戏预览：<a href="http://xzper.qiniudn.com/2014/04/2048flexlite/Main.html" target="_blank" rel="external">2048</a></p>
+    <![CDATA[<p>最近2048比较火，然后我又正好在学习pureMVC，之前对于pureMVC的了解只停留在理论上，正好拿这个游戏来练练手。废话不多说，游戏预览：<a href="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2014/04/2048flexlite/Main.html" target="_blank" rel="external">2048</a></p>
 ]]>
     
     </summary>
@@ -3382,7 +3382,7 @@ public function convert(<span class="keyword">type</span>:String , value:String)
     <link href="http://xzper.com/2014/04/21/%E5%9C%A8%E8%B7%AF%E4%B8%8A/"/>
     <id>http://xzper.com/2014/04/21/在路上/</id>
     <published>2014-04-21T15:51:00.000Z</published>
-    <updated>2018-01-15T06:08:29.065Z</updated>
+    <updated>2018-01-15T06:08:29.066Z</updated>
     <content type="html"><![CDATA[<p>博客建站以来也快有一个月了，每次想写点什么都不得而终。究其原因还是自己太懒了。所以现在趁自己不懒的时候，记录自己在前端开发路上的点滴。 希望此文能做一个好的开始，以此共勉。</p>
 <p>Flash开发到了如今，也到了日落西山，穷途末路的时候吧。从官方上来看，Adobe已经对Flash力不从心了，停止了移动端的FP的更新 ，把Flex捐给了Apache 。从开发者来看，大量新技术如Html5，Cocos2d，Unity3D的出现让开发者有了更多的选择，好多Flash老程序员都转行了，这似乎成了一个趋势  。 从市场上来看，如今的页游市场，已经不复当年的辉煌了，前篇一律的感觉玩家会卖账么？而且各种坑爹的运营导致Flash游戏的名声越来越臭。总之，对于即将毕业的我选择Flash开发这条路显然不是一个明智的选择。</p>
 <a id="more"></a>

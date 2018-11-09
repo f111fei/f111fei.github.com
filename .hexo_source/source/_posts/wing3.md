@@ -14,7 +14,7 @@ EgretWing3是Egret团队基于VSCode开发的最新编辑器，相比于EgretWin
 
 ## 窗口布局 ##
 
-![](http://xzper.qiniudn.com/2016/06/wing3/1.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/1.png)
 
 如上图，EgretWing窗口主要有下面几个部分组成：
 
@@ -28,15 +28,15 @@ EgretWing3是Egret团队基于VSCode开发的最新编辑器，相比于EgretWin
 
 **菜单栏**可以通过**切换菜单栏**命令来设置是否显示
 
-![](http://xzper.qiniudn.com/2016/06/wing3/3.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/3.png)
 
 **左侧栏，右侧栏，面板**可以通过视图菜单中的相关命令来切换是否显示
 
-![](http://xzper.qiniudn.com/2016/06/wing3/28.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/28.png)
 
 还可以通过鼠标操作来打开和关闭，如下图
 
-![](http://xzper.qiniudn.com/2016/06/wing3/2.gif)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/2.gif)
 
 
 ## 工作空间 ##
@@ -76,7 +76,7 @@ EgretWing提供了包括 **编辑器设置，文件设置，窗口设置** 等�
 
 可以通过菜单栏，**文件---首选项**菜单打开**用户设置**或者**工作空间设置**
 
-![](http://xzper.qiniudn.com/2016/06/wing3/4.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/4.png)
 
 设置分为**用户设置**和**工作空间设置**。用户设置是全局的，在任何地方都可以生效，用户设置会覆盖默认设置。用户设置保存在用户缓存目录的 settings.json 中。
 工作空间设置是针对某个文件夹的，只对当前工作空间有效，工作空间设置会覆盖用户设置。工作空间设置保存在当前工作空间下的 .wing/settings.json 中。
@@ -128,14 +128,14 @@ EgretWing提供了近300个快捷键设置项自定义命令的快捷键。可�
 
 在EgretWing3中有很多命令的快捷键与EgretWing2.5的默认快捷键不一样，可以使用 插件菜单中的 **IDE迁移向导 --- 导入其他IDE设置**，选择EgretWing2.5自动修改 `keybindings.json` 文件导入EgretWing2.5的快捷键。
 
-![](http://xzper.qiniudn.com/2016/06/wing3/9.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/9.png)
 
 ## 任务配置 ##
 
 设置当前工作空间下 `.wing/tasks.json` 可以自定义任务。常见的任务如 构建，清理，发布。这些任务通过一般是执行命令行程序来实现的。
 如果当前工作空间下的 `.wing` 文件夹没有 `tasks.json` 。可以通过命令面板中的 **Tasks: Configure Task Runner** 命令选择一个任务模板。
 
-![](http://xzper.qiniudn.com/2016/06/wing3/5.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/5.png)
 
 对于一般的Egret项目，在创建项目的时候已经自动生成了与Egret命令行匹配的任务： **构建(Ctrl+Shift+B)，清理，发布**。`tasks.json` 如下：
 
@@ -178,11 +178,11 @@ EgretWing提供了近300个快捷键设置项自定义命令的快捷键。可�
 当需要运行或者调试当前项目时，需要设置启动配置。与任务配置类似，启动配置保存在当前工作空间下的 `.wing/launch.json` 中。
 默认可以使用快捷键F5，**启动或者调试**当前项目。也可以切换左侧栏到调试选项卡在下拉框中选择一个启动配置，然后点击运行。
 
-![](http://xzper.qiniudn.com/2016/06/wing3/7.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/7.png)
 
 如果当前工作空间下不存在 `launch.json` 使用F5会出现选择启动配置模板的选择框。
 
-![](http://xzper.qiniudn.com/2016/06/wing3/6.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/6.png)
 
 对于一般的Egret项目，在创建项目的时候已经自动生成了与Egret项目匹配的启动配置： 包含使用内置播放器调试，使用Chrome调试，附加到Chrome进程等配置，轻松调试和启动Egret项目 。`tasks.json` 如下：
 
@@ -234,7 +234,7 @@ EgretWing提供了近300个快捷键设置项自定义命令的快捷键。可�
 
 命令面板能方便的查找和执行命令，使用快捷键 **F1** 或者 **Ctrl+Shift+P** 呼出面板。
 
-![](http://xzper.qiniudn.com/2016/06/wing3/8.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/8.png)
 
 
 面板每一项都是一个命令，如果该命令有快捷键在右侧会显示对应的快捷键。
@@ -243,35 +243,35 @@ EgretWing提供了近300个快捷键设置项自定义命令的快捷键。可�
 
 左侧栏的文件选项卡中，包含了当前工作空间的文件列表树。使用右键菜单能显示可以执行的命令。
 
-![](http://xzper.qiniudn.com/2016/06/wing3/10.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/10.png)
 
 
 ## 全局搜索 ##
 
 右侧栏的搜索选项卡中能对当前工作空间中的所有文件和内容进行搜索，并且支持正则表达式以及模式匹配和过滤等高级设置选项。
 
-![](http://xzper.qiniudn.com/2016/06/wing3/11.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/11.png)
 
 ## GIT ##
 
 EgretWing内置Git管理工具， 在右侧栏的GIT选项卡中能直接提交，拉取，推送代码到Git仓库。
 
-![](http://xzper.qiniudn.com/2016/06/wing3/12.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/12.png)
 
 在状态栏左侧也能显示远程仓库与本地仓库的同步状态。
 
-![](http://xzper.qiniudn.com/2016/06/wing3/13.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/13.png)
 
 单击更改的文件列表，在编辑器能打开比较编辑器查看改变的具体细节。
 
-![](http://xzper.qiniudn.com/2016/06/wing3/17.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/17.png)
 
 
 ## 调试和调试控制台 ##
 
 如果配置了 `launch.json` 可以通过快捷键F5 或者 调试面板启动调试。在调试模式下，调试选项卡中的**变量，监视，调用堆栈，断点**折叠菜单都是可用的。
 
-![](http://xzper.qiniudn.com/2016/06/wing3/14.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/14.png)
 
 面板中的调试面板中显示程序运行中的输出和报错信息，在下方的输入框中也能输入表达式并动态执行得到计算结果。这个面板与Chrome开发者工具中的Console面板功能类似。
 
@@ -281,14 +281,14 @@ EgretWing内置Git管理工具， 在右侧栏的GIT选项卡中能直接提交�
 
 例如Tasks频道会输出项目编译过程中相关的信息，GIT频道输出Git执行过程中的信息，Project频道输出项目创建相关的信息等。
 
-![](http://xzper.qiniudn.com/2016/06/wing3/15.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/15.png)
 
 
 ## 终端 ##
 
 EgretWing内置了一个终端命令行执行窗口，能方便的直接在EgretWing内部使用命令行。
 
-![](http://xzper.qiniudn.com/2016/06/wing3/16.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/16.png)
 
 点击右侧的 `+` 图标能新建一个命令行窗口，右侧的列表显示当前所有打开的命令行窗口。
 
@@ -304,26 +304,26 @@ EgretWing允许最多同时打开三个编辑器，并排在编辑器显示。
 - 在当前激活的编辑器中使用快捷键 `Ctrl+\` 将把当前编辑器一分为二
 - 在文件夹选项卡的右键菜单上选择 **在新编辑器中打开**
 
-![](http://xzper.qiniudn.com/2016/06/wing3/18.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/18.png)
 
 
 ## 智能提示 ##
 
 EgretWing支持多种语言的自动补全功能，如: JavaScript, JSON, HTML, CSS, Less, Sass, C# and TypeScript。
 
-![](http://xzper.qiniudn.com/2016/06/wing3/19.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/19.png)
 
 ## 参数提示 ##
 
 在 JavaScript，TypeScript中，输入方法的参数时能看到当前输入参数的类型和注释说明。如果是重载方法，可以通过 `上箭头` 和 `下箭头` 快捷键选择需要参数。
 
-![](http://xzper.qiniudn.com/2016/06/wing3/20.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/20.png)
 
 ## 悬浮提示 ##
 
 当鼠标移动到文字上时，如果该字符是一个变量或者下面例子中的css选择器，将出现一个悬浮提示框。
 
-![](http://xzper.qiniudn.com/2016/06/wing3/21.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/21.png)
 
 ## 跳转到定义 ##
 
@@ -331,7 +331,7 @@ EgretWing支持多种语言的自动补全功能，如: JavaScript, JSON, HTML, 
 
 也可以按下 `Ctrl` 键鼠标移动到变量或者方法上，将显示方法定义细节。
 
-![](http://xzper.qiniudn.com/2016/06/wing3/22.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/22.png)
 
 > 你还可以使用 `Ctrl+Click` 调整到定义，或者使用 `Ctrl+Alt+Click` 在新编辑器中打开定义。如果打开了一个新编辑器窗口，你能够使用 `Ctrl+Alt+Left` 返回到之前的编辑器。
 
@@ -339,50 +339,50 @@ EgretWing支持多种语言的自动补全功能，如: JavaScript, JSON, HTML, 
 
 使用快捷键 `Ctrl+Shift+O` 能够打开快速大纲面板(在之前的EgretWing2.5版本中这个快捷键是`Ctrl+O`)显示当前文件中定义的所有类，方法和变量。
 
-![](http://xzper.qiniudn.com/2016/06/wing3/23.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/23.png)
 
 
 ## 查找引用 ##
 
 可以通过执行**查找所有引用**(快捷键`Shift+F12`)命令找到当前变量或者方法被引用的所有位置。
 
-![](http://xzper.qiniudn.com/2016/06/wing3/24.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/24.png)
 
 ## 重命名变量 ##
 
 一些语言(如TypeScript)支持全局重命名变量。使用快捷键`F2`输入变量的新名称并按下`Enter`，项目中所有使用该变量的位置将被重命名。
 
-![](http://xzper.qiniudn.com/2016/06/wing3/25.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/25.png)
 
 
 ## 错误和警告 ##
 
 当文件出现语法错误或者警告时，将提示错误，使用快捷键 `Ctrl+Shift+M` 查看所有的错误
 
-![](http://xzper.qiniudn.com/2016/06/wing3/26.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/26.png)
 
 也可以在错误面板中查看出现的错误
 
-![](http://xzper.qiniudn.com/2016/06/wing3/27.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/27.png)
 
 ## 多选 ##
 
 EgretWing支持多个光标，可以快速编辑相似的文本。 可以使用 `Alt+Click` 快捷键添加多个光标，每一个光标都是独立的。 也可以使用 `Ctrl+Alt+Down` 或者 `Ctrl+Alt+Up` 在下面或者上面插入光标。
 
-![](http://xzper.qiniudn.com/2016/06/wing3/28.gif)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/28.gif)
 
 ## 跨行选择 ##
 
 按住 `Shift+Alt` 移动光标可以选择多行文本。
 
-![](http://xzper.qiniudn.com/2016/06/wing3/29.gif)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/29.gif)
 
 
 ## 代码折叠 ##
 
 你可以使用在行号右边的折叠图标来折叠代码。
 
-![](http://xzper.qiniudn.com/2016/06/wing3/30.gif)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/06/wing3/30.gif)
 
 也可以使用快捷键折叠和展开代码：
 

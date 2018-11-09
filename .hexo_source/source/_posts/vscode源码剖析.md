@@ -16,7 +16,7 @@ vscode作为微软推出的现代编辑器已经在GitHub上[开源](https://git
 
 每一个 `Electron` 应用都对应一个主进程(main process)， 主进程通过`BrowserWindow`创建的每个本地窗口对应一个渲染进程(renderer process)。
 
-![](http://xzper.qiniudn.com/2016/04/1.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/04/1.png)
 
 ### 主进程
 
@@ -417,7 +417,7 @@ Eletron通过[package.json](https://github.com/Microsoft/vscode/blob/master/pack
 - panel 是状态栏上方的面板选项卡，目前主要有 `output`，`debug`，`errorlist` 等几个面板。
 - quickopen 是悬浮在中上方的弹出界面，常用的命令面板(F1)就是一个`quickopen widget`。
 
-![](http://xzper.qiniudn.com/2016/04/2.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/04/2.png)
 
 
 下面的代码展示了各个part的创建，并添加到显示列表。

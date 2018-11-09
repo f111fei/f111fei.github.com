@@ -7,7 +7,7 @@
 
 下面通过一个简单的缓动动画来说明如何使用动画功能。
 
-![](http://xzper.qiniudn.com/2016/12/animation/17.gif)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/12/animation/17.gif)
 
 ### 创建EUI项目和皮肤文件
 
@@ -15,15 +15,15 @@
 
 创建一个AnimationSkin.exml的皮肤文件。设置皮肤的类名为"skins.AnimationSkin"
 
-![](http://xzper.qiniudn.com/2016/12/animation/18.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/12/animation/18.png)
 
 在**设计模式**下拖拽添加一个新的按钮到皮肤文件中。
 
-![](http://xzper.qiniudn.com/2016/12/animation/01.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/12/animation/01.png)
 
 由于动画涉及到改变组件的旋转属性，建议将锚点设置到中心，设置按钮的宽高和描点属性。
 
-![](http://xzper.qiniudn.com/2016/12/animation/19.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/12/animation/19.png)
 
 
 **TIPS:** 尽量不要给要添加动画的目标对象设置自动布局(left, right, top, bottom, horizontalCenter，verticalCenter)属性。这些属性可能会使对象的x, y, widht, height属性失效，如果动画里面涉及到改变这些属性的值，那么动画的表现也会出现异常。
@@ -33,11 +33,11 @@
 
 EgretWing v3.2.5的EXML编辑器新增了一个动画模式。 动画模式的入口在编辑器的模式切换按钮组上。
 
-![](http://xzper.qiniudn.com/2016/12/animation/02.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/12/animation/02.png)
 
 在动画模式下，下面的Panel面板中会多一个动画面板。
 
-![](http://xzper.qiniudn.com/2016/12/animation/03.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/12/animation/03.png)
 
 请记住这个重要的面板，动画的添加，编辑和预览都将在这个面板上完成。
 
@@ -50,21 +50,21 @@ EgretWing v3.2.5的EXML编辑器新增了一个动画模式。 动画模式的�
 
 首先使用动画面板左下角的'+'按钮，添加一个动画组，并设置动画组的id，这里设置id为tweenGroup。
 
-![](http://xzper.qiniudn.com/2016/12/animation/04.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/12/animation/04.png)
 
 接下来为动画组添加第一个动画。 但是可以发现动画那一栏的添加按钮是灰色不可用的。 在添加动画之前需要先选中一个显示对象，指定动画对应的目标才能添加动画。 
 
 这里以刚刚添加的按钮为例，先在编辑区选中该按钮。
 
-![](http://xzper.qiniudn.com/2016/12/animation/05.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/12/animation/05.png)
 
 此时动画面板上动画那一栏的添加按钮已经可以操作了。
 
-![](http://xzper.qiniudn.com/2016/12/animation/06.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/12/animation/06.png)
 
 点击添加按钮将会为该对象添加一个动画。
 
-![](http://xzper.qiniudn.com/2016/12/animation/07.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/12/animation/07.png)
 
 “button”是这个按钮的id。 如果目标对象没有设置id属性则会自动创建一个，否则使用用户设置的id。 
 
@@ -72,25 +72,25 @@ EgretWing v3.2.5的EXML编辑器新增了一个动画模式。 动画模式的�
 
 每个动画对应一个动画时间轴，通过在时间轴上**添加关键帧**和**缓动行为**来改变目标对象在不同时刻的属性。 此时时间轴上还没有关键帧和动画行为。
 
-![](http://xzper.qiniudn.com/2016/12/animation/08.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/12/animation/08.png)
 
 #### 添加关键帧
 
 首先在时间轴上1s的位置点击右键选择“添加关键帧”。
 
-![](http://xzper.qiniudn.com/2016/12/animation/09.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/12/animation/09.png)
 
 添加完成后时间轴上会使用 “■” 符号表示这是一个关键帧。
 
-![](http://xzper.qiniudn.com/2016/12/animation/10.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/12/animation/10.png)
 
 在关键帧的位置可以设置对象的大小，位置，缩放，旋转，透明度等属性。 与设计模式类似，可以**在编辑区操作显示对象**或者**在右侧的属性面板**中可以设置关键帧属性。
 
-![](http://xzper.qiniudn.com/2016/12/animation/11.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/12/animation/11.png)
 
 这里我们根据动画的在该时刻的状态，设置了Y，缩放，透明度，旋转，缓动函数等属性。 注意：如果关键帧的属性不填留空则表示不对该属性做改变。
 
-![](http://xzper.qiniudn.com/2016/12/animation/12.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/12/animation/12.png)
 
 #### 创建补间动画
 
@@ -98,11 +98,11 @@ EgretWing v3.2.5的EXML编辑器新增了一个动画模式。 动画模式的�
 
 在关键帧的位置或者之前的某一时刻右键选择“创建补间动画”。
 
-![](http://xzper.qiniudn.com/2016/12/animation/13.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/12/animation/13.png)
 
 时间轴上将会使用“●”标记补间动画的开头和结束，“→”标记这一段是补间动画。
 
-![](http://xzper.qiniudn.com/2016/12/animation/14.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/12/animation/14.png)
 
 由于在添加补间动画的位置之前没有其他的关键帧，所以该段补间动画的开头是开始0时刻的位置。
 
@@ -112,13 +112,13 @@ EgretWing v3.2.5的EXML编辑器新增了一个动画模式。 动画模式的�
 
 如果要改变关键帧或者补间动画的起始位置或者持续时间，可以直接在时间轴上左右拖拽关键帧的位置。
 
-![](http://xzper.qiniudn.com/2016/12/animation/15.gif)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/12/animation/15.gif)
 
 ### 预览动画
 
 动画编辑完成后可以通过**拖拽时间轴上的时间戳**或者**直接点击时间轴下方的播放按钮**预览动画。
 
-![](http://xzper.qiniudn.com/2016/12/animation/16.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2016/12/animation/16.png)
 
 ### 代码中调用
 

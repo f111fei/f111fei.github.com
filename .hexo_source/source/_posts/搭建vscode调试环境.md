@@ -16,11 +16,11 @@ vscode使用**task.json**来配置项目的构建过程。
 
 打开命令面板(Ctrl+Shift+P)选择Run Build Task(Ctrl+Shift+B)
 
-![](http://xzper.qiniudn.com/2015/11/1.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/11/1.png)
 
 如果当前工作空间没有**task.json**配置文件此时会出现提示
 
-![](http://xzper.qiniudn.com/2015/11/2.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/11/2.png)
 
 选择 Configure Task Runner 自动创建**task.json**。该配置文件在工作空间的.vscode目录下，这个目录也是存放vscode配置的文件夹。
 
@@ -56,7 +56,7 @@ vscode默认支持nodejs，ts，js等项目的调试。使用**launch.json**p配
 
 调试启动调试的默认快捷键是F5， 如果没有**launch.json**则会弹窗提示选择调试环境，并自动创建**launch.json**。
 
-![](http://xzper.qiniudn.com/2015/11/3.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/11/3.png)
 
 以调试node项目为例，简单说明下**launch.json**的写法
 
@@ -124,7 +124,7 @@ attach就是监听的任务。例如**其他程序**启动了一个node应用并
 
 附上一张vscode调试面板的截图
 
-![](http://xzper.qiniudn.com/2015/11/debugging_hero.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/11/debugging_hero.png)
 
 有关如何调试的教程
 

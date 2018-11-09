@@ -120,7 +120,7 @@ tags:
 
 这种原型链的描述方式完全符合Flex样式的设计思想。Flex的每个组件都持有两套样式表，可继承的样式和不可继承的样式。不可继承的样式不做传递，可继承的样式会添加到原型链中。当一个容器的子组件被添加的时候，子组件的样式表会被重新初始化，将父级的样式表添加到自己的原型链，然后添加自己的样式。最终自己的样式改变不会影响父级，父级的样式改变，如果自己没有显式定义就会跟随父级改变。关于Flex样式的原理详细的可以看下面的参考文章。
 
-本文代码下载: [Click Me](http://xzper.qiniudn.com/2014%2F10%2FStyleTest.zip)
+本文代码下载: [Click Me](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2014%2F10%2FStyleTest.zip)
 
 参考文章：
 

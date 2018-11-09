@@ -77,7 +77,7 @@
 <p>这里我们用到的资源主要有按钮，背景，文字以及数字这些图片。我们选择把这些图片都打包在一起合成一张大图就像 <a href="http://xzper.com/project/2048egret/resource/assets/source.png" target="_blank" rel="external">这样</a> 和 <a href="http://xzper.com/project/2048egret/resource/assets/number.png" target="_blank" rel="external">这样</a> 这样做可以减少URL请求数，还能减少资源的体积，把一些具有相同特征的图片放在一起便于管理。在egret里面这种类型的资源就是sheet。只有图片是不够的，还需要一个json描述文件来说明这张图每一张小图片的位置和大小。目前已经有成熟的工具来生成sheet和json。这里我用到的是 <a href="http://www.renderhjs.net/shoebox/" target="_blank" rel="external">ShoeBox</a> 配合这个 <a href="https://github.com/runinspring/egretTools" target="_blank" rel="external">插件</a> 来生成egret能识别的json。安装好插件后， 将每一张图片命名，然后将这些图片选中拖入Sprites Sheet中然后配置好生成的文件名点击save就能得到一张大图和一个json了，将图片和json放入”resource/assets/“文件夹下以备使用。此外ShoeBox还能读取swf将MovieClip导出为这种大图，按每一帧自动命名，这里的number.png就是这样导出的，下面有原始素材下载地址。</p>
 <p><strong>②资源加载</strong></p>
 <p>接下来我们需要生成一个资源描述文件resource.json，在游戏开始之前读取这个json来加载对应的文件。egret的资源加载机制可以参考 <a href="https://github.com/egret-labs/egret-core/wiki/Using%20Resource%20System" target="_blank" rel="external">这里</a> 现在已经有 <a href="http://bbs.egret-labs.org/thread-48-1-1.html" target="_blank" rel="external">工具</a> 能自动生成这个resource.json了。按照下图配置。<strong>注意：虽然我们的资源有图片，但是对应的json文件已经记录了图片的位置，所以在这个工具中我们不需要添加对应的图片只添加json文件就行了。</strong></p>
-<center><img src="http://xzper.qiniudn.com/2014/06/ResTool.png" alt=""></center>
+<center><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2014/06/ResTool.png" alt=""></center>
 
 <p>在项目初始化时，使用RES加载资源，简单明了。</p>
 <pre><code><span class="keyword">private</span> <span class="title">onAddToStage</span>(event:egret.Event){
@@ -182,7 +182,7 @@ context.stage.<span class="variable">scaleMode =</span> scaleMode;
 <p><strong>5.egret的GUI</strong></p>
 <p><strong>①制作菜单———-认识皮肤部件</strong></p>
 <p>先来看看菜单长什么样子</p>
-<p><img src="http://xzper.qiniudn.com/2014/06/菜单.jpg" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2014/06/菜单.jpg" alt=""></p>
 <p>我们会发现这个菜单。有些是静态文本，是一直不变的，我偷懒直接用了一张图片代替了，图片可以用egret.gui.UIAsset。</p>
 <p>还有当前得分和最高分已经那个向上飘的数字是动态的，可以选用egret.gui.Label这个组件。</p>
 <p>一个重试按钮，既然已经说了是按钮了我们就用egret.gui.Button好了。</p>
@@ -281,7 +281,7 @@ context.stage.<span class="variable">scaleMode =</span> scaleMode;
 </code></pre><p>   }</p>
 <p>在构造函数里面赋值skinName传入皮肤的类引用，这个解析过程就是SkinAdapter完成的。 可以看到主机组件有一个partAdded进行皮肤组件的配对。这个时候我们就可以获取到对应的皮肤组件，来进行操作了，</p>
 <p><strong>②制作游戏区域————了解九宫格和容器布局</strong></p>
-<p><img src="http://xzper.qiniudn.com/2014/06/游戏演示.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2014/06/游戏演示.png" alt=""></p>
 <p>再次来观察这个游戏的主界面。有一张纯色的背景图，还有4x4个空白的格子，随着游戏的进行会多出带数字的格子，游戏结束了还会出现胜利的界面。</p>
 <p>先来看看第一张图。也许你认为这个背景一张4x4的图片不就搞定了么。不过我们这个2048单元格的数量可是可以任意调整的，可以是5x5，或者6x6甚至更多，这样才具备灵活性。你只需要改变CommandData的size属性就可以了(PS:游戏胜利的条件默认是达成2048，也可以通过修改CommandData的winValue属性来修改条件比如8192时胜利或者像上面那样32的时候胜利，想不输都难)。</p>
 <p>我们继承SkinnableContainer建立一个MainGameUI的类作为容器来显示上面的界面，当然同时还需要一个皮肤MainGameUISkin。先来确定skinParts，如下：</p>

@@ -69,6 +69,6 @@ Mac下使用下面提供的elevate.scpt。
 
 elevate的下载地址,有兴趣的可以hack下:
 
-Windows：[elevate.exe](http://xzper.qiniudn.com/2015/01/elevate.zip)
+Windows：[elevate.exe](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/01/elevate.zip)
 
-Mac：[elevate.scpt](http://xzper.qiniudn.com/2015/01/elevate.scpt)
+Mac：[elevate.scpt](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/01/elevate.scpt)

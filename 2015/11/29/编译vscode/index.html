@@ -68,7 +68,7 @@
       <p>由于工作需要，最近开始研究vscode的源代码，这样就需要编译和调试vscode。</p>
 <p>先从GitHub(<a href="https://github.com/Microsoft/vscode" target="_blank" rel="external">https://github.com/Microsoft/vscode</a>)上clone一下vscode的源代码，顺便去点个star吧。</p>
 <a id="more"></a>
-<p><img src="http://xzper.qiniudn.com/2015/11/4.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/11/4.png" alt=""></p>
 <p>看一下目录结构</p>
 <ul>
 <li><p><strong>.build</strong> 是electron可执行文件的路径，clone出来的项目是不带这个文件夹的，需要build出来。后面会讲到。</p>
@@ -97,7 +97,7 @@ scripts\npm <span class="keyword">install</span></span>
 <ol>
 <li>node-gyp安装失败</li>
 </ol>
-<p><img src="http://xzper.qiniudn.com/2015/11/5.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/11/5.png" alt=""></p>
 <p>这个似乎是需要机器上有Visual Studio，这个东西的功能应该就是构建一些本机文件用的，安装失败没关系，我们可以从其他地方得到这些本机文件。</p>
 <p>ps: 最近node-inspector老是安装不上也是因为这个的原因，有没有大神能告之解决办法。</p>
 <h4 id="2-拷贝一些重要文件">2.拷贝一些重要文件</h4>
@@ -116,7 +116,7 @@ http<span class="variable">s:</span>//github.<span class="keyword">com</span>/Mi
 <p>这一步反倒很简单，vscode使用了gulp进行自动构建，只需要找vscode项目目录下，使用一行命令就行了。</p>
 <pre><code><span class="title">gulp</span> watch
 </code></pre><p>几分钟后编译完成，可能会有一个错误。</p>
-<p><img src="http://xzper.qiniudn.com/2015/11/6.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/11/6.png" alt=""></p>
 <p>要解决这个问题直接使用</p>
 <pre><code>npm <span class="operator"><span class="keyword">install</span> run-<span class="keyword">in</span>-terminal</span>
 </code></pre><p>安装一下这个模块就行了。</p>

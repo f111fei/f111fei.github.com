@@ -36,7 +36,7 @@ TPRouter.zip
 
 1.打开TPRouter，点击浏览，选择解锁了U-Boot分区的固件1，看清楚文件名千万别选错了。如下图修改：
 
-![](http://xzper.qiniudn.com/2015/07/01.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/07/01.png)
 
 修改完成后，再次打开就会发现固件标示变为了00120201。上面压缩包中的文件已经修改好，可以跳过这一步，有不放心的可以打开看看。
 
@@ -51,13 +51,13 @@ TPRouter.zip
 
 4.重启好了之后，再次打开192.168.1.1即可看到高大上openwrt的初始界面了。
 
-![](http://xzper.qiniudn.com/2015/07/02.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/07/02.png)
 
 也先别激动，这次刚刚开始。
 
 5.以上步骤刷入了一个u-boot分区可以写入的系统，接下来就是将不死boot写入到u-boot分区。打开putty，使用Telnet协议以命令行的模式登陆路由器。注意是**使用Telnet连接**，设置如下图：
 
-![](http://xzper.qiniudn.com/2015/07/03.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/07/03.png)
 
 6.openwrt的默认账号是root，密码没有。为了能使用WinSCP给路由器上传文件，需要设置路由器的密码，在putty中输入以下命令：
 
@@ -65,25 +65,25 @@ TPRouter.zip
 
 然后按照提示输入要设置的密码。输入密码不会显示到控制台但是已经输入了。控制台输出如下：
 
-![](http://xzper.qiniudn.com/2015/07/04.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/07/04.png)
 
 7.使用WinSCP将不死boot固件3上传到路由器的tmp文件夹。打开WinSCP，按照如下图配置：
 
-![](http://xzper.qiniudn.com/2015/07/05.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/07/05.png)
 
 注意协议类型选择SCP。
 
 点击Login后会弹出一个Warning窗口，不要管，点击add或者yes。进入管理界面。左边选中固件所在目录，右边选中/tmp目录。将breed-ar9331-mr12u.bin拖入左边上传到路由器tmp目录下。如下图：
 
-![](http://xzper.qiniudn.com/2015/07/06.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/07/06.png)
 
 8.上传好了之后就该刷入不死boot了。首先重启putty，使用ssh的方式连接路由器。设置如下图：
 
-![](http://xzper.qiniudn.com/2015/07/07.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/07/07.png)
 
 跟 WinSCP 一样，如果是第一次使用 PuTTY 登录路由，那么会有一些确定窗口，点击yes。进入到命令行窗口，然后输入用户名root和密码。如下图：
 
-![](http://xzper.qiniudn.com/2015/07/08.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/07/08.png)
 
 先使用cat命令查看一下当前的分区。输入命令
 
@@ -91,7 +91,7 @@ TPRouter.zip
 
 输出如下：
 
-![](http://xzper.qiniudn.com/2015/07/09.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/07/09.png)
 
 这次要刷入的就是u-boot分区
 
@@ -101,7 +101,7 @@ TPRouter.zip
 
 输出如下：
 
-![](http://xzper.qiniudn.com/2015/07/10.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/07/10.png)
 
 图中红框框起来打码的部分就是mac地址。先记录并备份一下待会会用到。
 
@@ -112,7 +112,7 @@ TPRouter.zip
 
 成功的话，如下图：
 
-![](http://xzper.qiniudn.com/2015/07/11.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/07/11.png)
 
 最后输入`reboot`命令重启路由器或者直接将路由器关机。
 
@@ -127,11 +127,11 @@ Tips：如果你一开始的openwrt固件是官方的，因为默认是锁了u-b
 
 10.修改mac地址。u-root会将mac地址重置，此时需要将mac地址还原回来，不然有些功能无法使用，比如无线功能。将之前备份好的mac地址输入到设置框中，如下图设置：
 
-![](http://xzper.qiniudn.com/2015/07/12.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/07/12.png)
 
 11.刷入官方的openwrt固件。在u-boot控制台选择固件更新→固件，选中固件2点击上传。如下图：
 
-![](http://xzper.qiniudn.com/2015/07/13.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/07/13.png)
 
 这时等待更新就行了。
 
@@ -139,7 +139,7 @@ Tips：如果你一开始的openwrt固件是官方的，因为默认是锁了u-b
 
 12.路由器重启后进入192.168.1.1即可看到官方的openwrt的luci界面了。至此不死boot和openwrt刷入成功，撒花庆祝。
 
-![](http://xzper.qiniudn.com/2015/07/14.png)
+![](https://raw.githubusercontent.com/f111fei/f111fei.github.com/master/.hexo_source/source/resource/2015/07/14.png)
 
 
 至于如何配置openwrt实现开篇所说的功能，等下回再说吧。特此感谢@hackpascal大牛的固件。
